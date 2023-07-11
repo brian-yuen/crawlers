@@ -33,9 +33,17 @@
     <hikaricp.version>4.0.3</hikaricp.version>
     <jdom2.version>2.0.6.1</jdom2.version>
     <mongodb.version>4.3.2</mongodb.version>
+    <ksqldb.version>7.4.0</ksqldb.version>
   </properties>
 
   <inceptionYear>2014</inceptionYear>
+
+  <repositories>
+    <repository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
+    </repository>
+  </repositories>
 
   <dependencyManagement>
     <dependencies>
@@ -58,7 +66,21 @@
   </dependencyManagement>
 
   <dependencies>
-
+    <dependency>
+      <groupId>io.confluent.ksql</groupId>
+      <artifactId>ksqldb-api-client</artifactId>
+      <version>7.4.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-streams</artifactId>
+      <version>3.4.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>3.4.0</version>
+    </dependency>
     <dependency>
       <groupId>com.norconex.crawler</groupId>
       <artifactId>nx-importer</artifactId>
@@ -172,6 +194,12 @@
       <artifactId>jai-imageio-jpeg2000</artifactId>
       <version>1.4.0</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.9.0</version>
+      <scope>compile</scope>
     </dependency>
 
   </dependencies>

@@ -46,13 +46,13 @@
     <h2.version>2.0.204</h2.version>
     <hikaricp.version>4.0.3</hikaricp.version>
     <jdom2.version>2.0.6.1</jdom2.version>
+    <kafka.version>3.4.0</kafka.version>
   </properties>
 
   <inceptionYear>2009</inceptionYear>
 
   <dependencyManagement>
     <dependencies>
-
       <!-- TODO: BELOW FROM V.3x, CLEANUP AND EVALUATE WHAT'S STILL NEEDED -->          
         
       <dependency>
@@ -104,7 +104,17 @@
   </dependencyManagement>
 
   <dependencies>
-
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>${kafka.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.kafka/connect-api -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>connect-api</artifactId>
+      <version>${kafka.version}</version>
+    </dependency>
     <dependency>
       <groupId>com.norconex.commons</groupId>
       <artifactId>norconex-commons-lang</artifactId>
