@@ -175,8 +175,6 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
                 minFreq.addXML(matcher);
             })
         );
-
-
         //TODO the rest
 
         crawlerXml.ifXML(IMPORTER, this::convertImporter);
@@ -185,6 +183,40 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
 
     private void convertImporter(XML importerXml) {
         //TODO
+        importerXml.ifXML("//importer", xml ->
+                xml.removeElement("parseErrorsSaveDir"));
+        importerXml.ifXML("preParseHandlers/handler", xml -> {
+            xml.forEach("restrictTo", r -> {
+                var fieldMatcher = new XML("fieldMatcher");
+                var valueMatcher = new XML("valueMatcher");
+                fieldMatcher.setTextContent(r.getString("@field"));
+                valueMatcher.setTextContent(r.getTextContent());
+                r.removeAttribute(IGNORE_CASE);
+                r.removeAttribute("field");
+                r.removeTextContent();
+                r.addXML(fieldMatcher);
+                r.addXML(valueMatcher);
+            });
+        });
+        importerXml.ifXML("preParseHandlers/handler[contains("
+                + "@class, 'DOMContentFilter')]", r -> {
+            setClass(r, d -> d.replaceFirst("\\bDOMContentFilter\\b", "DOMFilter"));
+            r.ifXML("restrictTo", rt -> {
+                var fieldMatcher = new XML("fieldMatcher");
+                var valueMatcher = new XML("valueMatcher");
+                fieldMatcher.setTextContent(rt.getString("@field"));
+                valueMatcher.setTextContent(rt.getTextContent());
+                valueMatcher.setAttribute("method", "regex");
+                valueMatcher.setAttribute(IGNORE_CASE,
+                        rt.getBoolean(attr(IGNORE_CASE), false));
+                rt.removeAttribute(IGNORE_CASE);
+                rt.removeAttribute("field");
+                rt.removeTextContent();
+                rt.addXML(fieldMatcher);
+                rt.addXML(valueMatcher);
+            });
+        });
+
     }
 
 
