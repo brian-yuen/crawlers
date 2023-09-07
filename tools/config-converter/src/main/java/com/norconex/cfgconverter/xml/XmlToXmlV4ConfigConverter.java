@@ -22,6 +22,7 @@ import static org.apache.commons.lang3.StringUtils.replace;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
@@ -185,40 +186,59 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
         //TODO
         importerXml.ifXML("//importer", xml ->
                 xml.removeElement("parseErrorsSaveDir"));
-        importerXml.ifXML("preParseHandlers/handler", xml -> {
-            xml.forEach("restrictTo", r -> {
-                var fieldMatcher = new XML("fieldMatcher");
-                var valueMatcher = new XML("valueMatcher");
-                fieldMatcher.setTextContent(r.getString("@field"));
-                valueMatcher.setTextContent(r.getTextContent());
-                r.removeAttribute(IGNORE_CASE);
-                r.removeAttribute("field");
-                r.removeTextContent();
-                r.addXML(fieldMatcher);
-                r.addXML(valueMatcher);
-            });
-        });
+
         importerXml.ifXML("preParseHandlers/handler[contains("
                 + "@class, 'DOMContentFilter')]", r -> {
-            setClass(r, d -> d.replaceFirst("\\bDOMContentFilter\\b", "DOMFilter"));
-            r.ifXML("restrictTo", rt -> {
-                var fieldMatcher = new XML("fieldMatcher");
-                var valueMatcher = new XML("valueMatcher");
-                fieldMatcher.setTextContent(rt.getString("@field"));
-                valueMatcher.setTextContent(rt.getTextContent());
-                valueMatcher.setAttribute("method", "regex");
-                valueMatcher.setAttribute(IGNORE_CASE,
-                        rt.getBoolean(attr(IGNORE_CASE), false));
-                rt.removeAttribute(IGNORE_CASE);
-                rt.removeAttribute("field");
-                rt.removeTextContent();
-                rt.addXML(fieldMatcher);
-                rt.addXML(valueMatcher);
-            });
+                    setClass(r, d -> d.replaceFirst("\\bDOMContentFilter\\b", "DOMFilter"));
+                });
+
+        importerXml.forEach("preParseHandlers/handler", xml -> {
+            // Define a regular expression pattern to match class names
+            String classPattern = "com\\.norconex\\.importer\\.handler\\.(filter|splitter|tagger|transformer)\\.impl\\..*";
+
+            // Get the class name of the current handler
+            String className = xml.getString("@class");
+
+            // Check if the class name matches the pattern
+            if (className.matches(classPattern)) {
+                // Apply the common conversion logic here
+
+                xml.forEach("restrictTo", rt -> {
+                    var fieldMatcher = new XML("fieldMatcher");
+                    var valueMatcher = new XML("valueMatcher");
+
+                    // Set the text content of fieldMatcher with the "field" attribute value
+                    fieldMatcher.setTextContent(rt.getString("@field"));
+
+                    // Set the text content of valueMatcher with the text content of the parent restrictTo
+                    valueMatcher.setTextContent(rt.getTextContent());
+
+                    // Remove attributes and text content from the parent restrictTo
+                    rt.removeAttribute(IGNORE_CASE);
+                    rt.removeAttribute("field");
+                    rt.removeTextContent();
+
+                    // Handle DateMetadataFilter separately
+                    if ("com.norconex.importer.handler.filter.impl.DateMetadataFilter".equals(className)) {
+                        // Only set the text content without additional attributes
+                        valueMatcher.setAttribute("method", null);
+                        valueMatcher.setAttribute(IGNORE_CASE, null);
+                    } else {
+                        // Set additional attributes for other classes
+                        valueMatcher.setAttribute("method", "regex");
+                        valueMatcher.setAttribute(IGNORE_CASE, "true");
+                    }
+
+                    // Add fieldMatcher and valueMatcher as child elements to the parent restrictTo
+                    rt.addXML(fieldMatcher);
+                    rt.addXML(valueMatcher);
+                });
+            }
         });
 
-    }
 
+
+    }
 
     private void writeXml(XML xml, Writer output) {
         try {
