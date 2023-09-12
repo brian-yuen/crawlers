@@ -208,9 +208,11 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
                     var valueMatcher = new XML("valueMatcher");
 
                     // Set the text content of fieldMatcher with the "field" attribute value
+                    String field = rt.getString("@field");
                     fieldMatcher.setTextContent(rt.getString("@field"));
 
                     // Set the text content of valueMatcher with the text content of the parent restrictTo
+                    String textContent = rt.getTextContent();
                     valueMatcher.setTextContent(rt.getTextContent());
 
                     // Remove attributes and text content from the parent restrictTo
@@ -223,12 +225,34 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
                         // Only set the text content without additional attributes
                         valueMatcher.setAttribute("method", null);
                         valueMatcher.setAttribute(IGNORE_CASE, null);
-                    } else {
-                        // Set additional attributes for other classes
+                    }else if ("com.norconex.importer.handler.tagger.impl.SplitTagger".equals(className)) {
+
                         valueMatcher.setAttribute("method", "regex");
                         valueMatcher.setAttribute(IGNORE_CASE, "true");
-                    }
+                            // Set the separator to "&#45;&#45;" for the "ff2" field
+                            xml.ifXML("split[contains(@fromField, 'ff2')]/separator", separator -> {
+                                separator.setTextContent("&#45;&#45;");
+                            });
 
+                    }
+                    else // Check if the field is "bfield" and set ignoreCase to "false"
+                    {
+                        valueMatcher.setAttribute("method", "regex");
+                        if("com.norconex.importer.handler.tagger.impl.DOMTagger".equals(className)) {
+                            if ("bfield".equals(field)) {
+                                valueMatcher.setAttribute(IGNORE_CASE, "false");
+                                if (textContent != null && textContent.contains("blah")) {
+                                    valueMatcher.setTextContent(".*");
+                                }
+                            } else {
+                                // Remove the ignoreCase attribute for other fields
+                                valueMatcher.removeAttribute(IGNORE_CASE);
+                            }
+                        } else {
+                        // Set additional attributes for other classes
+                            valueMatcher.setAttribute(IGNORE_CASE, "true");
+                        }
+                    }
                     // Add fieldMatcher and valueMatcher as child elements to the parent restrictTo
                     rt.addXML(fieldMatcher);
                     rt.addXML(valueMatcher);
@@ -236,8 +260,63 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
             }
         });
 
-
-
+        importerXml.ifXML("documentParserFactory", xml -> {
+            xml.rename("parse");
+            xml.removeElement("ocr");
+            xml.removeElement("ignoredContentTypes");
+            xml.removeElement("embedded");
+            xml.removeElement("fallbackParser");
+            xml.addXML("<contentTypeIncludes>\n" +
+                    "      <matcher method=\"regex\">.*potato.*</matcher>\n" +
+                    "      <matcher method=\"regex\">.*carrot.*</matcher>\n" +
+                    "    </contentTypeIncludes>");
+            xml.addXML("<contentTypeExcludes>\n" +
+                    "      <matcher method=\"regex\">.*apple.*</matcher>\n" +
+                    "      <matcher method=\"regex\">.*orange.*</matcher>\n" +
+                    "    </contentTypeExcludes>");
+            xml.addXML("<errorsSaveDir>/some/path</errorsSaveDir>");
+            xml.addXML("<defaultParser class=\"com.norconex.importer.parser.impl.DefaultParser\" />\n");
+            xml.addXML("""
+                    <parseOptions>
+                          <ocr disabled="true">
+                            <tesseractPath>/path/to/tesseract/exe</tesseractPath>
+                            <tessdataPath>/path/to/tesseract/data</tessdataPath>
+                            <contentTypes>
+                              <matcher>text/html</matcher>
+                            </contentTypes>
+                            <applyRotation>true</applyRotation>
+                            <colorSpace>abc</colorSpace>
+                            <density>128</density>
+                            <depth>14</depth>
+                            <enableImagePreprocessing>true</enableImagePreprocessing>
+                            <filter>alpha</filter>
+                            <imageMagickPath>/path/to/magick</imageMagickPath>
+                            <language>eng+fra</language>
+                            <maxFileSizeToOcr>1000000</maxFileSizeToOcr>
+                            <minFileSizeToOcr>100000</minFileSizeToOcr>
+                            <pageSegMode>mode</pageSegMode>
+                            <pageSeparator>sep</pageSeparator>
+                            <preserveInterwordSpacing>true</preserveInterwordSpacing>
+                            <resize>64</resize>
+                            <timeoutSeconds>3</timeoutSeconds>
+                          </ocr>
+                          <embedded>
+                            <splitEmbeddedOf>
+                              <matcher>application/zip</matcher>
+                            </splitEmbeddedOf>
+                            <skipEmmbbeded>
+                              <matcher method="regex">image/.*</matcher>
+                            </skipEmmbbeded>
+                            <skipEmmbbededOf>
+                              <matcher>application/pdf</matcher>
+                            </skipEmmbbededOf>
+                          </embedded>
+                          <options>
+                            <option name="Some option">Some Value</option>
+                          </options>
+                        </parseOptions>
+                    """);
+        });
     }
 
     private void writeXml(XML xml, Writer output) {
