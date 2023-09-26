@@ -176,6 +176,9 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
                 minFreq.addXML(matcher);
             })
         );
+        crawlerXml.ifXML("postImportProcessors/processor", xml -> {
+            xml.removeAttribute("class");
+        });
         //TODO the rest
 
         crawlerXml.ifXML(IMPORTER, this::convertImporter);
@@ -226,14 +229,12 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
                         valueMatcher.setAttribute("method", null);
                         valueMatcher.setAttribute(IGNORE_CASE, null);
                     }else if ("com.norconex.importer.handler.tagger.impl.SplitTagger".equals(className)) {
-
                         valueMatcher.setAttribute("method", "regex");
                         valueMatcher.setAttribute(IGNORE_CASE, "true");
                             // Set the separator to "&#45;&#45;" for the "ff2" field
-                            xml.ifXML("split[contains(@fromField, 'ff2')]/separator", separator -> {
-                                separator.setTextContent("&#45;&#45;");
-                            });
-
+                        xml.ifXML("split[contains(@fromField, 'ff2')]/separator", separator -> {
+                            separator.setTextContent("&#45;&#45;");
+                        });
                     }
                     else // Check if the field is "bfield" and set ignoreCase to "false"
                     {
@@ -326,6 +327,7 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
                 .maxLineLength(80)
                 .build()
                 .format(xml), output);
+
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
