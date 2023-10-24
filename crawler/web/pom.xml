@@ -21,7 +21,7 @@
     <groupId>com.norconex.crawler</groupId>
     <artifactId>nx-crawler-parent</artifactId>
     <version>4.0.0-SNAPSHOT</version>
-    <relativePath>../..</relativePath>    
+    <relativePath>../../pom.xml</relativePath>
   </parent>  
   <artifactId>nx-crawler-web</artifactId>
   <name>Norconex Web Crawler</name>
@@ -216,6 +216,7 @@
         <type>zip</type>
         <scope>provided</scope>
     </dependency>
+
   </dependencies>
   
   <build>
@@ -312,8 +313,29 @@
             </configuration>
           </execution>
         </executions>
+      </plugin> -->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-shared-resources</id>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <phase>prepare-package</phase>
+            <configuration>
+              <classifier>resources</classifier>
+              <outputDirectory>${project.build.directory}/shared-resources</outputDirectory>
+              <includeArtifactIds>nx-config-converter</includeArtifactIds>
+              <includeGroupIds>com.norconex.crawler</includeGroupIds>
+              <excludeTransitive>true</excludeTransitive>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
-      -->
+
     </plugins>
   </build>
   
