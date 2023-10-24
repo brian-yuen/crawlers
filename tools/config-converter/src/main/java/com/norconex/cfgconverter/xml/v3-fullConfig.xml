@@ -1,0 +1,692 @@
+<httpcollector id="Collector/CrawlSession Config">
+
+    <workDir>/workdir</workDir>
+
+    <eventListeners>
+        <listener class="com.norconex.collector.http.crawler.event.impl.URLStatusCrawlerEventListener">
+            <statusCodes>404</statusCodes>
+            <outputDir>/tmp/path</outputDir>
+            <fileNamePrefix>broken-links</fileNamePrefix>
+        </listener>
+    </eventListeners>
+
+    <crawlerDefaults>
+        <startURLs
+                stayOnDomain="true"
+                includeSubdomains="true"
+                stayOnPort="true"
+                stayOnProtocol="true"
+                async="true">
+            <url>http://www.example.com</url>
+            <url>http://www.sample.com</url>
+            <urlsFile>/local/path/to/a/file/full/of/urls.txt</urlsFile>
+            <sitemap>http://www.somewhere.com/sitemap.xml</sitemap>
+            <provider class="com.norconex.collector.http.crawler.MockStartURLsProvider"/>
+        </startURLs>
+        <keepDownloads>true</keepDownloads>
+        <keepReferencedLinks>INSCOPE, OUTSCOPE, MAXDEPTH</keepReferencedLinks>
+        <maxDepth>99</maxDepth>
+        <numThreads>1</numThreads>
+        <maxDocuments>111</maxDocuments>
+        <orphansStrategy>PROCESS</orphansStrategy>
+        <fetchHttpHead>OPTIONAL</fetchHttpHead>
+        <fetchHttpGet>DISABLED</fetchHttpGet>
+
+        <eventListeners>
+            <listener class="URLStatusCrawlerEventListener">
+                <statusCodes>200</statusCodes>
+                <outputDir>/tmp/okpath</outputDir>
+                <fileNamePrefix>good-pages</fileNamePrefix>
+            </listener>
+        </eventListeners>
+
+        <urlNormalizer disabled="false" class="com.norconex.collector.http.url.impl.GenericURLNormalizer">
+            <normalizations>
+                lowerCaseSchemeHost, upperCaseEscapeSequence,
+                decodeUnreservedCharacters, removeDefaultPort
+            </normalizations>
+            <replacements>
+                <replace><match>A</match><replacement>B</replacement></replace>
+                <replace><match>C</match></replace>
+            </replacements>
+        </urlNormalizer>
+        <delay class="com.norconex.collector.http.delay.impl.GenericDelayResolver"
+               default="1s" ignoreRobotsCrawlDelay="true" scope="crawler" >
+            <schedule dayOfWeek="from Monday to Friday"
+                      dayOfMonth="from 1 to 10" time="from 8:00 to 16:30">10s</schedule>
+            <schedule dayOfWeek="from Saturday to Sunday"
+                      dayOfMonth="from 11 to 28" time="from 6:00 to 7:30">20000</schedule>
+        </delay>
+        <dataStoreEngine class="com.norconex.collector.core.store.impl.mvstore.MVStoreDataStoreEngine">
+            <pageSplitSize>1000</pageSplitSize>
+            <compress>1</compress>
+            <cacheConcurrency>0</cacheConcurrency>
+            <cacheSize>1000</cacheSize>
+            <autoCompactFillRate>100</autoCompactFillRate>
+            <autoCommitBufferSize>100</autoCommitBufferSize>
+            <autoCommitDelay>100</autoCommitDelay>
+        </dataStoreEngine>
+
+        <httpFetchers maxRetries="5" retryDelay="10 seconds">
+            <fetcher class="com.norconex.collector.http.fetch.impl.GenericHttpFetcher">
+                <userAgent>Here we crawl!</userAgent>
+                <validStatusCodes>200,201</validStatusCodes>
+                <notFoundStatusCodes>404,401</notFoundStatusCodes>
+                <forceContentTypeDetection>true</forceContentTypeDetection>
+                <forceCharsetDetection>true</forceCharsetDetection>
+                <headersPrefix>myprefix</headersPrefix>
+                <detectContentType>true</detectContentType>
+                <detectCharset>true</detectCharset>
+                <redirectURLProvider fallbackCharset="UTF-8"/>
+                <cookieSpec>ignoreCookies</cookieSpec>
+                <authentication>
+                    <formParams>
+                        <param name="param1">value1</param>
+                        <param name="param2">value2</param>
+                    </formParams>
+                    <method>digest</method>
+                    <credentials>
+                        <username>user</username>
+                        <password>pass</password>
+                        <passwordKey>
+                            <value>/path/to/my.key</value>
+                            <source>file</source>
+                        </passwordKey>
+                    </credentials>
+                    <formUsernameField>userfield</formUsernameField>
+                    <formPasswordField>pwdfield</formPasswordField>
+                    <formSelector>#myform</formSelector>
+                    <formCharset>UTF-8</formCharset>
+                    <url>authURL</url>
+                    <host>
+                        <name>host</name>
+                        <port>9</port>
+                    </host>
+                    <realm>authRealm</realm>
+                    <workstation>authWorkstation</workstation>
+                    <domain>authDomain</domain>
+                    <preemptive>true</preemptive>
+                </authentication>
+                <connectionTimeout>1</connectionTimeout>
+                <socketTimeout>2 minutes</socketTimeout>
+                <connectionRequestTimeout>3 min 30s</connectionRequestTimeout>
+                <connectionCharset>US-ASCII</connectionCharset>
+                <expectContinueEnabled>true</expectContinueEnabled>
+                <maxRedirects>4</maxRedirects>
+                <localAddress>address</localAddress>
+                <maxConnections>5</maxConnections>
+                <maxConnectionsPerRoute>6</maxConnectionsPerRoute>
+                <maxConnectionIdleTime>7</maxConnectionIdleTime>
+                <maxConnectionInactiveTime>8</maxConnectionInactiveTime>
+                <trustAllSSLCertificates>true</trustAllSSLCertificates>
+                <disableSNI>true</disableSNI>
+                <sslProtocols>item1,item2</sslProtocols>
+                <proxySettings>
+                    <host>
+                        <name>host</name>
+                        <port>9</port>
+                    </host>
+                    <realm>realm</realm>
+                    <scheme>scheme</scheme>
+                    <credentials>
+                        <username>username</username>
+                        <password>pwd</password>
+                        <passwordKey>
+                            <value>/path/to/my.key</value>
+                            <source>file</source>
+                        </passwordKey>
+                    </credentials>
+                </proxySettings>
+                <disableIfModifiedSince>true</disableIfModifiedSince>
+                <headers>
+                    <header name="head1"></header>
+                    <header name="head2">value2</header>
+                </headers>
+            </fetcher>
+        </httpFetchers>
+
+        <referenceFilters>
+            <filter class="com.norconex.collector.core.filter.impl.ExtensionReferenceFilter"
+                    onMatch="exclude" caseSensitive="true">xml,pdf,doc</filter>
+            <filter class=".ReferenceFilter" onMatch="exclude">
+                <valueMatcher ignoreCase="false" method="regex">.*example.com.*</valueMatcher>
+            </filter>
+            <filter class="com.norconex.collector.http.filter.impl.SegmentCountURLFilter"
+                    onMatch="exclude" count="5" duplicate="false" separator="/" />
+        </referenceFilters>
+        <robotsTxt ignore="false" class="com.norconex.collector.http.robot.impl.StandardRobotsTxtProvider"/>
+        <sitemapResolver ignore="false" lenient="true"
+                         class="com.norconex.collector.http.sitemap.impl.GenericSitemapResolver">
+            <tempDir>/tmp/</tempDir>
+            <path>/path1/</path>
+            <path>/path2/</path>
+        </sitemapResolver>
+
+        <recrawlableResolver class="com.norconex.collector.http.recrawl.impl.GenericRecrawlableResolver"
+                             sitemapSupport="last" >
+            <minFrequency applyTo="reference" caseSensitive="false" value="always" >
+                .*\.pdf
+            </minFrequency>
+            <minFrequency applyTo="contentType" caseSensitive="true" value="3000" >
+                text/html
+            </minFrequency>
+        </recrawlableResolver>
+
+        <metadataFilters>
+            <filter class="com.norconex.collector.core.filter.impl.ExtensionReferenceFilter"
+                    onMatch="exclude" caseSensitive="true">xml,pdf,doc</filter>
+            <filter class=".ReferenceFilter" onMatch="exclude">
+                <valueMatcher ignoreCase="true" method="regex">.*example.com.*</valueMatcher>
+            </filter>
+            <filter class=".MetadataFilter" onMatch="include">
+                <valueMatcher ignoreCase="true" method="regex">Blah.*</valueMatcher>
+                <fieldMatcher>title</fieldMatcher>
+            </filter>
+            <filter class="com.norconex.collector.http.filter.impl.SegmentCountURLFilter"
+                    onMatch="exclude" count="5" duplicate="false" separator="/" />
+        </metadataFilters>
+        <canonicalLinkDetector class="com.norconex.collector.http.canon.impl.GenericCanonicalLinkDetector"
+                               ignore="false">
+            <contentTypes>text/html</contentTypes>
+        </canonicalLinkDetector>
+        <metadataChecksummer
+                class="com.norconex.collector.http.checksum.impl.LastModifiedMetadataChecksummer"
+                disabled="false" keep="true" toField="myfield" />
+
+        <robotsMeta ignore="false"
+                    class="com.norconex.collector.http.robot.impl.StandardRobotsMetaProvider">
+            <headersPrefix>prefix</headersPrefix>
+        </robotsMeta>
+        <linkExtractors>
+            <extractor class="com.norconex.collector.http.link.impl.HtmlLinkExtractor"
+                       maxURLLength="999" ignoreNofollow="false"
+                       commentsEnabled="true" charset="UTF-8" >
+                <restrictTo>
+                    <fieldMatcher>document.contentType</fieldMatcher>
+                    <valueMatcher>text/html</valueMatcher>
+                </restrictTo>
+                <schemes>https</schemes>
+                <tags>
+                    <tag name="a" attribute="href" />
+                    <tag name="frame" attribute="src" />
+                    <tag name="iframe" attribute="src" />
+                    <tag name="img" attribute="src" />
+                    <tag name="meta" attribute="http-equiv" />
+                </tags>
+                <extractBetween caseSensitive="true">
+                    <start>start1</start><end>end1</end>
+                </extractBetween>
+                <extractBetween caseSensitive="false">
+                    <start>start2</start><end>end2</end>
+                </extractBetween>
+                <noExtractBetween caseSensitive="true">
+                    <start>nostart1</start><end>noend1</end>
+                </noExtractBetween>
+                <noExtractBetween caseSensitive="false">
+                    <start>nostart2</start><end>noend2</end>
+                </noExtractBetween>
+            </extractor>
+            <extractor class="com.norconex.collector.http.link.impl.HtmlLinkExtractor">
+                <tags>
+                    <tag name="a" attribute="href" />
+                    <tag name="script" attribute="src" />
+                </tags>
+            </extractor>
+            <extractor class="com.norconex.collector.http.link.impl.RegexLinkExtractor"
+                       maxURLLength="1234" charset="iso-8859-1">
+                <restrictTo>
+                    <fieldMatcher>document.contentType</fieldMatcher>
+                    <valueMatcher method="regex">ct.*</valueMatcher>
+                </restrictTo>
+                <restrictTo>
+                    <fieldMatcher>document.reference</fieldMatcher>
+                    <valueMatcher method="regex">ref.*</valueMatcher>
+                </restrictTo>
+                <linkExtractionPatterns>
+                    <pattern><match>\[(.*?)\]</match><replace>$1</replace></pattern>
+                    <pattern><match>http://.*?\.html</match></pattern>
+                </linkExtractionPatterns>
+            </extractor>
+            <extractor class="com.norconex.collector.http.link.impl.XMLFeedLinkExtractor">
+                <restrictTo>
+                    <fieldMatcher>document.contentType</fieldMatcher>
+                    <valueMatcher method="regex">.*</valueMatcher>
+                </restrictTo>
+                <restrictTo>
+                    <fieldMatcher>document.reference</fieldMatcher>
+                    <valueMatcher method="regex">.*</valueMatcher>
+                </restrictTo>
+            </extractor>
+        </linkExtractors>
+        <documentFilters>
+            <filter class="com.norconex.collector.core.filter.impl.ExtensionReferenceFilter"
+                    onMatch="exclude" caseSensitive="true">xml,pdf,doc</filter>
+            <filter class=".ReferenceFilter" onMatch="exclude">
+                <valueMatcher ignoreCase="true" method="regex">.*example.com.*</valueMatcher>
+            </filter>
+            <filter class=".MetadataFilter" onMatch="include">
+                <fieldMatcher>title</fieldMatcher>
+                <valueMatcher ignoreCase="true" method="regex">Blah.*</valueMatcher>
+            </filter>
+            <filter class="com.norconex.collector.http.filter.impl.SegmentCountURLFilter"
+                    onMatch="exclude" count="5" duplicate="false" separator="/" />
+        </documentFilters>
+        <preImportProcessors>
+            <processor class="com.norconex.collector.http.processor.impl.FeaturedImageProcessor">
+                <pageContentTypePattern>text/html</pageContentTypePattern>
+                <domSelector>dom dom</domSelector>
+                <minDimensions>425x312</minDimensions>
+                <largest>true</largest>
+                <imageCacheSize>1234</imageCacheSize>
+                <imageCacheDir>/some/path</imageCacheDir>
+                <storage>url, inline</storage>
+                <scaleQuality>medium</scaleQuality>
+                <scaleDimensions>25</scaleDimensions>
+                <scaleStretch>true</scaleStretch>
+                <imageFormat>gif</imageFormat>
+                <storageDiskDir structure="datetime">/some/other/path</storageDiskDir>
+                <storageDiskField>diskField</storageDiskField>
+                <storageInlineField>inlineField</storageInlineField>
+                <storageUrlField>urlField</storageUrlField>
+            </processor>
+        </preImportProcessors>
+
+        <!--v3-importer.xml-->
+        <importer>
+            <tempDir>/some/path/</tempDir>
+            <maxMemoryInstance>99</maxMemoryInstance>
+            <maxMemoryPool>99</maxMemoryPool>
+            <parseErrorsSaveDir>/some/path</parseErrorsSaveDir>
+            <preParseHandlers>
+                <handler class="com.norconex.importer.handler.filter.impl.DateMetadataFilter"
+                         onMatch="include" field="FIELD" format="FORMAT" >
+                    <restrictTo caseSensitive="true" field="bfield">.*blah</restrictTo>
+                    <condition operator="ge" date="TODAY-7" />
+                    <condition operator="lt" date="TODAY" />
+                </handler>
+                <handler class="com.norconex.importer.handler.filter.impl.DOMContentFilter"
+                         onMatch="exclude"  caseSensitive="true" sourceCharset="UTF-8"
+                         selector="selector" extract="text" parser="html">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <regex>.*</regex>
+                </handler>
+                <handler class="com.norconex.importer.handler.filter.impl.EmptyMetadataFilter"
+                         onMatch="include" fields="FIELD1, FIELD2" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.filter.impl.NumericMetadataFilter"
+                         onMatch="include" field="age" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <condition operator="ge" number="20" />
+                    <condition operator="lt" number="30" />
+                </handler>
+                <handler class="com.norconex.importer.handler.filter.impl.RegexContentFilter"
+                         onMatch="include"  caseSensitive="true"
+                         sourceCharset="UTF-8" maxReadSize="9999">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <regex>.*regex.*</regex>
+                </handler>
+                <handler class="com.norconex.importer.handler.filter.impl.RegexMetadataFilter"
+                         onMatch="include" field="title">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <regex>.*potato.*</regex>
+                </handler>
+                <handler class="com.norconex.importer.handler.filter.impl.RegexReferenceFilter"
+                         onMatch="include">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <regex>.*/login/.*</regex>
+                </handler>
+                <handler class="com.norconex.importer.handler.filter.impl.ScriptFilter"
+                         engineName="MyEngine" onMatch="include"
+                         sourceCharset="UTF-8" maxReadSize="999">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <script>[CDATA[
+                        var myvar = "test";
+                        ]]</script>
+                </handler>
+                <handler class="com.norconex.importer.handler.splitter.impl.CsvSplitter"
+                         separatorCharacter="A" quoteCharacter="B" escapeCharacter="C"
+                         useFirstRowAsFields="false" linesToSkip="0" referenceColumn="columnA"
+                         contentColumns="columnB, columnC, columnD">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.splitter.impl.DOMSplitter"
+                         selector="div.contact" sourceCharset="UTF-8" parser="xml">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.splitter.impl.TranslatorSplitter"
+                         api="microsoft" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <ignoreContent>true</ignoreContent>
+                    <ignoreNonTranslatedFields>false</ignoreNonTranslatedFields>
+                    <fieldsToTranslate>field1, field2</fieldsToTranslate>
+                    <sourceLanguageField>lang</sourceLanguageField>
+                    <sourceLanguage>en</sourceLanguage>
+                    <targetLanguages>fr,it</targetLanguages>
+                    <clientId>blahid</clientId>
+                    <clientSecret>blahsecret</clientSecret>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.CharacterCaseTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <characterCase fieldName="title" type="lower" applyTo="field" />
+                    <characterCase fieldName="title" type="string" applyTo="value" />
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.CharsetTagger"
+                         sourceCharset="ISO-8859-1" targetCharset="UTF-8">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <fieldsRegex>description</fieldsRegex>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.ConstantTagger"
+                         onConflict="replace">
+                    <constant name="source">web</constant>
+                    <constant name="department">HR</constant>
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.CopyTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <copy fromField="creator"   toField="author" overwrite="true" />
+                    <copy fromField="publisher" toField="author" overwrite="true" />
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.CountMatchesTagger"
+                         sourceCharset="UTF-8" maxReadSize="999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <countMatches fromField="ff1" toField="tf1"
+                                  caseSensitive="false" regex="true">.*</countMatches>
+                    <countMatches fromField="ff2" toField="tf2"
+                                  caseSensitive="false" regex="true">.*</countMatches>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.CurrentDateTagger"
+                         field="datefield" format="yyy-MM-dd" locale="fr" overwrite="true" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.DateFormatTagger"
+                         fromField="FF"  toField="TF" fromLocale="fr" toLocale="en"
+                         toFormat="EPOCH" keepBadDates="false" overwrite="true" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <fromFormat>yyyy-MM-dd</fromFormat>
+                    <fromFormat>yy-MM-dd</fromFormat>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.DebugTagger"
+                         logFields="field1,field2"
+                         logContent="true"
+                         logLevel="INFO" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.DeleteTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <fields>field1, field2</fields>
+                    <fieldsRegex>^[Xx]-.*</fieldsRegex>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.DocumentLengthTagger"
+                         field="docSize" overwrite="true" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.DOMTagger"
+                         fromField="FROMFIELD" parser="xml" sourceCharset="UTF-8">
+                    <restrictTo caseSensitive="true" field="bfield">.*blah</restrictTo>
+                    <restrictTo caseSensitive="false" field="afield">.*</restrictTo>
+                    <dom selector="a selector" toField="TODOFIELD1"
+                         overwrite="false"     extract="ownText"
+                         matchBlanks="false"   defaultValue="NOVALUE1" />
+                    <dom selector="another selector" toField="TODOFIELD2"
+                         extract="tagName"     defaultValue="NOVALUE2" />
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.ExternalTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <command inputDisabled="true">
+                        c:\Apps\myapp.exe ${INPUT} ${OUTPUT_META} ${REFERENCE}
+                    </command>
+                    <metadata inputFormat="json" outputFormat="xml">
+                        <pattern field="field1">&lt;title&gt;&lt;(title)&gt;</pattern>
+                        <pattern fieldGroup="2" valueGroup="1" caseSensitive="true">(.*?):(.*)</pattern>
+                    </metadata>
+                    <environment>
+                        <variable name="var1">blah</variable>
+                        <variable name="var2">blah blah</variable>
+                    </environment>
+                    <tempDir>/some/dir</tempDir>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.ForceSingleValueTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <singleValue field="authors" action="mergeWith:, "/>
+                    <singleValue field="title" action="keepLast"/>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.HierarchyTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <hierarchy fromField="FF1" toField="TF1"
+                               fromSeparator="/"  toSeparator="-" overwrite="true" />
+                    <hierarchy fromField="FF2" toField="TF2"
+                               fromSeparator="--"  toSeparator="|" overwrite="false" />
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.KeepOnlyTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <fields>title, description</fields>
+                    <fieldsRegex>collector\..*</fieldsRegex>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.LanguageTagger"
+                         keepProbabilities="true" sourceCharset="UTF-8"
+                         maxReadSize="999" fallbackLanguage="en" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <languages>en,fr, it, es</languages>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.MergeTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <merge toField="title" deleteFromFields="true"
+                           singleValue="true" singleValueSeparator="," >
+                        <fromFields>pubname</fromFields>
+                        <fromFieldsRegex>.*title</fromFieldsRegex>
+                    </merge>
+                    <merge toField="TF"><fromFields>desc, dc.description</fromFields></merge>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.RenameTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <rename fromField="FF1" toField="TF1" overwrite="true" />
+                    <rename fromField="FF2" toField="TF2" overwrite="false" />
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.ReplaceTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <replace fromField="FF" toField="TF" caseSensitive="true"
+                             regex="false" wholeMatch="false" replaceAll="true">
+                        <fromValue>apple</fromValue><toValue>orange</toValue>
+                    </replace>
+                    <replace fromField="FF2" toField="TF2" caseSensitive="true"
+                             regex="false" wholeMatch="false" replaceAll="true">
+                        <fromValue>_</fromValue><toValue xml:space="preserve"> </toValue>
+                    </replace>
+                    <replace fromField="FF3" toField="TF3" caseSensitive="true"
+                             regex="false" wholeMatch="false" replaceAll="true">
+                        <fromValue>apple</fromValue>
+                    </replace>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.ScriptTagger"
+                         engineName="myEngine" sourceCharset="UTF8" maxReadSize="999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <script>var myscript = "blah";</script>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.SplitTagger">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <split fromField="ff1" toField="tf1" regex="true">
+                        <separator>/</separator>
+                    </split>
+                    <split fromField="ff2" toField="tf2" regex="false">
+                        <separator>--</separator>
+                    </split>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.TextBetweenTagger"
+                         inclusive="true" caseSensitive="false"
+                         sourceCharset="UTF-8" maxReadSize="9999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <textBetween name="targetFieldName">
+                        <start>OPEN</start><end>CLOSE</end>
+                    </textBetween>
+                    <textBetween name="targetFieldName">
+                        <start>[</start><end>]</end>
+                    </textBetween>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.TextPatternTagger"
+                         sourceCharset="UTF-8" maxReadSize="9999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <pattern field="field1" valueGroup="1" fieldGroup="2">potato</pattern>
+                    <pattern field="field2" caseSensitive="true">apple</pattern>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.TextStatisticsTagger"
+                         sourceCharset="UTF-8" fieldName="myfield" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.TitleGeneratorTagger"
+                         fromField="ff" toField="tf" overwrite="false" titleMaxLength="200"
+                         detectHeading="true" detectHeadingMinLength="20"
+                         detectHeadingMaxLength="200" sourceCharset="UTF-8" maxReadSize="9999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.TruncateTagger"
+                         fromField="field1"
+                         maxLength="50"
+                         toField="field2"
+                         overwrite="true"
+                         appendHash="true"
+                         suffix="!!!" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.tagger.impl.UUIDTagger"
+                         field="uuidField" overwrite="true" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.transformer.impl.CharsetTransformer"
+                         sourceCharset="ISO-8859-1" targetCharset="UTF-8">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                </handler>
+                <handler class="com.norconex.importer.handler.transformer.impl.ExternalTransformer">
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <command>c:\Apps\myapp.exe ${INPUT} ${OUTPUT} ${REFERENCE}</command>
+                    <metadata inputFormat="json" outputFormat="xml">
+                        <pattern field="field1">&lt;title&gt;&lt;(title)&gt;</pattern>
+                        <pattern fieldGroup="2" valueGroup="1" caseSensitive="true">(.*?):(.*)</pattern>
+                    </metadata>
+                    <environment>
+                        <variable name="var1">blah</variable>
+                        <variable name="var2">blah blah</variable>
+                    </environment>
+                    <tempDir>/some/dir</tempDir>
+                </handler>
+                <handler class="com.norconex.importer.handler.transformer.impl.ReduceConsecutivesTransformer"
+                         caseSensitive="false" sourceCharset="UTF-8" maxReadSize="999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <reduce>hello\s</reduce>
+                    <reduce>\n\n</reduce>
+                </handler>
+                <handler class="com.norconex.importer.handler.transformer.impl.ReplaceTransformer"
+                         caseSensitive="false" sourceCharset="UTF-8" maxReadSize="999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <replace><fromValue>apple</fromValue><toValue>orange</toValue></replace>
+                    <replace><fromValue>one</fromValue><toValue>two</toValue></replace>
+                    <replace><fromValue>blah</fromValue></replace>
+                </handler>
+                <handler class="com.norconex.importer.handler.transformer.impl.ScriptTransformer"
+                         engineName="myEngine" sourceCharset="blah" maxReadSize="999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <script>var blah = 'blah';</script>
+                </handler>
+                <handler class="com.norconex.importer.handler.transformer.impl.StripAfterTransformer"
+                         inclusive="true" caseSensitive="false" sourceCharset="UTF-8" maxReadSize="999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <stripAfterRegex>blah</stripAfterRegex>
+                </handler>
+                <handler class="com.norconex.importer.handler.transformer.impl.StripBeforeTransformer"
+                         inclusive="true" caseSensitive="false" sourceCharset="UTF-8" maxReadSize="999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <stripBeforeRegex>blah</stripBeforeRegex>
+                </handler>
+                <handler class="com.norconex.importer.handler.transformer.impl.StripBetweenTransformer"
+                         inclusive="true" caseSensitive="false" sourceCharset="UTF-8" maxReadSize="999" >
+                    <restrictTo caseSensitive="false" field="FIELD">.*</restrictTo>
+                    <stripBetween><start>OPEN</start><end>CLOSE</end></stripBetween>
+                    <stripBetween><start>A</start><end>Z</end></stripBetween>
+                </handler>
+                <handler class="com.norconex.importer.handler.transformer.impl.SubstringTransformer"
+                         begin="100" end="10000"/>
+            </preParseHandlers>
+            <documentParserFactory>
+                <ocr path="/path/example/">
+                    <languages>en, fr</languages>
+                    <contentTypes>image/jpeg, image/png</contentTypes>
+                </ocr>
+                <ignoredContentTypes>application/xml</ignoredContentTypes>
+                <embedded>
+                    <splitContentTypes>application/zip</splitContentTypes>
+                    <noExtractEmbeddedContentTypes>image/.*</noExtractEmbeddedContentTypes>
+                    <noExtractContainerContentTypes>application/pdf</noExtractContainerContentTypes>
+                </embedded>
+                <fallbackParser class="com.norconex.importer.parser.impl.FallbackParser" />
+                <parsers>
+                    <parser contentType="application/pdf"
+                            class="com.norconex.importer.parser.impl.ExternalParser" >
+                        <command>c:\Apps\myapp.exe ${INPUT} ${OUTPUT}</command>
+                        <metadata inputFormat="xml" outputFormat="json">
+                            <pattern field="field1">&lt;title&gt;&lt;(title)&gt;</pattern>
+                            <pattern fieldGroup="2" valueGroup="1" caseSensitive="true">(.*?):(.*)</pattern>
+                        </metadata>
+                        <environment>
+                            <variable name="var1">blah</variable>
+                            <variable name="var2">blah blah</variable>
+                        </environment>
+                        <tempDir>/some/dir</tempDir>
+                    </parser>
+                </parsers>
+            </documentParserFactory>
+            <postParseHandlers>
+                <handler class="com.norconex.importer.handler.tagger.impl.DebugTagger"/>
+                <handler class="com.norconex.importer.handler.transformer.impl.CharsetTransformer"/>
+                <handler class="com.norconex.importer.handler.tagger.impl.LanguageTagger"/>
+                <handler class="com.norconex.importer.handler.splitter.impl.DOMSplitter" selector="blah"/>
+                <handler class="com.norconex.importer.handler.filter.impl.EmptyMetadataFilter" fields="FIELD1" />
+            </postParseHandlers>
+            <responseProcessors>
+                <responseProcessor
+                        class="com.norconex.importer.response.DummyResponseProcessor" />
+            </responseProcessors>
+        </importer>
+
+        <documentChecksummer
+                class="com.norconex.collector.core.checksum.impl.MD5DocumentChecksummer"
+                disabled="false" keep="true" toField="afield">
+            <fieldMatcher method="csv">field1,field2</fieldMatcher>
+        </documentChecksummer>
+        <postImportProcessors>
+            <processor class="com.norconex.collector.http.processor.impl.MockHttpDocumentProcessor"/>
+        </postImportProcessors>
+        <postImportLinks keep="true">
+            <fieldMatcher method="wildcard">myurls*</fieldMatcher>
+        </postImportLinks>
+        <spoiledReferenceStrategizer
+                class="com.norconex.collector.core.spoil.impl.GenericSpoiledReferenceStrategizer"
+                fallbackStrategy="DELETE">
+            <mapping state="NOT_FOUND" strategy="DELETE" />
+            <mapping state="BAD_STATUS" strategy="DELETE" />
+            <mapping state="ERROR" strategy="IGNORE" />
+        </spoiledReferenceStrategizer>
+
+
+        <committers>
+            <committer class="com.norconex.committer.core3.fs.impl.JSONFileCommitter">
+                <directory>/tmp/somepath</directory>
+            </committer>
+        </committers>
+
+    </crawlerDefaults>
+
+    <crawlers>
+        <crawler id="myCrawler1">
+            <numThreads>2</numThreads>
+            <maxDocuments>222</maxDocuments>
+            <orphansStrategy>DELETE</orphansStrategy>
+        </crawler>
+        <crawler id="myCrawler2">
+            <numThreads>3</numThreads>
+            <maxDocuments>333</maxDocuments>
+            <orphansStrategy>IGNORE</orphansStrategy>
+        </crawler>
+    </crawlers>
+
+
+</httpcollector>

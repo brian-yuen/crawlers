@@ -1,0 +1,1103 @@
+<crawlSession id="Collector/CrawlSession Config">
+  <workDir>/workdir</workDir>
+  <eventListeners>
+    <listener
+        class="com.norconex.crawler.web.crawler.event.impl.URLStatusCrawlerEventListener">
+      <statusCodes>404</statusCodes>
+      <outputDir>/tmp/path</outputDir>
+      <fileNamePrefix>broken-links</fileNamePrefix>
+    </listener>
+  </eventListeners>
+  <crawlerDefaults>
+    <start
+        async="true"
+        includeSubdomains="true"
+        stayOnDomain="true"
+        stayOnPort="true"
+        stayOnProtocol="true">
+      <ref>http://www.example.com</ref>
+      <ref>http://www.sample.com</ref>
+      <refsFile>/local/path/to/a/file/full/of/urls.txt</refsFile>
+      <sitemap>http://www.somewhere.com/sitemap.xml</sitemap>
+      <provider class="com.norconex.crawler.web.crawler.MockStartURLsProvider"/>
+    </start>
+    <keepReferencedLinks>INSCOPE, OUTSCOPE, MAXDEPTH</keepReferencedLinks>
+    <maxDepth>99</maxDepth>
+    <numThreads>1</numThreads>
+    <maxDocuments>111</maxDocuments>
+    <orphansStrategy>PROCESS</orphansStrategy>
+    <metadataFetchSupport>OPTIONAL</metadataFetchSupport>
+    <documentFetchSupport>DISABLED</documentFetchSupport>
+    <eventListeners>
+      <listener class="URLStatusCrawlerEventListener">
+        <statusCodes>200</statusCodes>
+        <outputDir>/tmp/okpath</outputDir>
+        <fileNamePrefix>good-pages</fileNamePrefix>
+      </listener>
+    </eventListeners>
+    <urlNormalizer
+        class="com.norconex.crawler.web.url.impl.GenericURLNormalizer">
+      <normalizations>
+        lowerCaseSchemeHost, upperCaseEscapeSequence,
+        decodeUnreservedCharacters, removeDefaultPort
+      </normalizations>
+      <replacements>
+        <replace>
+          <match>A</match>
+          <replacement>B</replacement>
+        </replace>
+        <replace>
+          <match>C</match>
+        </replace>
+      </replacements>
+    </urlNormalizer>
+    <delay
+        class="com.norconex.crawler.web.delay.impl.GenericDelayResolver"
+        default="1s"
+        ignoreRobotsCrawlDelay="true"
+        scope="crawler">
+      <schedule
+          dayOfMonth="from 1 to 10"
+          dayOfWeek="from Monday to Friday"
+          time="from 8:00 to 16:30">
+        10s
+      </schedule>
+      <schedule
+          dayOfMonth="from 11 to 28"
+          dayOfWeek="from Saturday to Sunday"
+          time="from 6:00 to 7:30">
+        20000
+      </schedule>
+    </delay>
+    <dataStoreEngine
+        class="com.norconex.crawler.core.store.impl.mvstore.MVStoreDataStoreEngine">
+      <pageSplitSize>1000</pageSplitSize>
+      <compress>1</compress>
+      <cacheConcurrency>0</cacheConcurrency>
+      <cacheSize>1000</cacheSize>
+      <autoCompactFillRate>100</autoCompactFillRate>
+      <autoCommitBufferSize>100</autoCommitBufferSize>
+      <autoCommitDelay>100</autoCommitDelay>
+    </dataStoreEngine>
+    <fetchers maxRetries="5" retryDelay="10 seconds">
+      <fetcher class="com.norconex.crawler.web.fetch.impl.GenericHttpFetcher">
+        <userAgent>Here we crawl!</userAgent>
+        <validStatusCodes>200,201</validStatusCodes>
+        <notFoundStatusCodes>404,401</notFoundStatusCodes>
+        <forceContentTypeDetection>true</forceContentTypeDetection>
+        <forceCharsetDetection>true</forceCharsetDetection>
+        <headersPrefix>myprefix</headersPrefix>
+        <detectContentType>true</detectContentType>
+        <detectCharset>true</detectCharset>
+        <redirectURLProvider fallbackCharset="UTF-8"/>
+        <cookieSpec>ignore</cookieSpec>
+        <authentication>
+          <formParams>
+            <param name="param1">value1</param>
+            <param name="param2">value2</param>
+          </formParams>
+          <method>digest</method>
+          <credentials>
+            <username>user</username>
+            <password>pass</password>
+            <passwordKey>
+              <value>/path/to/my.key</value>
+              <source>file</source>
+            </passwordKey>
+          </credentials>
+          <formUsernameField>userfield</formUsernameField>
+          <formPasswordField>pwdfield</formPasswordField>
+          <formSelector>#myform</formSelector>
+          <formCharset>UTF-8</formCharset>
+          <url>authURL</url>
+          <host>
+            <name>host</name>
+            <port>9</port>
+          </host>
+          <realm>authRealm</realm>
+          <workstation>authWorkstation</workstation>
+          <domain>authDomain</domain>
+          <preemptive>true</preemptive>
+        </authentication>
+        <connectionTimeout>1</connectionTimeout>
+        <socketTimeout>2 minutes</socketTimeout>
+        <connectionRequestTimeout>3 min 30s</connectionRequestTimeout>
+        <connectionCharset>US-ASCII</connectionCharset>
+        <expectContinueEnabled>true</expectContinueEnabled>
+        <maxRedirects>4</maxRedirects>
+        <localAddress>address</localAddress>
+        <maxConnections>5</maxConnections>
+        <maxConnectionsPerRoute>6</maxConnectionsPerRoute>
+        <maxConnectionIdleTime>7</maxConnectionIdleTime>
+        <maxConnectionInactiveTime>8</maxConnectionInactiveTime>
+        <trustAllSSLCertificates>true</trustAllSSLCertificates>
+        <sniDisabled>true</sniDisabled>
+        <sslProtocols>item1,item2</sslProtocols>
+        <proxySettings>
+          <host>
+            <name>host</name>
+            <port>9</port>
+          </host>
+          <realm>realm</realm>
+          <scheme>scheme</scheme>
+          <credentials>
+            <username>username</username>
+            <password>pwd</password>
+            <passwordKey>
+              <value>/path/to/my.key</value>
+              <source>file</source>
+            </passwordKey>
+          </credentials>
+        </proxySettings>
+        <ifModifiedSinceDisabled>true</ifModifiedSinceDisabled>
+        <headers>
+          <header name="head1"></header>
+          <header name="head2">value2</header>
+        </headers>
+      </fetcher>
+    </fetchers>
+    <referenceFilters>
+      <filter
+          class="com.norconex.crawler.core.filter.impl.ExtensionReferenceFilter"
+          ignoreCase="false"
+          onMatch="exclude">
+        xml,pdf,doc
+      </filter>
+      <filter class=".GenericReferenceFilter" onMatch="exclude">
+        <valueMatcher ignoreCase="false" method="regex">.*example.com.*</valueMatcher>
+      </filter>
+      <filter
+          class="com.norconex.crawler.web.filter.impl.SegmentCountURLFilter"
+          count="5"
+          duplicate="false"
+          onMatch="exclude">
+        <separator>/</separator>
+      </filter>
+    </referenceFilters>
+    <robotsTxt
+        class="com.norconex.crawler.web.robot.impl.StandardRobotsTxtProvider"/>
+    <sitemapResolver
+        class="com.norconex.crawler.web.sitemap.impl.GenericSitemapResolver"
+        lenient="true">
+    </sitemapResolver>
+    <sitemapLocator
+        class="com.norconex.crawler.web.sitemap.impl.GenericSitemapLocator">
+      <paths>
+        <path>/path1/</path>
+        <path>/path2/</path>
+      </paths>
+    </sitemapLocator>
+    <recrawlableResolver
+        class="com.norconex.crawler.web.recrawl.impl.GenericRecrawlableResolver"
+        sitemapSupport="last">
+      <minFrequency applyTo="reference" value="always">
+        <matcher ignoreCase="true" method="regex">.*\.pdf</matcher>
+      </minFrequency>
+      <minFrequency applyTo="contentType" value="3000">
+        <matcher ignoreCase="false" method="regex">text/html</matcher>
+      </minFrequency>
+    </recrawlableResolver>
+    <metadataFilters>
+      <filter
+          class="com.norconex.crawler.core.filter.impl.ExtensionReferenceFilter"
+          ignoreCase="false"
+          onMatch="exclude">
+        xml,pdf,doc
+      </filter>
+      <filter class=".GenericReferenceFilter" onMatch="exclude">
+        <valueMatcher ignoreCase="true" method="regex">.*example.com.*</valueMatcher>
+      </filter>
+      <filter class=".GenericMetadataFilter" onMatch="include">
+        <valueMatcher ignoreCase="true" method="regex">Blah.*</valueMatcher>
+        <fieldMatcher>title</fieldMatcher>
+      </filter>
+      <filter
+          class="com.norconex.crawler.web.filter.impl.SegmentCountURLFilter"
+          count="5"
+          duplicate="false"
+          onMatch="exclude">
+        <separator>/</separator>
+      </filter>
+    </metadataFilters>
+    <canonicalLinkDetector
+        class="com.norconex.crawler.web.canon.impl.GenericCanonicalLinkDetector">
+      <contentTypes>text/html</contentTypes>
+    </canonicalLinkDetector>
+    <metadataChecksummer
+        class="com.norconex.crawler.web.checksum.impl.LastModifiedMetadataChecksummer"
+        keep="true"
+        toField="myfield"/>
+    <robotsMeta
+        class="com.norconex.crawler.web.robot.impl.StandardRobotsMetaProvider">
+      <headersPrefix>prefix</headersPrefix>
+    </robotsMeta>
+    <linkExtractors>
+      <extractor
+          charset="UTF-8"
+          class="com.norconex.crawler.web.link.impl.HtmlLinkExtractor"
+          commentsEnabled="true"
+          ignoreNofollow="false"
+          maxURLLength="999">
+        <restrictTo>
+          <fieldMatcher>document.contentType</fieldMatcher>
+          <valueMatcher>text/html</valueMatcher>
+        </restrictTo>
+        <schemes>https</schemes>
+        <tags>
+          <tag attribute="href" name="a"/>
+          <tag attribute="src" name="frame"/>
+          <tag attribute="src" name="iframe"/>
+          <tag attribute="src" name="img"/>
+          <tag attribute="http-equiv" name="meta"/>
+        </tags>
+        <extractBetween ignoreCase="false">
+          <start>start1</start>
+          <end>end1</end>
+        </extractBetween>
+        <extractBetween ignoreCase="true">
+          <start>start2</start>
+          <end>end2</end>
+        </extractBetween>
+        <noExtractBetween ignoreCase="false">
+          <start>nostart1</start>
+          <end>noend1</end>
+        </noExtractBetween>
+        <noExtractBetween ignoreCase="true">
+          <start>nostart2</start>
+          <end>noend2</end>
+        </noExtractBetween>
+      </extractor>
+      <extractor class="com.norconex.crawler.web.link.impl.HtmlLinkExtractor">
+        <tags>
+          <tag attribute="href" name="a"/>
+          <tag attribute="src" name="script"/>
+        </tags>
+      </extractor>
+      <extractor
+          charset="iso-8859-1"
+          class="com.norconex.crawler.web.link.impl.RegexLinkExtractor"
+          maxURLLength="1234">
+        <restrictTo>
+          <fieldMatcher>document.contentType</fieldMatcher>
+          <valueMatcher method="regex">ct.*</valueMatcher>
+        </restrictTo>
+        <restrictTo>
+          <fieldMatcher>document.reference</fieldMatcher>
+          <valueMatcher method="regex">ref.*</valueMatcher>
+        </restrictTo>
+        <linkExtractionPatterns>
+          <pattern>
+            <match>\[(.*?)\]</match>
+            <replace>$1</replace>
+          </pattern>
+          <pattern>
+            <match>http://.*?\.html</match>
+          </pattern>
+        </linkExtractionPatterns>
+      </extractor>
+      <extractor
+          class="com.norconex.crawler.web.link.impl.XMLFeedLinkExtractor">
+        <restrictTo>
+          <fieldMatcher>document.contentType</fieldMatcher>
+          <valueMatcher method="regex">.*</valueMatcher>
+        </restrictTo>
+        <restrictTo>
+          <fieldMatcher>document.reference</fieldMatcher>
+          <valueMatcher method="regex">.*</valueMatcher>
+        </restrictTo>
+      </extractor>
+    </linkExtractors>
+    <documentFilters>
+      <filter
+          class="com.norconex.crawler.core.filter.impl.ExtensionReferenceFilter"
+          ignoreCase="false"
+          onMatch="exclude">
+        xml,pdf,doc
+      </filter>
+      <filter class=".GenericReferenceFilter" onMatch="exclude">
+        <valueMatcher ignoreCase="true" method="regex">.*example.com.*</valueMatcher>
+      </filter>
+      <filter class=".GenericMetadataFilter" onMatch="include">
+        <fieldMatcher>title</fieldMatcher>
+        <valueMatcher ignoreCase="true" method="regex">Blah.*</valueMatcher>
+      </filter>
+      <filter
+          class="com.norconex.crawler.web.filter.impl.SegmentCountURLFilter"
+          count="5"
+          duplicate="false"
+          onMatch="exclude">
+        <separator>/</separator>
+      </filter>
+    </documentFilters>
+    <preImportProcessors>
+      <processor
+          class="com.norconex.crawler.web.processor.impl.FeaturedImageProcessor">
+        <pageContentTypePattern>text/html</pageContentTypePattern>
+        <domSelector>dom dom</domSelector>
+        <minDimensions>425x312</minDimensions>
+        <largest>true</largest>
+        <imageCacheSize>1234</imageCacheSize>
+        <imageCacheDir>/some/path</imageCacheDir>
+        <storage>url, inline</storage>
+        <scaleQuality>medium</scaleQuality>
+        <scaleDimensions>25</scaleDimensions>
+        <scaleStretch>true</scaleStretch>
+        <imageFormat>gif</imageFormat>
+        <storageDiskDir structure="datetime">/some/other/path</storageDiskDir>
+        <storageDiskField>diskField</storageDiskField>
+        <storageInlineField>inlineField</storageInlineField>
+        <storageUrlField>urlField</storageUrlField>
+      </processor>
+    </preImportProcessors>
+    <!-- v3-importer.xml -->
+    <importer>
+      <tempDir>/some/path/</tempDir>
+      <maxMemoryInstance>99</maxMemoryInstance>
+      <maxMemoryPool>99</maxMemoryPool>
+      <preParseHandlers>
+        <handler
+            class="com.norconex.importer.handler.filter.impl.DateMetadataFilter"
+            field="FIELD"
+            format="FORMAT"
+            onMatch="include">
+          <restrictTo>
+            <fieldMatcher>bfield</fieldMatcher>
+            <valueMatcher>.*blah</valueMatcher>
+          </restrictTo>
+          <condition date="TODAY-7" operator="ge"/>
+          <condition date="TODAY" operator="lt"/>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.filter.impl.DOMFilter"
+            extract="text"
+            ignoreCase="false"
+            onMatch="exclude"
+            parser="html"
+            selector="selector"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <regex>.*</regex>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.filter.impl.EmptyMetadataFilter"
+            fields="FIELD1, FIELD2"
+            onMatch="include">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.filter.impl.NumericMetadataFilter"
+            field="age"
+            onMatch="include">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <condition number="20" operator="ge"/>
+          <condition number="30" operator="lt"/>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.filter.impl.RegexContentFilter"
+            ignoreCase="false"
+            maxReadSize="9999"
+            onMatch="include"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <regex>.*regex.*</regex>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.filter.impl.RegexMetadataFilter"
+            field="title"
+            onMatch="include">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <regex>.*potato.*</regex>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.filter.impl.RegexReferenceFilter"
+            onMatch="include">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <regex>.*/login/.*</regex>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.filter.impl.ScriptFilter"
+            engineName="MyEngine"
+            maxReadSize="999"
+            onMatch="include"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <script>
+            [CDATA[
+            var myvar = "test";
+            ]]
+          </script>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.splitter.impl.CsvSplitter"
+            contentColumns="columnB, columnC, columnD"
+            escapeCharacter="C"
+            linesToSkip="0"
+            quoteCharacter="B"
+            referenceColumn="columnA"
+            separatorCharacter="A"
+            useFirstRowAsFields="false">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.splitter.impl.DOMSplitter"
+            parser="xml"
+            selector="div.contact"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler
+            api="microsoft"
+            class="com.norconex.importer.handler.splitter.impl.TranslatorSplitter">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <ignoreContent>true</ignoreContent>
+          <ignoreNonTranslatedFields>false</ignoreNonTranslatedFields>
+          <fieldsToTranslate>field1, field2</fieldsToTranslate>
+          <sourceLanguageField>lang</sourceLanguageField>
+          <sourceLanguage>en</sourceLanguage>
+          <targetLanguages>fr,it</targetLanguages>
+          <clientId>blahid</clientId>
+          <clientSecret>blahsecret</clientSecret>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.CharacterCaseTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <characterCase applyTo="field" fieldName="title" type="lower"/>
+          <characterCase applyTo="value" fieldName="title" type="string"/>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.CharsetTagger"
+            sourceCharset="ISO-8859-1"
+            targetCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <fieldsRegex>description</fieldsRegex>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.ConstantTagger"
+            onConflict="replace">
+          <constant name="source">web</constant>
+          <constant name="department">HR</constant>
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler class="com.norconex.importer.handler.tagger.impl.CopyTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <copy fromField="creator" overwrite="true" toField="author"/>
+          <copy fromField="publisher" overwrite="true" toField="author"/>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.CountMatchesTagger"
+            maxReadSize="999"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <countMatches
+              fromField="ff1"
+              ignoreCase="true"
+              regex="true"
+              toField="tf1">
+            .*
+          </countMatches>
+          <countMatches
+              fromField="ff2"
+              ignoreCase="true"
+              regex="true"
+              toField="tf2">
+            .*
+          </countMatches>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.CurrentDateTagger"
+            field="datefield"
+            format="yyy-MM-dd"
+            locale="fr"
+            overwrite="true">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.DateFormatTagger"
+            fromField="FF"
+            fromLocale="fr"
+            keepBadDates="false"
+            overwrite="true"
+            toField="TF"
+            toFormat="EPOCH"
+            toLocale="en">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <fromFormat>yyyy-MM-dd</fromFormat>
+          <fromFormat>yy-MM-dd</fromFormat>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.DebugTagger"
+            logContent="true"
+            logFields="field1,field2"
+            logLevel="INFO">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler class="com.norconex.importer.handler.tagger.impl.DeleteTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <fields>field1, field2</fields>
+          <fieldsRegex>^[Xx]-.*</fieldsRegex>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.DocumentLengthTagger"
+            field="docSize"
+            overwrite="true">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.DOMTagger"
+            fromField="FROMFIELD"
+            parser="xml"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>bfield</fieldMatcher>
+            <valueMatcher ignoreCase="false" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <restrictTo>
+            <fieldMatcher>afield</fieldMatcher>
+            <valueMatcher method="regex">.*</valueMatcher>
+          </restrictTo>
+          <dom
+              defaultValue="NOVALUE1"
+              extract="ownText"
+              matchBlanks="false"
+              overwrite="false"
+              selector="a selector"
+              toField="TODOFIELD1"/>
+          <dom
+              defaultValue="NOVALUE2"
+              extract="tagName"
+              selector="another selector"
+              toField="TODOFIELD2"/>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.ExternalTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <command inputDisabled="true">
+            c:\Apps\myapp.exe ${INPUT} ${OUTPUT_META} ${REFERENCE}
+          </command>
+          <metadata inputFormat="json" outputFormat="xml">
+            <pattern field="field1">&lt;title&gt;&lt;(title)&gt;</pattern>
+            <pattern fieldGroup="2" ignoreCase="false" valueGroup="1">(.*?):(.*)</pattern>
+          </metadata>
+          <environment>
+            <variable name="var1">blah</variable>
+            <variable name="var2">blah blah</variable>
+          </environment>
+          <tempDir>/some/dir</tempDir>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.ForceSingleValueTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <singleValue action="mergeWith:," field="authors"/>
+          <singleValue action="keepLast" field="title"/>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.HierarchyTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <hierarchy
+              fromField="FF1"
+              fromSeparator="/"
+              overwrite="true"
+              toField="TF1"
+              toSeparator="-"/>
+          <hierarchy
+              fromField="FF2"
+              fromSeparator="--"
+              overwrite="false"
+              toField="TF2"
+              toSeparator="|"/>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.KeepOnlyTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <fields>title, description</fields>
+          <fieldsRegex>collector\..*</fieldsRegex>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.LanguageTagger"
+            fallbackLanguage="en"
+            keepProbabilities="true"
+            maxReadSize="999"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <languages>en,fr, it, es</languages>
+        </handler>
+        <handler class="com.norconex.importer.handler.tagger.impl.MergeTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <merge
+              deleteFromFields="true"
+              singleValue="true"
+              singleValueSeparator=","
+              toField="title">
+            <fromFields>pubname</fromFields>
+            <fromFieldsRegex>.*title</fromFieldsRegex>
+          </merge>
+          <merge toField="TF">
+            <fromFields>desc, dc.description</fromFields>
+          </merge>
+        </handler>
+        <handler class="com.norconex.importer.handler.tagger.impl.RenameTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <rename fromField="FF1" overwrite="true" toField="TF1"/>
+          <rename fromField="FF2" overwrite="false" toField="TF2"/>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.ReplaceTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <replace
+              fromField="FF"
+              ignoreCase="false"
+              regex="false"
+              replaceAll="true"
+              toField="TF"
+              wholeMatch="false">
+            <fromValue>apple</fromValue>
+            <toValue>orange</toValue>
+          </replace>
+          <replace
+              fromField="FF2"
+              ignoreCase="false"
+              regex="false"
+              replaceAll="true"
+              toField="TF2"
+              wholeMatch="false">
+            <fromValue>_</fromValue>
+            <toValue xml:space="preserve"></toValue>
+          </replace>
+          <replace
+              fromField="FF3"
+              ignoreCase="false"
+              regex="false"
+              replaceAll="true"
+              toField="TF3"
+              wholeMatch="false">
+            <fromValue>apple</fromValue>
+          </replace>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.ScriptTagger"
+            engineName="myEngine"
+            maxReadSize="999"
+            sourceCharset="UTF8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <script>var myscript = "blah";</script>
+        </handler>
+        <handler class="com.norconex.importer.handler.tagger.impl.SplitTagger">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <split fromField="ff1" regex="true" toField="tf1">
+            <separator>/</separator>
+          </split>
+          <split fromField="ff2" regex="false" toField="tf2">
+            <separator>&amp;#45;&amp;#45;</separator>
+          </split>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.TextBetweenTagger"
+            ignoreCase="true"
+            inclusive="true"
+            maxReadSize="9999"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <textBetween name="targetFieldName">
+            <start>OPEN</start>
+            <end>CLOSE</end>
+          </textBetween>
+          <textBetween name="targetFieldName">
+            <start>[</start>
+            <end>]</end>
+          </textBetween>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.TextPatternTagger"
+            maxReadSize="9999"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <pattern field="field1" fieldGroup="2" valueGroup="1">potato</pattern>
+          <pattern field="field2" ignoreCase="false">apple</pattern>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.TextStatisticsTagger"
+            fieldName="myfield"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.TitleGeneratorTagger"
+            detectHeading="true"
+            detectHeadingMaxLength="200"
+            detectHeadingMinLength="20"
+            fromField="ff"
+            maxReadSize="9999"
+            overwrite="false"
+            sourceCharset="UTF-8"
+            titleMaxLength="200"
+            toField="tf">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler
+            appendHash="true"
+            class="com.norconex.importer.handler.tagger.impl.TruncateTagger"
+            fromField="field1"
+            maxLength="50"
+            overwrite="true"
+            suffix="!!!"
+            toField="field2">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.UUIDTagger"
+            field="uuidField"
+            overwrite="true">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.transformer.impl.CharsetTransformer"
+            sourceCharset="ISO-8859-1"
+            targetCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.transformer.impl.ExternalTransformer">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <command>c:\Apps\myapp.exe ${INPUT} ${OUTPUT} ${REFERENCE}</command>
+          <metadata inputFormat="json" outputFormat="xml">
+            <pattern field="field1">&lt;title&gt;&lt;(title)&gt;</pattern>
+            <pattern fieldGroup="2" ignoreCase="false" valueGroup="1">(.*?):(.*)</pattern>
+          </metadata>
+          <environment>
+            <variable name="var1">blah</variable>
+            <variable name="var2">blah blah</variable>
+          </environment>
+          <tempDir>/some/dir</tempDir>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.transformer.impl.ReduceConsecutivesTransformer"
+            ignoreCase="true"
+            maxReadSize="999"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <reduce>hello\s</reduce>
+          <reduce>\n\n</reduce>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.transformer.impl.ReplaceTransformer"
+            ignoreCase="true"
+            maxReadSize="999"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <replace>
+            <fromValue>apple</fromValue>
+            <toValue>orange</toValue>
+          </replace>
+          <replace>
+            <fromValue>one</fromValue>
+            <toValue>two</toValue>
+          </replace>
+          <replace>
+            <fromValue>blah</fromValue>
+          </replace>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.transformer.impl.ScriptTransformer"
+            engineName="myEngine"
+            maxReadSize="999"
+            sourceCharset="blah">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <script>var blah = 'blah';</script>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.transformer.impl.StripAfterTransformer"
+            ignoreCase="true"
+            inclusive="true"
+            maxReadSize="999"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <stripAfterRegex>blah</stripAfterRegex>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.transformer.impl.StripBeforeTransformer"
+            ignoreCase="true"
+            inclusive="true"
+            maxReadSize="999"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <stripBeforeRegex>blah</stripBeforeRegex>
+        </handler>
+        <handler
+            class="com.norconex.importer.handler.transformer.impl.StripBetweenTransformer"
+            ignoreCase="true"
+            inclusive="true"
+            maxReadSize="999"
+            sourceCharset="UTF-8">
+          <restrictTo>
+            <fieldMatcher>FIELD</fieldMatcher>
+            <valueMatcher ignoreCase="true" method="regex">.*</valueMatcher>
+          </restrictTo>
+          <stripBetween>
+            <start>OPEN</start>
+            <end>CLOSE</end>
+          </stripBetween>
+          <stripBetween>
+            <start>A</start>
+            <end>Z</end>
+          </stripBetween>
+        </handler>
+        <handler
+            begin="100"
+            class="com.norconex.importer.handler.transformer.impl.SubstringTransformer"
+            end="10000"/>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.SaveDocumentTagger">
+          <saveDir>./downloads</saveDir>
+        </handler>
+      </preParseHandlers>
+      <parse>
+        <parsers>
+          <parser
+              class="com.norconex.importer.parser.impl.ExternalParser"
+              contentType="application/pdf">
+            <command>c:\Apps\myapp.exe ${INPUT} ${OUTPUT}</command>
+            <metadata inputFormat="xml" outputFormat="json">
+              <pattern field="field1">&lt;title&gt;&lt;(title)&gt;</pattern>
+              <pattern fieldGroup="2" ignoreCase="false" valueGroup="1">(.*?):(.*)</pattern>
+            </metadata>
+            <environment>
+              <variable name="var1">blah</variable>
+              <variable name="var2">blah blah</variable>
+            </environment>
+            <tempDir>/some/dir</tempDir>
+          </parser>
+        </parsers>
+        <contentTypeIncludes>
+          <matcher method="regex">.*potato.*</matcher>
+          <matcher method="regex">.*carrot.*</matcher>
+        </contentTypeIncludes>
+        <contentTypeExcludes>
+          <matcher method="regex">.*apple.*</matcher>
+          <matcher method="regex">.*orange.*</matcher>
+        </contentTypeExcludes>
+        <errorsSaveDir>/some/path</errorsSaveDir>
+        <defaultParser class="com.norconex.importer.parser.impl.DefaultParser"/>
+        <parseOptions>
+          <ocr disabled="true">
+            <tesseractPath>/path/to/tesseract/exe</tesseractPath>
+            <tessdataPath>/path/to/tesseract/data</tessdataPath>
+            <contentTypes>
+              <matcher>text/html</matcher>
+            </contentTypes>
+            <applyRotation>true</applyRotation>
+            <colorSpace>abc</colorSpace>
+            <density>128</density>
+            <depth>14</depth>
+            <enableImagePreprocessing>true</enableImagePreprocessing>
+            <filter>alpha</filter>
+            <imageMagickPath>/path/to/magick</imageMagickPath>
+            <language>eng+fra</language>
+            <maxFileSizeToOcr>1000000</maxFileSizeToOcr>
+            <minFileSizeToOcr>100000</minFileSizeToOcr>
+            <pageSegMode>mode</pageSegMode>
+            <pageSeparator>sep</pageSeparator>
+            <preserveInterwordSpacing>true</preserveInterwordSpacing>
+            <resize>64</resize>
+            <timeoutSeconds>3</timeoutSeconds>
+          </ocr>
+          <embedded>
+            <splitEmbeddedOf>
+              <matcher>application/zip</matcher>
+            </splitEmbeddedOf>
+            <skipEmmbbeded>
+              <matcher method="regex">image/.*</matcher>
+            </skipEmmbbeded>
+            <skipEmmbbededOf>
+              <matcher>application/pdf</matcher>
+            </skipEmmbbededOf>
+          </embedded>
+          <options>
+            <option name="Some option">Some Value</option>
+          </options>
+        </parseOptions>
+      </parse>
+      <postParseHandlers>
+        <handler class="com.norconex.importer.handler.tagger.impl.DebugTagger"/>
+        <handler
+            class="com.norconex.importer.handler.transformer.impl.CharsetTransformer"/>
+        <handler
+            class="com.norconex.importer.handler.tagger.impl.LanguageTagger"/>
+        <handler
+            class="com.norconex.importer.handler.splitter.impl.DOMSplitter"
+            selector="blah"/>
+        <handler
+            class="com.norconex.importer.handler.filter.impl.EmptyMetadataFilter"
+            fields="FIELD1"/>
+      </postParseHandlers>
+      <responseProcessors>
+        <responseProcessor
+            class="com.norconex.importer.response.DummyResponseProcessor"/>
+      </responseProcessors>
+    </importer>
+    <documentChecksummer
+        class="com.norconex.crawler.core.checksum.impl.MD5DocumentChecksummer"
+        keep="true"
+        toField="afield">
+      <fieldMatcher method="csv">field1,field2</fieldMatcher>
+    </documentChecksummer>
+    <postImportProcessors>
+      <processor/>
+    </postImportProcessors>
+    <postImportLinks keep="true">
+      <fieldMatcher method="wildcard">myurls*</fieldMatcher>
+    </postImportLinks>
+    <spoiledReferenceStrategizer
+        class="com.norconex.crawler.core.spoil.impl.GenericSpoiledReferenceStrategizer"
+        fallbackStrategy="DELETE">
+      <mapping state="NOT_FOUND" strategy="DELETE"/>
+      <mapping state="BAD_STATUS" strategy="DELETE"/>
+      <mapping state="ERROR" strategy="IGNORE"/>
+    </spoiledReferenceStrategizer>
+    <committers>
+      <committer class="com.norconex.committer.core.fs.impl.JSONFileCommitter">
+        <directory>/tmp/somepath</directory>
+      </committer>
+    </committers>
+  </crawlerDefaults>
+  <crawlers>
+    <crawler id="myCrawler1">
+      <numThreads>2</numThreads>
+      <maxDocuments>222</maxDocuments>
+      <orphansStrategy>DELETE</orphansStrategy>
+    </crawler>
+    <crawler id="myCrawler2">
+      <numThreads>3</numThreads>
+      <maxDocuments>333</maxDocuments>
+      <orphansStrategy>IGNORE</orphansStrategy>
+    </crawler>
+  </crawlers>
+</crawlSession>

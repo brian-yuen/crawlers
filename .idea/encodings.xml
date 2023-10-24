@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/amazoncloudsearch" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/amazoncloudsearch/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/amazoncloudsearch/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/apachekafka" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/apachekafka/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/apachekafka/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/azurecognitivesearch" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/azurecognitivesearch/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/azurecognitivesearch/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/elasticsearch" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/elasticsearch/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/elasticsearch/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/idol" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/idol/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/idol/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/neo4j" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/neo4j/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/neo4j/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/solr" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/solr/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/solr/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/sql" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/sql/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/committer/sql/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/fs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/fs/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/fs/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/server/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawler/web/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/importer" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/importer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/importer/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/config-converter" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/config-converter/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/config-converter/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="BUILD_PROCESS_ADDITIONAL_VM_OPTIONS" value="-Djps.track.ap.dependencies=false" />
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+      </profile>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+      </profile>
+      <profile name="Annotation profile for Norconex Crawler Parent" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/com/github/therapi/therapi-runtime-javadoc-scribe/0.15.0/therapi-runtime-javadoc-scribe-0.15.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/github/therapi/therapi-runtime-javadoc/0.15.0/therapi-runtime-javadoc-0.15.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.26/lombok-1.18.26.jar" />
+        </processorPath>
+        <module name="nx-committer-azurecognitivesearch" />
+        <module name="nx-crawler-core" />
+        <module name="nx-committer-idol" />
+        <module name="nx-crawler-fs" />
+        <module name="nx-committer-neo4j" />
+        <module name="nx-config-converter" />
+        <module name="nx-committer-elasticsearch" />
+        <module name="nx-crawler-web" />
+        <module name="nx-committer-sql" />
+        <module name="nx-committer-solr" />
+        <module name="nx-crawler-server" />
+        <module name="nx-committer-apachekafka" />
+        <module name="nx-importer" />
+        <module name="nx-committer-amazoncloudsearch" />
+        <module name="nx-committer-core" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
