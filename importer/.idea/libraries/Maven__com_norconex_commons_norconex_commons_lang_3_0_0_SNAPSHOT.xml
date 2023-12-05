@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: com.norconex.commons:norconex-commons-lang:3.0.0-SNAPSHOT" type="java-imported" external-system-id="Maven">
+    <properties groupId="com.norconex.commons" artifactId="norconex-commons-lang" version="3.0.0-20231024.014019-86" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/norconex/commons/norconex-commons-lang/3.0.0-SNAPSHOT/norconex-commons-lang-3.0.0-20231024.014019-86.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/norconex/commons/norconex-commons-lang/3.0.0-SNAPSHOT/norconex-commons-lang-3.0.0-20231024.014019-86-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/norconex/commons/norconex-commons-lang/3.0.0-SNAPSHOT/norconex-commons-lang-3.0.0-20231024.014019-86-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
