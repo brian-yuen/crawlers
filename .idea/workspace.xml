@@ -9,7 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fccc5c6-ffe9-4f17-8c6d-ea7e6206877a" name="Changes" comment=" converted importer config restrictTo" />
+    <list default="true" id="9fccc5c6-ffe9-4f17-8c6d-ea7e6206877a" name="Changes" comment=" converted importer config restrictTo">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,20 +64,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "zalak-xml-converter",
-    "last_opened_file_path": "C:/Users/zalak/XmlToXmlConverter/collector-http/tools/config-converter/src/main/resources",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2023692",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "settings.editor.splitter.proportion": "0.25785658",
-    "two.files.diff.last.used.file": "C:/Users/zalak/XmlToXmlConverter/collector-http/tools/config-converter/src/test/resources/v4-web-crawler.xml"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;zalak-xml-converter&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/zalak/XmlToXmlConverter/collector-http/tools/config-converter/src/main/resources&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2023692&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.25785658&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;C:/Users/zalak/XmlToXmlConverter/collector-http/tools/config-converter/src/test/resources/v4-web-crawler.xml&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\zalak\XmlToXmlConverter\collector-http\tools\config-converter\src\main\resources" />
@@ -87,13 +89,28 @@
       <recent name="C:\Users\zalak\XmlToXmlConverter\collector-http\tools\config-converter\src\main\resources\config-converter-scripts" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ConverterApp">
+  <component name="RunManager" selected="JUnit.ConfigConverterLauncherTest (1)">
     <configuration name="ConverterApp" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="20" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.norconex.cfgconverter.xml.ConverterApp" />
       <module name="nx-config-converter" />
       <option name="PROGRAM_PARAMETERS" value="C:\Users\zalak\XmlToXmlConverter\collector-http\tools\config-converter\src\main\java\com\norconex\cfgconverter\xml\v3-fullConfig.xml C:\Users\zalak\XmlToXmlConverter\collector-http\tools\config-converter\src\main\java\com\norconex\cfgconverter\xml\output.xml" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ConfigConverterLauncherTest (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="nx-config-converter" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.norconex.cfgconverter.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.norconex.cfgconverter" />
+      <option name="MAIN_CLASS_NAME" value="com.norconex.cfgconverter.ConfigConverterLauncherTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -314,6 +331,7 @@
     </configuration>
     <list>
       <item itemvalue="Application.ConverterApp" />
+      <item itemvalue="JUnit.ConfigConverterLauncherTest (1)" />
       <item itemvalue="JUnit.ConfigConverterLauncherTest" />
       <item itemvalue="JUnit.ConfigConverterLauncherTest.testMain" />
       <item itemvalue="Maven.nx-crawler-parent [package]" />
@@ -324,6 +342,7 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ConfigConverterLauncherTest (1)" />
         <item itemvalue="JUnit.ConfigConverterLauncherTest.testMain" />
         <item itemvalue="JUnit.ConfigConverterLauncherTest" />
       </list>
