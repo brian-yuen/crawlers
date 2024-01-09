@@ -124,6 +124,8 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
                     </handler>""");
             crawlerXml.removeElement("keepDownloads");
         }
+        crawlerXml.addXML("<idleTimeout>111</idleTimeout>");
+        crawlerXml.addXML("<minProgressLoggingInterval>1</minProgressLoggingInterval>");
         crawlerXml.ifXML("fetchHttpHead",
                 xml -> xml.rename("metadataFetchSupport"));
         crawlerXml.ifXML("fetchHttpGet",
@@ -148,6 +150,14 @@ public class XmlToXmlV4ConfigConverter implements ConfigConverter {
                 f.addElement("separator", f.getString("@separator"));
                 f.removeAttribute("separator");
             }
+        });
+        crawlerXml.ifXML("linkExtractors/extractor[contains("
+                + "@class, 'XMLFeedLinkExtractor')]", r -> {
+            setClass(r, d -> d.replaceFirst("\\bXMLFeedLinkExtractor\\b", "XmlFeedLinkExtractor"));
+        });
+        crawlerXml.ifXML("linkExtractors/extractor[contains("
+                + "@class, 'DOMLinkExtractor')]", r -> {
+            setClass(r, d -> d.replaceFirst("\\bDOMLinkExtractor\\b", "DomLinkExtractor"));
         });
         crawlerXml.ifXML("sitemapResolver[contains("
                 + "@class, 'GenericSitemapResolver')]", xml -> {
