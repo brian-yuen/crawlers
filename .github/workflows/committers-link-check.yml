@@ -1,0 +1,35 @@
+name: Download Latest Zip File from Newest Folder
+
+on:
+  workflow_dispatch:
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find and download zip file from newest folder
+        run: |
+          # Define URL of the page containing the list of folders
+          URL="https://repo1.maven.org/maven2/com/norconex/collectors/norconex-committer-elasticsearch/"
+
+          # Extract the list of folder URLs from the page
+          FOLDERS=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+/' | sort -r)
+
+          # Get the URL of the newest folder
+          NEWEST_FOLDER_URL=$(echo "$FOLDERS" | head -n 1)
+
+          echo "newest folder is: $NEWEST_FOLDER_URL"
+
+          # Download the zip file from the newest folder
+          ZIP_FILE_URL="${NEWEST_FOLDER_URL}latest.zip"
+          
+          echo "zip file url: $ZIP_FILE_URL"
+          
+          #curl -L -o latest.zip "$ZIP_FILE_URL"
+
+          # Unzip the downloaded file
+          #unzip latest.zip
