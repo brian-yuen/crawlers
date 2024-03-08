@@ -42,13 +42,14 @@ jobs:
         id: version_value_check
         with:
           cond: ${{ inputs.manual_build_version == '' }}
-          if_true: $(cat pom.xml | grep -m2 "version" | sed 's/<.*>\(.*\)<.*>/\1/' | sed 's/^[ ]*//g')
+          if_true: $(sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' pom.xml | sed -n '2p')
+          #if_true: $(cat pom.xml | grep -m2 "version" | sed 's/<.*>\(.*\)<.*>/\1/' | sed 's/^[ ]*//g')
           if_false: ${{ inputs.manual_build_version }}
 
       # assign version value into GITHUB env variable
       - name: Use conditional value        
         run: |
-          #echo "tmp_version=${{ steps.version_value_check.outputs.value }}" >> $GITHUB_ENV
+          echo "tmp_version=${{ steps.version_value_check.outputs.value }}" >> $GITHUB_ENV
           #echo "final_committer_type=${{ steps.committer_value_check.outputs.value}}" >> $GITHUB_ENV
 
       # print the value of the env version variable for debugging use  
