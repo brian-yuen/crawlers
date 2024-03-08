@@ -28,7 +28,7 @@ jobs:
           echo "newest folder is: $NEWEST_FOLDER_URL"
 
           # Save the folder name without the trailing slash into a variable
-          FOLDER_NAME="${NEWEST_FOLDER%/}"
+          FOLDER_NAME="${NEWEST_FOLDER_URL%/}"
 
           echo "foldername: $FOLDER_NAME"
 
