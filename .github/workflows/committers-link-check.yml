@@ -2,6 +2,9 @@ name: Download Latest Zip File from Newest Folder
 
 on:
   workflow_dispatch:
+    inputs:
+      committer_type:
+        type: string
 
 jobs:
   download:
@@ -14,7 +17,7 @@ jobs:
       - name: Find and download zip file from newest folder
         run: |
           # Define URL of the page containing the list of folders
-          URL="https://repo1.maven.org/maven2/com/norconex/collectors/norconex-committer-elasticsearch/"
+          URL="https://repo1.maven.org/maven2/com/norconex/collectors/norconex-committer-${{inputs.committer_type}}/"
 
           # Extract the list of folder URLs from the page
           FOLDERS=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+/' | sort -r)
@@ -24,8 +27,13 @@ jobs:
 
           echo "newest folder is: $NEWEST_FOLDER_URL"
 
+          # Save the folder name without the trailing slash into a variable
+          FOLDER_NAME="${NEWEST_FOLDER%/}"
+
+          echo "foldername: $FOLDER_NAME"
+
           # Download the zip file from the newest folder
-          ZIP_FILE_URL="${URL}${NEWEST_FOLDER_URL}*.zip"
+          ZIP_FILE_URL="${URL}${NEWEST_FOLDER_URL}norconex-committer-${{inputs.committer_type}}$FOLDER_NAME.zip"
           
           echo "zip file url: $ZIP_FILE_URL"
           
