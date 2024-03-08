@@ -42,7 +42,7 @@ jobs:
         id: version_value_check
         with:
           cond: ${{ inputs.manual_build_version == '' }}
-          if_true: $(cat pom.xml | grep -m1 "version" | sed 's/<.*>\(.*\)<.*>/\1/' | sed 's/^[ ]*//g')
+          if_true: $(cat pom.xml | grep -m2 "version" | sed 's/<.*>\(.*\)<.*>/\1/' | sed 's/^[ ]*//g')
           if_false: ${{ inputs.manual_build_version }}
 
       # assign version value into GITHUB env variable
