@@ -48,7 +48,7 @@ jobs:
       # assign version value into GITHUB env variable
       - name: Use conditional value        
         run: |
-          echo "tmp_version=${{ steps.version_value_check.outputs.value }}" >> $GITHUB_ENV
+          #echo "tmp_version=${{ steps.version_value_check.outputs.value }}" >> $GITHUB_ENV
           #echo "final_committer_type=${{ steps.committer_value_check.outputs.value}}" >> $GITHUB_ENV
 
       # print the value of the env version variable for debugging use  
