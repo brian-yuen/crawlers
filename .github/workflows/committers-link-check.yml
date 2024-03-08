@@ -25,7 +25,7 @@ jobs:
           echo "newest folder is: $NEWEST_FOLDER_URL"
 
           # Download the zip file from the newest folder
-          ZIP_FILE_URL="${NEWEST_FOLDER_URL}latest.zip"
+          ZIP_FILE_URL="${URL}${NEWEST_FOLDER_URL}*.zip"
           
           echo "zip file url: $ZIP_FILE_URL"
           
