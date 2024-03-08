@@ -33,7 +33,7 @@ jobs:
           echo "foldername: $FOLDER_NAME"
 
           # Download the zip file from the newest folder
-          ZIP_FILE_URL="${URL}${NEWEST_FOLDER_URL}norconex-committer-${{inputs.committer_type}}$FOLDER_NAME.zip"
+          ZIP_FILE_URL="${URL}${NEWEST_FOLDER_URL}norconex-committer-${{inputs.committer_type}}-$FOLDER_NAME.zip"
           
           echo "zip file url: $ZIP_FILE_URL"
           
