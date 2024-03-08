@@ -67,49 +67,49 @@ jobs:
           VERSION=$(sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' pom.xml | sed -n '2p')
           echo "Version: $VERSION"
 
-    #   # convert the string to lower case for SNAPSHOT build    
-    #   - name: convert string to lowercase
-    #     id: string
-    #     uses: ASzc/change-string-case-action@v1
-    #     with:
-    #       string: ${{ env.tmp_version }}
+      # convert the string to lower case for SNAPSHOT build    
+      - name: convert string to lowercase
+        id: string
+        uses: ASzc/change-string-case-action@v1
+        with:
+          string: ${{ env.tmp_version }}
       
-    #   # assign the lowercase value back to an variable for later use
-    #   - run: |
-    #       echo "version=${{ steps.string.outputs.lowercase }}" >> $GITHUB_ENV          
+      # assign the lowercase value back to an variable for later use
+      - run: |
+          echo "version=${{ steps.string.outputs.lowercase }}" >> $GITHUB_ENV          
           
-    #   # debug use only    
-    #   - run: |
-    #       echo "GITHUB_ENV_Version: ${{ env.version }}"
-    #       echo "lowercase: ${{ steps.string.outputs.lowercase }}"
-    #       echo "uppercase: ${{ steps.string.outputs.uppercase}}"
+      # debug use only    
+      - run: |
+          echo "GITHUB_ENV_Version: ${{ env.version }}"
+          echo "lowercase: ${{ steps.string.outputs.lowercase }}"
+          echo "uppercase: ${{ steps.string.outputs.uppercase}}"
 
       
-    #   # extract version number from value and assign it to different variables for tagging use
-    #   - name: Extract version numbers
-    #     run: |  
-    #       #if [[ "${{env.version}}" == *"-snapshot"* ]]; then
+      # extract version number from value and assign it to different variables for tagging use
+      - name: Extract version numbers
+        run: |  
+          #if [[ "${{env.version}}" == *"-snapshot"* ]]; then
           
-    #       #echo "snapshot_image=${{env.version}}" >> $GITHUB_ENV
+          #echo "snapshot_image=${{env.version}}" >> $GITHUB_ENV
           
-    #       #else
-    #       # Extract major version
-    #       echo "major=$(echo ${{env.version}} | cut -d '.' -f 1)" >> $GITHUB_ENV
+          #else
+          # Extract major version
+          echo "major=$(echo ${{env.version}} | cut -d '.' -f 1)" >> $GITHUB_ENV
 
-    #       # Extract major_minor version
-    #       echo "major_minor=$(echo ${{env.version}} | cut -d '.' -f 1-2)" >> $GITHUB_ENV
+          # Extract major_minor version
+          echo "major_minor=$(echo ${{env.version}} | cut -d '.' -f 1-2)" >> $GITHUB_ENV
 
-    #       # Extract major_minor_revis version
-    #       echo "major_minor_revis=$(echo ${{env.version}} | cut -d '-' -f 1)" >> $GITHUB_ENV
-    #       #fi
+          # Extract major_minor_revis version
+          echo "major_minor_revis=$(echo ${{env.version}} | cut -d '-' -f 1)" >> $GITHUB_ENV
+          #fi
 
-    #   # debug use only    
-    #   - name: print extracted version numbers   
-    #     run: |
-    #       # Print extracted version numbers
-    #       echo "Major: ${{ env.major }}"
-    #       echo "Major_Minor: ${{ env.major_minor }}"
-    #       echo "Major_Minor_Revis: ${{ env.major_minor_revis }}"
+      # debug use only    
+      - name: print extracted version numbers   
+        run: |
+          # Print extracted version numbers
+          echo "Major: ${{ env.major }}"
+          echo "Major_Minor: ${{ env.major_minor }}"
+          echo "Major_Minor_Revis: ${{ env.major_minor_revis }}"
 
     #   - name: Find and download latest snapshot zip file
     #     run: |
