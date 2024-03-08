@@ -60,7 +60,12 @@ jobs:
           echo "GITHUB_ENV_TMP_Version: ${{ env.tmp_version }}"
           #echo "GITHUB_COMMITTER_TYPE: ${{ env.final_committer_type }}"
          
-      
+      - name: Read and Extract Version
+        run: |
+          # Get the version line from pom.xml and extract the 2nd <version> tag
+          VERSION=$(sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' pom.xml | sed -n '2p')
+          echo "Version: $VERSION"
+
     #   # convert the string to lower case for SNAPSHOT build    
     #   - name: convert string to lowercase
     #     id: string
