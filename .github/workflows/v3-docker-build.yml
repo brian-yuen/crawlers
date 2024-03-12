@@ -180,7 +180,7 @@ jobs:
               # echo "zip file url: $zip_file_url"
 
               # more .github/workflows/docker-files/Dockerfile-committers
-              docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg build_version=${{env.version}} --build-arg committer_type=${type} --build-arg dl_path=${zip_file_url} --build-arg committer_version=${file_version_no}  --tag ${{env.version}}-crawler-${type}
+              docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg build_version=${{env.major_minor_revis}} --build-arg committer_type=${type} --build-arg dl_path=${zip_file_url} --build-arg committer_version=${file_version_no}  --tag ${{env.version}}-crawler-${type}
               
               # docker image ls -a
             
