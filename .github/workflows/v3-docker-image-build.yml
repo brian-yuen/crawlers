@@ -136,7 +136,7 @@ jobs:
     #       echo "env dl_filename: ${{env.dl_filename}}"
       
       - name: tmp env assign for testing
-        run: echo "version=${{ env.major_minor_revis }}" >> $GITHUB_ENV # testing purpose
+        run: echo "version=3.0.2" >> $GITHUB_ENV # testing purpose
       
       # build the crawler base docker image
       - name: Build docker base image
