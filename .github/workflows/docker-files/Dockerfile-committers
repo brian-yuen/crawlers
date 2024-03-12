@@ -11,6 +11,5 @@ WORKDIR /nxer
 
 RUN curl -LO ${dl_path}
 RUN unzip norconex-committer-${committer_type}-${committer_version}.zip
-#RUN cp norconex-committer-${committer_type}-${committer_version}/lib/* norconex-collector-http-${build_version}/lib/
-
-RUN ls -l
+RUN cp norconex-committer-${committer_type}-${committer_version}/lib/* norconex-collector-http-${build_version}/lib/
+RUN rm *.zip
