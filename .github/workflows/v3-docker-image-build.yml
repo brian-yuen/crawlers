@@ -141,14 +141,14 @@ jobs:
         run: |
           pwd
           ls -a
-          echo "version=${{ env.major_minor_revis }}" >> $GITHUB_ENV # testing purpose
+          echo "tst_version=${{ env.major_minor_revis }}" >> $GITHUB_ENV # testing purpose
 
-          echo version: ${{env.version}}
-          
+          echo version: ${{env.tst_version}}
+
           #check whether a regular or a snapshot version should be built
-          if [[ "${{env.version}}" != *"-snapshot"* ]]; then
+          if [[ "${{env.tst_version}}" != *"-snapshot"* ]]; then
             
-            docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version}} --target regular --tag ${{env.version}}-crawler-base
+            docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.tst_version}} --target regular --tag ${{env.tst_version}}-crawler-base
           else
             echo "snapshot image build require"
             
