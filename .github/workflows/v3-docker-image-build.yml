@@ -68,7 +68,7 @@ jobs:
       #     echo "Version: $VERSION"
 
       - name: tmp env assign for testing
-        run: echo "tmp_version=3.0.2-snapshot" >> $GITHUB_ENV # testing purpose
+        run: echo "tmp_version=3.0.2" >> $GITHUB_ENV # testing purpose
 
       # convert the string to lower case for SNAPSHOT build    
       - name: convert string to lowercase
