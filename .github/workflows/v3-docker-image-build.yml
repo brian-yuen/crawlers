@@ -142,7 +142,7 @@ jobs:
           pwd
           ls -a
           echo "version=3.0.2" >> $GITHUB_ENV # testing purpose
-          
+          echo version: ${{env.version}}
           #check whether a regular or a snapshot version should be built
           if [[ "${{env.version}}" != *"-snapshot"* ]]; then
             
