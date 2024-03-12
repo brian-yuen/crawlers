@@ -28,16 +28,25 @@ jobs:
           echo "newest folder is: $newest_folder_url"
 
           # Save the folder name without the trailing slash into a variable
-          folder_name="${newest_folder_url%/}"
+          local_file_version_no="${newest_folder_url%/}"
 
-          echo "foldername: $folder_name"
+          echo "local_file_version_no: $local_file_version_no"
+          echo "file_version_no=$local_file_version_no" >> $GITHUB_ENV
 
           # Download the zip file from the newest folder
-          ZIP_FILE_URL="${base_url}${newest_folder_url}norconex-committer-${{inputs.committer_type}}-$folder_name.zip"
+          zip_file_url=${base_url}${newest_folder_url}norconex-committer-${{inputs.committer_type}}-$file_version_no.zip
+          echo "local_zip_file_url=$zip_file_url" >> $GITHUB_ENV
           
-          echo "zip file url: $ZIP_FILE_URL"
+
+          echo "zip file url: $zip_file_url"
           
           #curl -L -o latest.zip "$ZIP_FILE_URL"
 
           # Unzip the downloaded file
           #unzip latest.zip
+
+
+      - name: print env variables
+        run: |
+          echo "env zip_file_url: ${{ env.zip_file_url}}"
+          echo "env file_version_no: ${{env.file_version_no}}"
