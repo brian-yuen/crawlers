@@ -136,20 +136,22 @@ jobs:
     #       echo "env dl_filename: ${{env.dl_filename}}"
       
       
-    #   # build the crawler base docker image
-    #   - name: Build docker base image
-    #     run: |
-    #       pwd
-    #       ls -a
-    #       #check whether a regular or a snapshot version should be built
-    #       if [[ "${{env.version}}" != *"-snapshot"* ]]; then
-
-    #         docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version}} --target regular --tag ${{env.version}}-crawler-base
-    #       else
-    #         echo "snapshot image build require"
+      # build the crawler base docker image
+      - name: Build docker base image
+        run: |
+          pwd
+          ls -a
+          #check whether a regular or a snapshot version should be built
+          if [[ "${{env.version}}" != *"-snapshot"* ]]; then
+            echo "version=3.0.2" >> $GITHUB_ENV # testing purpose
+            docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version}} --target regular --tag ${{env.version}}-crawler-base
+          else
+            echo "snapshot image build require"
             
-    #         docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=${{env.dl_filename}} --target snapshot --tag ${{env.version}}-crawler-base
-    #       fi
+            docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=${{env.dl_filename}} --target snapshot --tag ${{env.version}}-crawler-base
+          fi
+
+          docker image ls -a
      
 
     #    # update the base image version number within the Dockerfile-committers file
