@@ -207,7 +207,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       
-      # Tag and push images onto Dockerhub repo
+      # Tag and push images onto Dockerhub repo 
       - name: Tag and Push images to Dockerhub
         run: |
 
@@ -261,7 +261,7 @@ jobs:
               #docker push norconex/crawler:${{env.version}}-$type
               
             done
-            
+
             docker image ls -a
             echo "snapshot uploaded!"
           fi
