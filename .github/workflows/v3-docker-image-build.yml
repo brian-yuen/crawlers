@@ -21,7 +21,7 @@ on:
 
 env:
   # define the types of committers
-  committer_types: "core solr idol elasticsearch sql amazoncloudsearch neo4j azurecognitivesearch apachekafka"     
+  committer_types: "core solr idol elasticsearch sql cloudsearch neo4j azuresearch"     
 
 jobs:
   # job to build the base crawler image
