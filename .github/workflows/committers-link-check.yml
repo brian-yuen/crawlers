@@ -17,23 +17,23 @@ jobs:
       - name: Find and download zip file from newest folder
         run: |
           # Define URL of the page containing the list of folders
-          URL="https://repo1.maven.org/maven2/com/norconex/collectors/norconex-committer-${{inputs.committer_type}}/"
+          base_url="https://repo1.maven.org/maven2/com/norconex/collectors/norconex-committer-${{inputs.committer_type}}/"
 
-          # Extract the list of folder URLs from the page
-          FOLDERS=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+/' | sort -r)
+          # Extract the list of folder base_urls from the page
+          all_folders=$(curl -s "$base_url" | grep -oP '(?<=href=")[^"]+/' | sort -r)
 
           # Get the URL of the newest folder
-          NEWEST_FOLDER_URL=$(echo "$FOLDERS" | head -n 1)
+          newest_folder_url=$(echo "$all_folders" | head -n 1)
 
-          echo "newest folder is: $NEWEST_FOLDER_URL"
+          echo "newest folder is: $newest_folder_url"
 
           # Save the folder name without the trailing slash into a variable
-          FOLDER_NAME="${NEWEST_FOLDER_URL%/}"
+          folder_name="${newest_folder_url%/}"
 
-          echo "foldername: $FOLDER_NAME"
+          echo "foldername: $folder_name"
 
           # Download the zip file from the newest folder
-          ZIP_FILE_URL="${URL}${NEWEST_FOLDER_URL}norconex-committer-${{inputs.committer_type}}-$FOLDER_NAME.zip"
+          ZIP_FILE_URL="${base_url}${newest_folder_url}norconex-committer-${{inputs.committer_type}}-$folder_name.zip"
           
           echo "zip file url: $ZIP_FILE_URL"
           
