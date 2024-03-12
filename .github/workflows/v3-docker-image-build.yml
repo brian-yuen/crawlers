@@ -220,10 +220,10 @@ jobs:
             docker image tag ${{env.version}}-crawler-base norconex/crawler:${{env.version}}
 
             # upload to dockerhub
-            # docker push norconex/crawler:latest
-            # docker push norconex/crawler:${{env.major}}
-            # docker push norconex/crawler:${{env.major_minor}}
-            # docker push norconex/crawler:${{env.version}}
+            docker push norconex/crawler:latest
+            docker push norconex/crawler:${{env.major}}
+            docker push norconex/crawler:${{env.major_minor}}
+            docker push norconex/crawler:${{env.version}}
 
          
             for type in $committer_types; do
@@ -234,9 +234,9 @@ jobs:
               docker image tag ${{env.version}}-crawler-$type norconex/crawler:${{env.version}}-$type
              
               # upload online norconex tagged images onto docker hub 
-              # docker push norconex/crawler:${{env.major}}-$type
-              # docker push norconex/crawler:${{env.major_minor}}-$type
-              # docker push norconex/crawler:${{env.version}}-$type
+              docker push norconex/crawler:${{env.major}}-$type
+              docker push norconex/crawler:${{env.major_minor}}-$type
+              docker push norconex/crawler:${{env.version}}-$type
 
             done  
 
@@ -250,7 +250,7 @@ jobs:
             docker image tag ${{env.version}}-crawler-base norconex/crawler:${{env.version}}
             
             # upload tagged images to dockerhub
-            #docker push norconex/crawler:${{env.version}}
+            docker push norconex/crawler:${{env.version}}
                       
             # tag images for different committer type
             for type in $committer_types; do
@@ -258,7 +258,7 @@ jobs:
               docker image tag ${{env.version}}-crawler-$type norconex/crawler:${{env.version}}-$type
                 
               # upload different type of committer images
-              #docker push norconex/crawler:${{env.version}}-$type
+              docker push norconex/crawler:${{env.version}}-$type
               
             done
 
