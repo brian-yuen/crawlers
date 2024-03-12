@@ -189,7 +189,7 @@ jobs:
               echo "file_version_no: $file_version_no"
                   
               # construct the download url of the zip file
-              zip_file_url="${base_url}${newest_folder_url}norconex-committer-${{inputs.committer_type}}-$local_file_version_no.zip"
+              zip_file_url="${base_url}${newest_folder_url}norconex-committer-${type}-$file_version_no.zip"
                                 
               echo "zip file url: $zip_file_url"
 
@@ -198,7 +198,7 @@ jobs:
               #sed -i 's/replace-this-with-committer-files-in-dockerfile/$type-folder/g' .github/workflows/docker-files/Dockerfile-committers-$type
               
               more .github/workflows/docker-files/Dockerfile-committers
-              docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg build_version=${{env.version}} --build-arg committer_type=${type} --build-arg dl_path=${ zip_file_url} --build-arg committer_version=${file_version_no}  --tag ${{env.version}}-crawler-${type}
+              docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg build_version=${{env.version}} --build-arg committer_type=${type} --build-arg dl_path=${zip_file_url} --build-arg committer_version=${file_version_no}  --tag ${{env.version}}-crawler-${type}
               #docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg build_version=${{env.major_minor_revis}} --build-arg committer_type=elasticsearch --tag ${{env.version}}-crawler-${type}
               docker image ls -a
             
