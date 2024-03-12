@@ -1,5 +1,6 @@
 FROM replace-this-with-real-version-crawler-base
 ARG committer_type
+ARG dl_path
 ARG committer_version
 ARG build_version
 
@@ -8,8 +9,8 @@ RUN echo "build_version is: $build_version"
 
 WORKDIR /nxer
 
-RUN curl -LO https://oss.sonatype.org/content/repositories/releases/com/norconex/collectors/norconex-committer-${committer_type}/${committer_version}/norconex-committer-${committer_type}-4.1.1.zip
-RUN unzip norconex-committer-${committer_type}-4.1.1.zip
-RUN cp norconex-committer-${committer_type}-4.1.1/lib/* norconex-collector-http-${build_version}/lib/
+RUN curl -LO ${dl_path}
+RUN unzip norconex-committer-${committer_type}-${committer_version}.zip
+#RUN cp norconex-committer-${committer_type}-${committer_version}/lib/* norconex-collector-http-${build_version}/lib/
 
 RUN ls -l
