@@ -41,5 +41,5 @@ RUN echo "dl_filename: ${dl_filename}"
 
 RUN curl -LO ${dl_path}
 RUN unzip ${dl_filename}
-#RUN mv norconex-collector-http-${build_version}-snapshot norconex-collector-http-${build_version}
+RUN mv norconex-collector-http-${build_version}-snapshot norconex-collector-http-${build_version}
 RUN chmod +x norconex-collector-http-${build_version}/collector-http.*
