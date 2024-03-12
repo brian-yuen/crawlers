@@ -22,7 +22,7 @@ FROM base AS regular
 WORKDIR /nxer
 
 RUN echo "this is regular build"
-RUN echo "s_version: ${version}"
+RUN echo "s_version: ${build_version}"
 
 RUN curl -LO https://oss.sonatype.org/content/repositories/releases/com/norconex/collectors/norconex-collector-http/${build_version}/norconex-collector-http-${build_version}.zip && \
     unzip norconex-collector-http-${build_version}.zip && \
@@ -34,12 +34,12 @@ FROM base AS snapshot
 WORKDIR /nxer
 
 RUN echo "this is snapshot build"
-RUN echo "s_version: ${version}"
+RUN echo "s_version: ${build_version}"
 RUN echo "dl_path: ${dl_path}"
 RUN echo "dl_filename: ${dl_filename}"
 
 
 RUN curl -LO ${dl_path}
 RUN unzip ${dl_filename}
-RUN mv norconex-collector-http-${build_version}-snapshot norconex-collector-http-${build_version}
+#RUN mv norconex-collector-http-${build_version}-snapshot norconex-collector-http-${build_version}
 RUN chmod +x norconex-collector-http-${build_version}/collector-http.*

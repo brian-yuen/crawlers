@@ -61,11 +61,14 @@ jobs:
           echo "GITHUB_ENV_TMP_Version: ${{ env.tmp_version }}"
           #echo "GITHUB_COMMITTER_TYPE: ${{ env.final_committer_type }}"
          
-      - name: Read and Extract Version
-        run: |
-          # Get the version line from pom.xml and extract the 2nd <version> tag
-          VERSION=$(sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' pom.xml | sed -n '2p')
-          echo "Version: $VERSION"
+      # - name: Read and Extract Version
+      #   run: |
+      #     # Get the version line from pom.xml and extract the 2nd <version> tag
+      #     VERSION=$(sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' pom.xml | sed -n '2p')
+      #     echo "Version: $VERSION"
+
+      - name: tmp env assign for testing
+        run: echo "tmp_version=3.0.2-snapshot" >> $GITHUB_ENV # testing purpose
 
       # convert the string to lower case for SNAPSHOT build    
       - name: convert string to lowercase
@@ -88,11 +91,6 @@ jobs:
       # extract version number from value and assign it to different variables for tagging use
       - name: Extract version numbers
         run: |  
-          #if [[ "${{env.version}}" == *"-snapshot"* ]]; then
-          
-          #echo "snapshot_image=${{env.version}}" >> $GITHUB_ENV
-          
-          #else
           # Extract major version
           echo "major=$(echo ${{env.version}} | cut -d '.' -f 1)" >> $GITHUB_ENV
 
@@ -101,7 +99,7 @@ jobs:
 
           # Extract major_minor_revis version
           echo "major_minor_revis=$(echo ${{env.version}} | cut -d '-' -f 1)" >> $GITHUB_ENV
-          #fi
+          
 
       # debug use only    
       - name: print extracted version numbers   
@@ -111,32 +109,29 @@ jobs:
           echo "Major_Minor: ${{ env.major_minor }}"
           echo "Major_Minor_Revis: ${{ env.major_minor_revis }}"
 
-    #   - name: Find and download latest snapshot zip file
-    #     run: |
-    #       # Define URL of the page containing the list of zip files
-    #       URL="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/collectors/norconex-collector-http/${{ steps.string.outputs.uppercase}}/"
+      - name: Find and download latest snapshot zip file
+        run: |
+          # Define URL of the page containing the list of zip files
+          URL="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/collectors/norconex-collector-http/${{ steps.string.outputs.uppercase}}/"
       
-    #       echo "URL: $URL"
+          echo "URL: $URL"
 
-    #       # Extract the list of zip file URLs from the page
-    #       all_zip_files=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+\.zip' | sort)
+          # Extract the list of zip file URLs from the page
+          all_zip_files=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+\.zip' | sort)
      
-    #       # Get the latest zip file URL
-    #       local_latest_file=$(echo "$all_zip_files" | tail -n 1)
-    #       echo "latest_file=$(echo "$all_zip_files" | tail -n 1)" >> $GITHUB_ENV
+          # Get the latest zip file URL
+          local_latest_file=$(echo "$all_zip_files" | tail -n 1)
+          echo "latest_file=$(echo "$all_zip_files" | tail -n 1)" >> $GITHUB_ENV
 
-    #       # Extract just the filename from the URL
-    #       echo "dl_filename=$(basename "$local_latest_file")" >> $GITHUB_ENV
+          # Extract just the filename from the URL
+          echo "dl_filename=$(basename "$local_latest_file")" >> $GITHUB_ENV
 
-    #       echo "latestfile: $local_latest_file"
+          echo "latestfile: $local_latest_file"
 
-    #   - name: Print Env Variable
-    #     run: |
-    #       echo "env latestfile: ${{env.latest_file}}" 
-    #       echo "env dl_filename: ${{env.dl_filename}}"
-      
-      - name: tmp env assign for testing
-        run: echo "version=3.0.2" >> $GITHUB_ENV # testing purpose
+      - name: Print Env Variable
+        run: |
+          echo "env latestfile: ${{env.latest_file}}" 
+          echo "env dl_filename: ${{env.dl_filename}}"
       
       # build the crawler base docker image
       - name: Build docker base image
