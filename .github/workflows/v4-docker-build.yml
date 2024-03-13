@@ -145,6 +145,8 @@ jobs:
                                 -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/ \
                                 -DoutputDirectory=./downloaded/
 
+      - name: List Downloaded Files
+        run: ls -la downloaded  
         
       - name: Extract Filename
         id: extract_filename
