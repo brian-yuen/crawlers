@@ -138,7 +138,7 @@ jobs:
           
       - name: Create Download Directory
         run: mkdir -p downloaded       
-        
+
       - name: Download Zip File
         run: |
             mvn dependency:get -DgroupId=com.norconex.crawler \
@@ -149,7 +149,10 @@ jobs:
                                 -DoutputDirectory=./downloaded/
 
       - name: List Downloaded Files
-        run: ls -la ./downloaded  
+        run: |
+          ls -la  
+          ls -la downloaded
+
 
       - name: Extract Filename
         id: extract_filename
