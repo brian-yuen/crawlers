@@ -130,7 +130,29 @@ jobs:
           echo "env latestfile: ${{env.latest_file}}" 
           echo "env dl_filename: ${{env.dl_filename}}"
       
-      
+          - name: Setup Java
+          uses: actions/setup-java@v2
+          with:
+            distribution: 'adopt'
+            java-version: '11'
+            
+      - name: Download Zip File
+        run: |
+            mvn dependency:get -DgroupId=com.norconex.crawler \
+                                -DartifactId=nx-crawler-web \
+                                -Dpackaging=zip \
+                                -Dversion=4.0.0-SNAPSHOT \
+                                -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
+            mv $(mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout)/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT/*.zip ./downloaded.zip
+        
+      - name: Extract Filename
+        id: extract_filename
+        run: echo "::set-output name=filename::$(basename ./downloaded.zip)"
+            
+      - name: Display Filename
+        run: echo "Downloaded Filename: ${{ steps.extract_filename.outputs.filename }}"
+
+          
     #   # build the crawler base docker image
     #   - name: Build docker base image
     #     run: |
