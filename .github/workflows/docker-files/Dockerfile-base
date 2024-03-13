@@ -7,15 +7,15 @@ WORKDIR /nxer
 
 RUN echo "build_version is: $build_version"
 
-RUN apt-get -y update && \
-    apt-get install -y nano && \
-    apt-get install -y curl && \
-    apt-get install -y unzip && \
-    apt-get install -y iputils-ping && \
-    apt install bash-completion && \
-    curl -LO https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.deb && \
-    dpkg -i jdk-17_linux-x64_bin.deb && \    
-    rm *.deb
+#RUN apt-get -y update && \
+#    apt-get install -y nano && \
+#    apt-get install -y curl && \
+#    apt-get install -y unzip && \
+#    apt-get install -y iputils-ping && \
+#    apt install bash-completion && \
+#    curl -LO https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.deb && \
+#    dpkg -i jdk-17_linux-x64_bin.deb && \    
+#    rm *.deb
 
 
 FROM base AS regular
@@ -38,7 +38,7 @@ RUN echo "s_version: ${build_version}"
 RUN echo "dl_path: ${dl_path}"
 RUN echo "dl_filename: ${dl_filename}"
 #RUN ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT/*.zip
-RUN ls -ls ./downloaded
+RUN ls -la
 
 #RUN curl -LO ${dl_path}
 #RUN unzip ${dl_filename}
