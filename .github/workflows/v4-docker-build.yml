@@ -145,8 +145,8 @@ jobs:
                                 -DartifactId=nx-crawler-web \
                                 -Dpackaging=zip \
                                 -Dversion=4.0.0-SNAPSHOT \
-                                -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/ \
-                                -DoutputDirectory=./downloaded/
+                                -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
+                                
 
       - name: List Downloaded Files
         run: |
@@ -156,11 +156,11 @@ jobs:
 
       - name: Extract Filename
         id: extract_filename
-        run: echo "::set-output name=filename::$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT/*.zip)"
+        run: echo "zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT/*.zip)" >> $GITHUB_ENV
             
       - name: Display Filename
         run: |
-          echo "Downloaded Filename: ${{ steps.extract_filename.outputs.filename }}"
+          echo "Downloaded Filename: ${{ env.zip_filename }}"
 
           
     #   # build the crawler base docker image
