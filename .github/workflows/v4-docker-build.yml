@@ -135,7 +135,10 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
-            
+          
+      - name: Create Download Directory
+        run: mkdir -p downloaded       
+        
       - name: Download Zip File
         run: |
             mvn dependency:get -DgroupId=com.norconex.crawler \
