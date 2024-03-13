@@ -3,7 +3,7 @@ name: V3 Docker Image Build
 on:
   # push:    
   #   branches:
-  #     - feature/8687upe3a-3.x-docker
+  #     - 3.x-branch
 
   #define the workflow that will trigger this workflow to run
   # workflow_run:
@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       manual_build_version:
-        description: 'Crawler Version Number - format: x.x.x or x.x.x-snapshot (Case senstive)'
+        description: 'Crawler Version Number - format: x.x.x or x.x.x-snapshot (Case senstive). If not specify, will read from pom.xml'
         required: false
         type: string
 
