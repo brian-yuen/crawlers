@@ -150,7 +150,7 @@ jobs:
 
       - name: List Downloaded Files
         run: |
-          ls -la /home/runner/.m2/repository/com/norconex/crawler
+          ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web
           ls -la downloaded
 
 
