@@ -1,0 +1,237 @@
+name: Build Docker Image
+
+on:
+  # push:    
+  #   branches:
+  #     - feature/docker-image
+
+  #define the workflow that will trigger this workflow to run
+  # workflow_run:
+  #   workflows: []
+  #   types:
+  #     - completed
+
+  #allow the workflow to run manually with version as input
+  workflow_dispatch:
+    inputs:
+      manual_build_version:
+        description: 'Crawler Version Number - format: x.x.x or x.x.x-snapshot (Case senstive)'
+        required: false
+        type: string
+
+env:
+  # define the types of committers
+  committer_types: "core solr idol elasticsearch sql amazoncloudsearch neo4j azurecognitivesearch apachekafka"     
+
+jobs:
+  # job to build the base crawler image
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: feature/docker-image
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+    #check which version value should be used
+      - name: check condition - version value
+        uses: haya14busa/action-cond@v1
+        id: version_value_check
+        with:
+          cond: ${{ inputs.manual_build_version == '' }}
+          if_true: $(cat pom.xml | grep -m1 "version" | sed 's/<.*>\(.*\)<.*>/\1/' | sed 's/^[ ]*//g')
+          if_false: ${{ inputs.manual_build_version }}
+
+      # assign version value into GITHUB env variable
+      - name: Use conditional value        
+        run: |
+          echo "tmp_version=${{ steps.version_value_check.outputs.value }}" >> $GITHUB_ENV
+          #echo "final_committer_type=${{ steps.committer_value_check.outputs.value}}" >> $GITHUB_ENV
+
+      # print the value of the env version variable for debugging use  
+      - name: print the value of GITHUB_ENV:version
+        run: |
+          #echo "read-data-version:$(cat pom.xml | grep -m1 "version" | sed 's/<.*>\(.*\)<.*>/\1/' | sed 's/^[ ]*//g')"
+          echo "input-version: ${{ inputs.manual_build_version }}"
+          #echo "input-version: $manual_build_version"
+          echo "GITHUB_ENV_TMP_Version: ${{ env.tmp_version }}"
+          #echo "GITHUB_COMMITTER_TYPE: ${{ env.final_committer_type }}"
+         
+      
+      # convert the string to lower case for SNAPSHOT build    
+      - name: convert string to lowercase
+        id: string
+        uses: ASzc/change-string-case-action@v1
+        with:
+          string: ${{ env.tmp_version }}
+      
+      # assign the lowercase value back to an variable for later use
+      - run: |
+          echo "version=${{ steps.string.outputs.lowercase }}" >> $GITHUB_ENV          
+          
+      # debug use only    
+      - run: |
+          echo "GITHUB_ENV_Version: ${{ env.version }}"
+          echo "lowercase: ${{ steps.string.outputs.lowercase }}"
+          echo "uppercase: ${{ steps.string.outputs.uppercase}}"
+
+      
+      # extract version number from value and assign it to different variables for tagging use
+      - name: Extract version numbers
+        run: |  
+          #if [[ "${{env.version}}" == *"-snapshot"* ]]; then
+          
+          #echo "snapshot_image=${{env.version}}" >> $GITHUB_ENV
+          
+          #else
+          # Extract major version
+          echo "major=$(echo ${{env.version}} | cut -d '.' -f 1)" >> $GITHUB_ENV
+
+          # Extract major_minor version
+          echo "major_minor=$(echo ${{env.version}} | cut -d '.' -f 1-2)" >> $GITHUB_ENV
+
+          # Extract major_minor_revis version
+          echo "major_minor_revis=$(echo ${{env.version}} | cut -d '-' -f 1)" >> $GITHUB_ENV
+          #fi
+
+      # debug use only    
+      - name: print extracted version numbers   
+        run: |
+          # Print extracted version numbers
+          echo "Major: ${{ env.major }}"
+          echo "Major_Minor: ${{ env.major_minor }}"
+          echo "Major_Minor_Revis: ${{ env.major_minor_revis }}"
+
+      - name: Find and download latest snapshot zip file
+        run: |
+          # Define URL of the page containing the list of zip files
+          URL="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/collectors/norconex-collector-http/${{ steps.string.outputs.uppercase}}/"
+      
+          echo "URL: $URL"
+
+          # Extract the list of zip file URLs from the page
+          all_zip_files=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+\.zip' | sort)
+     
+          # Get the latest zip file URL
+          local_latest_file=$(echo "$all_zip_files" | tail -n 1)
+          echo "latest_file=$(echo "$all_zip_files" | tail -n 1)" >> $GITHUB_ENV
+
+          # Extract just the filename from the URL
+          echo "dl_filename=$(basename "$local_latest_file")" >> $GITHUB_ENV
+
+          echo "latestfile: $local_latest_file"
+
+      - name: Print Env Variable
+        run: |
+          echo "env latestfile: ${{env.latest_file}}" 
+          echo "env dl_filename: ${{env.dl_filename}}"
+      
+      
+      # build the crawler base docker image
+      - name: Build docker base image
+        run: |
+          pwd
+          ls -a
+          #check whether a regular or a snapshot version should be built
+          if [[ "${{env.version}}" != *"-snapshot"* ]]; then
+
+            docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version}} --target regular --tag ${{env.version}}-crawler-base
+          else
+            echo "snapshot image build require"
+            
+            docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=${{env.dl_filename}} --target snapshot --tag ${{env.version}}-crawler-base
+          fi
+     
+
+       # update the base image version number within the Dockerfile-committers file
+      - name: Update Committer Dockerfile with the right base version
+        run: sed -i 's/replace-this-with-real-version/${{env.version}}/g' .github/workflows/docker-files/Dockerfile-committers
+
+      
+      # add committer library into base image and save as committer specific image
+      # for additional committers, add the committer type to the variable "committer_types" in the env variable section
+      - name: Build committer images
+        run: |
+          #if [[ "${{inputs.manual_committer_type}}" == 'all' ]]; then
+
+            for type in $committer_types; do
+            
+              #cp .github/workflows/docker-files/Dockerfile-com .github/workflows/docker-files/Dockerfile-com-$type
+              
+              #sed -i 's/replace-this-with-committer-files-in-dockerfile/$type-folder/g' .github/workflows/docker-files/Dockerfile-committers-$type
+              
+              more .github/workflows/docker-files/Dockerfile-committers
+              #docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg build_version=${{env.version}} --build-arg committer_type=${type} --tag ${{env.version}}-crawler-${type}
+              docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg build_version=${{env.major_minor_revis}} --build-arg committer_type=elasticsearch --tag ${{env.version}}-crawler-${type}
+              docker image ls -a
+            
+            done
+
+      # login to Dockerhub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      
+      # Tag and push images onto Dockerhub repo
+      - name: Tag and Push images to Dockerhub
+        run: |
+
+          # check if it is a snapshot build, if not, upload different favor of images
+          if [[ "${{env.version}}" != *"-snapshot"* ]]; then
+
+            docker image tag ${{env.version}}-crawler-base norconex/crawler:latest
+            docker image tag ${{env.version}}-crawler-base norconex/crawler:${{env.major}}
+            docker image tag ${{env.version}}-crawler-base norconex/crawler:${{env.major_minor}}
+            docker image tag ${{env.version}}-crawler-base norconex/crawler:${{env.version}}
+
+            # upload to dockerhub
+            docker push norconex/crawler:latest
+            docker push norconex/crawler:${{env.major}}
+            docker push norconex/crawler:${{env.major_minor}}
+            docker push norconex/crawler:${{env.version}}
+
+         
+            for type in $committer_types; do
+            
+              # tag local images with online norconex tag
+              docker image tag ${{env.version}}-crawler-$type norconex/crawler:${{env.major}}-$type
+              docker image tag ${{env.version}}-crawler-$type norconex/crawler:${{env.major_minor}}-$type
+              docker image tag ${{env.version}}-crawler-$type norconex/crawler:${{env.version}}-$type
+             
+              # upload online norconex tagged images onto docker hub 
+              docker push norconex/crawler:${{env.major}}-$type
+              docker push norconex/crawler:${{env.major_minor}}-$type
+              docker push norconex/crawler:${{env.version}}-$type
+
+            done  
+
+            # check what images are created
+            docker image ls -a
+                     
+            echo "Base, and committers images uploaded!"
+          
+          else # snapshot images
+            # tag the local images with repo inform for upload use
+            docker image tag ${{env.version}}-crawler-base norconex/crawler:${{env.version}}
+            
+            # upload tagged images to dockerhub
+            docker push norconex/crawler:${{env.version}}
+                      
+            # tag images for different committer type
+            for type in $committer_types; do
+
+              docker image tag ${{env.version}}-crawler-$type norconex/crawler:${{env.version}}-$type
+                
+              # upload different type of committer images
+              docker push norconex/crawler:${{env.version}}-$type
+
+            done
+            
+            echo "snapshot uploaded!"
+          fi
