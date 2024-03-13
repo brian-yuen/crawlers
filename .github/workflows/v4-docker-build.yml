@@ -148,7 +148,7 @@ jobs:
         
       - name: Extract Filename
         id: extract_filename
-        run: echo "::set-output name=filename::$(basename $(find ./downloaded -name '*.zip'))"
+        run: echo "::set-output name=filename::$(basename ./downloaded/*.zip)"
             
       - name: Display Filename
         run: |
