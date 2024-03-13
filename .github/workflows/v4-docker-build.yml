@@ -153,6 +153,9 @@ jobs:
           ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT
           ls -la downloaded
 
+      - name: Copy zip file
+        run: |
+          cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT/*.zip ./downloaded/
 
       - name: Extract Filename
         id: extract_filename

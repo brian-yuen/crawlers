@@ -37,7 +37,8 @@ RUN echo "this is snapshot build"
 RUN echo "s_version: ${build_version}"
 RUN echo "dl_path: ${dl_path}"
 RUN echo "dl_filename: ${dl_filename}"
-RUN ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT/*.zip
+#RUN ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT/*.zip
+RUN ls -ls ./downloaded
 
 #RUN curl -LO ${dl_path}
 #RUN unzip ${dl_filename}
