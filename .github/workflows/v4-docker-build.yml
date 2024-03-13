@@ -156,7 +156,7 @@ jobs:
 
       - name: Extract Filename
         id: extract_filename
-        run: echo "::set-output name=filename::$(basename ./downloaded/*.zip)"
+        run: echo "::set-output name=filename::$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT/*.zip)"
             
       - name: Display Filename
         run: |
