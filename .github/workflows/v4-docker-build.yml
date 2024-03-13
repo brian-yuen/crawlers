@@ -150,7 +150,8 @@ jobs:
         run: echo "::set-output name=filename::$(basename ./downloaded.zip)"
             
       - name: Display Filename
-        run: echo "Downloaded Filename: ${{ steps.extract_filename.outputs.filename }}"
+        run: |
+          echo "Downloaded Filename: ${{ steps.extract_filename.outputs.filename }}"
 
           
     #   # build the crawler base docker image
