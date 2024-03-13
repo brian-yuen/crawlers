@@ -130,11 +130,11 @@ jobs:
           echo "env latestfile: ${{env.latest_file}}" 
           echo "env dl_filename: ${{env.dl_filename}}"
       
-          - name: Setup Java
-          uses: actions/setup-java@v2
-          with:
-            distribution: 'adopt'
-            java-version: '11'
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
             
       - name: Download Zip File
         run: |
