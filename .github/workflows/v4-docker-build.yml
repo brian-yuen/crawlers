@@ -150,7 +150,7 @@ jobs:
 
       - name: List Downloaded Files
         run: |
-          ls -la  
+          ls -la /home
           ls -la downloaded
 
 
