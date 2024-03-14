@@ -147,7 +147,7 @@ jobs:
 
             # download the latest zip file from meven central
             mvn dependency:get -DgroupId=com.norconex.crawler \
-                               -DartifactId=nx-crawler-web \
+                               -DartifactId=nx-crawler-$type \
                                -Dpackaging=zip \
                                -Dversion=4.0.0-SNAPSHOT \
                                -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
