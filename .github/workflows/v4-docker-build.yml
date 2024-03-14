@@ -138,7 +138,39 @@ jobs:
           
           
       
-      - name: Download Zip File
+    #   - name: Download Zip File
+    #     run: |
+    #       for type in $crawler_types; do
+
+    #         # create folder for the downloaded files
+    #         mkdir -p downloaded/$type
+
+    #         # download the latest zip file from meven central
+    #         mvn dependency:get -DgroupId=com.norconex.crawler \
+    #                            -DartifactId=nx-crawler-$type \
+    #                            -Dpackaging=zip \
+    #                            -Dversion=4.0.0-SNAPSHOT \
+    #                            -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
+          
+    #         # copy the zip files over to the downloaded folder where docker has access to
+    #         cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT/*.zip ./downloaded/$type
+
+    #         # debug
+    #         ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT
+    #         ls -la downloaded/$type
+            
+    #         #Extract Filename
+    #         echo "zip_filename_$type=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT/*.zip)" >> $GITHUB_ENV
+          
+    #       done
+
+    #   - name: Display Filename
+    #     run: |
+    #       echo "Downloaded Filename: ${{env.zip_filename}}"
+
+          
+      # build the crawler base docker image
+      - name: Build docker base image
         run: |
           for type in $crawler_types; do
 
@@ -151,28 +183,23 @@ jobs:
                                -Dpackaging=zip \
                                -Dversion=4.0.0-SNAPSHOT \
                                -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
-          
+        
             # copy the zip files over to the downloaded folder where docker has access to
             cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT/*.zip ./downloaded/$type
 
             # debug
             ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT
             ls -la downloaded/$type
-            
+          
             #Extract Filename
-            echo "zip_filename_$type=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT/*.zip)" >> $GITHUB_ENV
-          
-          done
+            zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT/*.zip)
 
-    #   - name: Display Filename
-    #     run: |
-    #       echo "Downloaded Filename: ${{env.zip_filename}}"
-
-          
-      # build the crawler base docker image
-      - name: Build docker base image
-        run: |
-          for type in $crawler_types; do
+            echo ""
+            echo ""
+            echo "zip filename: $zip_filename"
+            echo ""
+            echo ""
+            
 
             #check whether a regular or a snapshot version should be built
             if [[ "${{env.version}}" != *"-snapshot"* ]]; then
@@ -181,8 +208,8 @@ jobs:
             
             else
               echo "snapshot image build require"
-              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=${{env.zip_filename}}_$type --target snapshot --tag ${{env.version}}-crawler-$type-base
-            
+              zip_filname=
+              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version}}-crawler-$type-base         
             fi                        
           done
 
