@@ -214,7 +214,7 @@ jobs:
           
             base_name="${{env.version}}-crawler-$type-base"
 
-            sed -i 's/replace-this-with-real-version/$base_name/g' .github/workflows/docker-files/Dockerfile-committers
+            sed -i 's/replace-this-with-real-version/${base_name}/g' .github/workflows/docker-files/Dockerfile-committers
             more .github/workflows/docker-files/Dockerfile-committers
        
           done
