@@ -211,14 +211,14 @@ jobs:
             
             if [[ $type == "web" ]]; then
               echo "replace file with web"
-              cp .github/workflows/docker-files/Dockerfile-committers .github/workflows/docker-files/Dockerfile-committers-$type
-              sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-web-base/g' .github/workflows/docker-files/Dockerfile-committers-$type
-              more .github/workflows/docker-files/Dockerfile-committers-$type
+              cp .github/workflows/docker-files/Dockerfile-committers-template .github/workflows/docker-files/Dockerfile-committers
+              sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-web-base/g' .github/workflows/docker-files/Dockerfile-committers
+              more .github/workflows/docker-files/Dockerfile-committers
             else
               echo "replace file with fs"
-              cp .github/workflows/docker-files/Dockerfile-committers .github/workflows/docker-files/Dockerfile-committers-$type
-              sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-fs-base/g' .github/workflows/docker-files/Dockerfile-committers-$type
-              more .github/workflows/docker-files/Dockerfile-committers-$type
+              cp .github/workflows/docker-files/Dockerfile-committers-template .github/workflows/docker-files/Dockerfile-committers
+              sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-fs-base/g' .github/workflows/docker-files/Dockerfile-committers
+              more .github/workflows/docker-files/Dockerfile-committers
             fi
 
           done
