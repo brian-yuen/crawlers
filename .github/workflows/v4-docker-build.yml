@@ -178,7 +178,7 @@ jobs:
           else
             echo "snapshot image build require"
             
-            docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=${{env.dl_filename}} --target snapshot --tag ${{env.version}}-crawler-base
+            docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=${{ env.zip_filename }} --target snapshot --tag ${{env.version}}-crawler-base
           fi
      
 
