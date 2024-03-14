@@ -46,6 +46,6 @@ RUN ls -la /nxer
 
 #RUN curl -LO ${dl_path}
 RUN unzip ${dl_filename}
-RUN mv norconex-collector-http-${build_version}-SNAPSHOT norconex-collector-http-${build_version}
-RUN chmod +x norconex-collector-http-${build_version}/collector-http.*
+RUN mv nx-crawler-web-${build_version}-SNAPSHOT nx-crawler-web-${build_version}
+RUN chmod +x nx-crawler-web-${build_version}/crawler-web.*
 RUN rm *.zip
