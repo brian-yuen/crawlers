@@ -160,7 +160,7 @@ jobs:
             ls -la downloaded/$type
             
             #Extract Filename
-            echo "zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT/*.zip)" >> $GITHUB_ENV
+            echo "zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT/*.zip)" >> $GITHUB_ENV
           
           done
 
