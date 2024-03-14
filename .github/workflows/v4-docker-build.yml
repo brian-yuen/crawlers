@@ -203,23 +203,21 @@ jobs:
 
             #check whether a regular or a snapshot version should be built
             if [[ "${{env.version}}" != *"-snapshot"* ]]; then
-
-              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version}} --target regular --tag ${{env.version}}-crawler-base
-            
+              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version}} --target regular --tag ${{env.version}}-crawler-base            
             else
-              echo "snapshot image build require"
-              
+              echo "snapshot image build require"              
               docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version}}-crawler-$type-base         
             fi                        
             
-            if [[ "$type" == "web"]]; then
+            if [[ $type == "web" ]]; then
               echo "replace file with web"
               sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-web-base/g' .github/workflows/docker-files/Dockerfile-committers
               more .github/workflows/docker-files/Dockerfile-committers
             else
               echo "replace file with fs"
-              sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-web-base/g' .github/workflows/docker-files/Dockerfile-committers
+              sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-fs-base/g' .github/workflows/docker-files/Dockerfile-committers
               more .github/workflows/docker-files/Dockerfile-committers
+            fi
 
           done
       
