@@ -42,7 +42,7 @@ RUN echo "crawler type: $crawler_type"
 
 RUN ls -la
 RUN pwd
-COPY downloaded/*.zip /nxer/
+COPY downloaded/$crawler_type/*.zip /nxer/
 RUN ls -la /nxer
 
 #RUN curl -LO ${dl_path}
