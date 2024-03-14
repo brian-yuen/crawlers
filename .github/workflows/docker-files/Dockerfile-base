@@ -40,7 +40,7 @@ RUN echo "dl_filename: ${dl_filename}"
 #RUN ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-web/4.0.0-SNAPSHOT/*.zip
 RUN ls -la
 RUN pwd
-COPY downloaded/*.zip 
+COPY downloaded/*.zip /nxer/
 RUN ls -la /nxer
 
 #RUN curl -LO ${dl_path}
