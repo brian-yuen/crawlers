@@ -211,12 +211,14 @@ jobs:
             
             if [[ $type == "web" ]]; then
               echo "replace file with web"
-              sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-web-base/g' .github/workflows/docker-files/Dockerfile-committers
-              more .github/workflows/docker-files/Dockerfile-committers
+              cp .github/workflows/docker-files/Dockerfile-committers .github/workflows/docker-files/Dockerfile-committers-$type
+              sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-web-base/g' .github/workflows/docker-files/Dockerfile-committers-$type
+              more .github/workflows/docker-files/Dockerfile-committers-$type
             else
               echo "replace file with fs"
-              sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-fs-base/g' .github/workflows/docker-files/Dockerfile-committers
-              more .github/workflows/docker-files/Dockerfile-committers
+              cp .github/workflows/docker-files/Dockerfile-committers .github/workflows/docker-files/Dockerfile-committers-$type
+              sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-fs-base/g' .github/workflows/docker-files/Dockerfile-committers-$type
+              more .github/workflows/docker-files/Dockerfile-committers-$type
             fi
 
           done
