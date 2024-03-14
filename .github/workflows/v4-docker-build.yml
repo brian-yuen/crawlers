@@ -160,7 +160,7 @@ jobs:
             ls -la downloaded/$type
             
             #Extract Filename
-            echo "zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT/*.zip)" >> $GITHUB_ENV
+            echo "zip_filename_$type=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT/*.zip)" >> $GITHUB_ENV
           
           done
 
@@ -181,7 +181,7 @@ jobs:
             
             else
               echo "snapshot image build require"
-              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=${{env.zip_filename}} --target snapshot --tag ${{env.version}}-crawler-$type-base
+              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=${{env.zip_filename}}_$type --target snapshot --tag ${{env.version}}-crawler-$type-base
             
             fi                        
           done
