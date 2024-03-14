@@ -1,4 +1,5 @@
 From ubuntu:22.04 AS base
+ARG crawler_type
 ARG build_version
 ARG dl_path
 ARG dl_filename
@@ -37,7 +38,7 @@ RUN echo "this is snapshot build"
 RUN echo "s_version: ${build_version}"
 RUN echo "dl_path: ${dl_path}"
 RUN echo "dl_filename: ${dl_filename}"
-
+RUN echo "crawler type: $crawler_type"
 
 RUN ls -la
 RUN pwd
@@ -46,6 +47,6 @@ RUN ls -la /nxer
 
 #RUN curl -LO ${dl_path}
 RUN unzip ${dl_filename}
-RUN mv nx-crawler-web-${build_version}-SNAPSHOT nx-crawler-web-${build_version}
-RUN chmod +x nx-crawler-web-${build_version}/crawl-web.*
+RUN mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT nx-crawler-${crawler_type}-${build_version}
+RUN chmod +x nx-crawler-${crawler_type}-${build_version}/crawl-${crawler_type}.*
 RUN rm *.zip
