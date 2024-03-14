@@ -47,5 +47,5 @@ RUN ls -la /nxer
 #RUN curl -LO ${dl_path}
 RUN unzip ${dl_filename}
 RUN mv nx-crawler-web-${build_version}-SNAPSHOT nx-crawler-web-${build_version}
-RUN chmod +x nx-crawler-web-${build_version}/crawler-web.*
+RUN chmod +x nx-crawler-web-${build_version}/crawl-web.*
 RUN rm *.zip
