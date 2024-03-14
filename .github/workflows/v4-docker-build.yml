@@ -199,7 +199,7 @@ jobs:
             echo "zip filename: $zip_filename"
             echo ""
             echo ""
-            
+
 
             #check whether a regular or a snapshot version should be built
             if [[ "${{env.version}}" != *"-snapshot"* ]]; then
@@ -211,15 +211,20 @@ jobs:
               zip_filname=
               docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version}}-crawler-$type-base         
             fi                        
+          
+            sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-$type-base/g' .github/workflows/docker-files/Dockerfile-committers
+            more .github/workflows/docker-files/Dockerfile-committers
+       
           done
-
+      
           docker image ls
-     
 
-    #    # update the base image version number within the Dockerfile-committers file
+      # update the base image version number within the Dockerfile-committers file
     #   - name: Update Committer Dockerfile with the right base version
-    #     run: sed -i 's/replace-this-with-real-version/${{env.version}}/g' .github/workflows/docker-files/Dockerfile-committers
-
+    #     run: |
+    #       sed -i 's/replace-this-with-real-version/${{env.version}}-crawler-$type-base/g' .github/workflows/docker-files/Dockerfile-committers
+    #       more .github/workflows/docker-files/Dockerfile-committers
+    
       
     #   # add committer library into base image and save as committer specific image
     #   # for additional committers, add the committer type to the variable "committer_types" in the env variable section
