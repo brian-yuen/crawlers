@@ -10,6 +10,7 @@ RUN echo "build_version is: $build_version"
 WORKDIR /nxer
 
 RUN curl -LO ${dl_path}
-RUN unzip norconex-committer-${committer_type}-${committer_version}.zip
-RUN cp norconex-committer-${committer_type}-${committer_version}/lib/* norconex-collector-http-${build_version}/lib/
+RUN unzip nx-committer-elasticsearch-4.0.0-20240313.161608-38.zip
+#RUN unzip nx-committer-${committer_type}-${committer_version}.zip
+#RUN cp norconex-committer-${committer_type}-${committer_version}/lib/* norconex-collector-http-${build_version}/lib/
 RUN rm *.zip
