@@ -21,7 +21,7 @@ on:
 
 env:
   # define the types of committers
-  committer_types: "core solr idol elasticsearch sql amazoncloudsearch neo4j azurecognitivesearch apachekafka"     
+  committer_types: "solr idol elasticsearch sql amazoncloudsearch neo4j azurecognitivesearch apachekafka"     
   crawler_types: "web fs"
 
 jobs:
@@ -233,7 +233,7 @@ jobs:
 
               # debug
               ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-committer-$com_type/${{steps.string.outputs.uppercase}}
-              ls -la downloaded/$type
+              ls -la downloaded/$com_type
             
               #Extract Filename
               zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-committer-$com_type/${{steps.string.outputs.uppercase}}/*.zip)
