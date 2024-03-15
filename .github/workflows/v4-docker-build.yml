@@ -240,7 +240,7 @@ jobs:
             
               #more .github/workflows/docker-files/Dockerfile-committers
               #docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=elasticsearch --build-arg dl_path="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-committer-elasticsearch/4.0.0-SNAPSHOT/nx-committer-elasticsearch-4.0.0-20240313.161608-38.zip" --build-arg committer_version=4.0.0 --build-arg build_version=${{env.major_minor_revis}} --tag ${{env.version}}-crawler-${type}-${com_type}
-              docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=$com_type --build-arg dl_filename=$zip_filename --build-arg committer_version=${{env.version}} --build-arg build_version=${{env.major_minor_revis}} --tag ${{env.version}}-crawler-$type-$com_type
+              docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=$com_type --build-arg dl_filename=$zip_filename --build-arg committer_version=${{env.string.outputs.uppercase}} --build-arg build_version=${{env.major_minor_revis}} --tag ${{env.version}}-crawler-$type-$com_type
               
             done
 
