@@ -275,12 +275,12 @@ jobs:
             
     #         done
 
-    #   # login to Dockerhub
-    #   - name: Login to Docker Hub
-    #     uses: docker/login-action@v3
-    #     with:
-    #       username: ${{ secrets.DOCKER_HUB_USERNAME }}
-    #       password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      # login to Dockerhub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       
       # Tag and push images onto Dockerhub repo
@@ -327,7 +327,7 @@ jobs:
                 docker image tag ${{env.version}}-crawler-$type-base norconex/crawler:${{env.version}}-$type
                 
                 # upload tagged images to dockerhub
-                # docker push norconex/crawler:${{env.version}}-$type
+                docker push norconex/crawler:${{env.version}}-$type
                         
                 # tag images for different committer type
                 for com_type in $committer_types; do
@@ -335,7 +335,7 @@ jobs:
                   docker image tag ${{env.version}}-crawler-$type-$com_type norconex/crawler:${{env.version}}-$type-$com_type
                     
                 # upload different type of committer images
-                #   docker push norconex/crawler:${{env.version}}-$type-$com_type
+                docker push norconex/crawler:${{env.version}}-$type-$com_type
 
                 done
                 
