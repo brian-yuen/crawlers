@@ -221,12 +221,12 @@ jobs:
               more .github/workflows/docker-files/Dockerfile-committers
             fi
 
-            # for type in $committer_types; do
+            for type in $committer_types; do
               
-            #   more .github/workflows/docker-files/Dockerfile-committers
-            #   docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=$type --build-arg dl_path="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-committer-elasticsearch/4.0.0-SNAPSHOT/nx-committer-elasticsearch-4.0.0-20240313.161608-38.zip" --build-arg committer_version=4.0.0 --build-arg build_version=${{env.major_minor_revis}}--tag ${{env.version}}-crawler-${type}
+              more .github/workflows/docker-files/Dockerfile-committers
+              docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=$type --build-arg dl_path="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-committer-elasticsearch/4.0.0-SNAPSHOT/nx-committer-elasticsearch-4.0.0-20240313.161608-38.zip" --build-arg committer_version=4.0.0 --build-arg build_version=${{env.major_minor_revis}}--tag ${{env.version}}-crawler-${type}
               
-            # done
+            done
 
 
           done
