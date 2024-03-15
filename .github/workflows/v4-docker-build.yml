@@ -181,18 +181,18 @@ jobs:
             mvn dependency:get -DgroupId=com.norconex.crawler \
                                -DartifactId=nx-crawler-$type \
                                -Dpackaging=zip \
-                               -Dversion=${{env.version}} \
+                               -Dversion=${{ steps.string.outputs.uppercase}}" \
                                -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
         
             # copy the zip files over to the downloaded folder where docker has access to
-            cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version}}/*.zip ./downloaded/$type
+            cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{ steps.string.outputs.uppercase}}"/*.zip ./downloaded/$type
 
             # debug
-            ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version}}
+            ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{ steps.string.outputs.uppercase}}"
             ls -la downloaded/$type
           
             #Extract Filename
-            zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version}}/*.zip)
+            zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{ steps.string.outputs.uppercase}}"/*.zip)
 
             echo ""
             echo ""
