@@ -217,7 +217,10 @@ jobs:
             fi
 
             for com_type in $committer_types; do
-              
+            
+              # create folder for the downloaded files
+              mkdir -p downloaded/$com_type 
+
               # download the latest zip file from meven central
               mvn dependency:get -DgroupId=com.norconex.crawler \
                               -DartifactId=nx-committer-$com_type \
