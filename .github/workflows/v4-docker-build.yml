@@ -174,6 +174,7 @@ jobs:
         run: |
           for type in $crawler_types; do
 
+            ### this section might need to move to under snapshot section, depends on what the release download URL looks like
             # create folder for the downloaded files
             mkdir -p downloaded/$type
 
@@ -193,20 +194,14 @@ jobs:
           
             #Extract Filename
             zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{ steps.string.outputs.uppercase}}/*.zip)
-
-            echo ""
-            echo ""
-            echo "zip filename: $zip_filename"
-            echo ""
-            echo ""
-
-
+            ###
+           
             #check whether a regular or a snapshot version should be built
             if [[ "${{env.version}}" != *"-snapshot"* ]]; then
               docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version}} --target regular --tag ${{env.version}}-crawler-base            
             else
               echo "snapshot image build require"              
-              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_path=${{env.latest_file}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version}}-crawler-$type-base         
+              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version}}-crawler-$type-base         
             fi                        
             
             if [[ $type == "web" ]]; then
@@ -223,8 +218,26 @@ jobs:
 
             for com_type in $committer_types; do
               
+              # download the latest zip file from meven central
+              mvn dependency:get -DgroupId=com.norconex.crawler \
+                              -DartifactId=nx-committer-$com_type \
+                              -Dpackaging=zip \
+                              -Dversion=${{steps.string.outputs.uppercase}} \
+                              -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
+            
+              # copy the zip files over to the downloaded folder where docker has access to
+              cp /home/runner/.m2/repository/com/norconex/crawler/nx-committer-$com_type/${{steps.string.outputs.uppercase}}/*.zip ./downloaded/$com_type
+
+              # debug
+              ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-committer-$com_type/${{steps.string.outputs.uppercase}}
+              ls -la downloaded/$type
+            
+              #Extract Filename
+              zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-committer-$com_type/${{steps.string.outputs.uppercase}}/*.zip)
+            
               #more .github/workflows/docker-files/Dockerfile-committers
-              docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=elasticsearch --build-arg dl_path="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-committer-elasticsearch/4.0.0-SNAPSHOT/nx-committer-elasticsearch-4.0.0-20240313.161608-38.zip" --build-arg committer_version=4.0.0 --build-arg build_version=${{env.major_minor_revis}} --tag ${{env.version}}-crawler-${type}-${com_type}
+              #docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=elasticsearch --build-arg dl_path="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-committer-elasticsearch/4.0.0-SNAPSHOT/nx-committer-elasticsearch-4.0.0-20240313.161608-38.zip" --build-arg committer_version=4.0.0 --build-arg build_version=${{env.major_minor_revis}} --tag ${{env.version}}-crawler-${type}-${com_type}
+              docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=$com_type --build-arg dl_filename=$zip_filename --build-arg committer_version=${{env.version}} --build-arg build_version=${{env.major_minor_revis}} --tag ${{env.version}}-crawler-$type-$com_type
               
             done
 
