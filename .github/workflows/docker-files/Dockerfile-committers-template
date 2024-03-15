@@ -7,6 +7,9 @@ ARG build_version
 ARG crawler_type
 
 RUN echo "committer type is: $committer_type"
+RUN echo "committer version is: $committer_version"
+RUN echo "crawler_type: ${crawler_type}"
+RUN echo "dl filename: ${dl_filename}"
 RUN echo "build_version is: $build_version"
 
 WORKDIR /nxer
