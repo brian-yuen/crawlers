@@ -138,38 +138,6 @@ jobs:
           java-version: '17'
           
           
-      
-    #   - name: Download Zip File
-    #     run: |
-    #       for type in $crawler_types; do
-
-    #         # create folder for the downloaded files
-    #         mkdir -p downloaded/$type
-
-    #         # download the latest zip file from meven central
-    #         mvn dependency:get -DgroupId=com.norconex.crawler \
-    #                            -DartifactId=nx-crawler-$type \
-    #                            -Dpackaging=zip \
-    #                            -Dversion=4.0.0-SNAPSHOT \
-    #                            -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
-          
-    #         # copy the zip files over to the downloaded folder where docker has access to
-    #         cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT/*.zip ./downloaded/$type
-
-    #         # debug
-    #         ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT
-    #         ls -la downloaded/$type
-            
-    #         #Extract Filename
-    #         echo "zip_filename_$type=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/4.0.0-SNAPSHOT/*.zip)" >> $GITHUB_ENV
-          
-    #       done
-
-    #   - name: Display Filename
-    #     run: |
-    #       echo "Downloaded Filename: ${{env.zip_filename}}"
-
-          
       # build the crawler base docker image
       - name: Build docker base image
         run: |
@@ -189,10 +157,11 @@ jobs:
                                  -DartifactId=nx-crawler-$type \
                                  -Dpackaging=zip \
                                  -Dversion=${{env.version_lowercase}} \
+                                 -Dtransitive=false \
                                  -DremoteRepositories=https://repo1.maven.org/maven2/com/norconex/
               
               docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version_lowercase}} --target regular --tag ${{env.version_lowercase}}-crawler-base            
-            else
+            else # start building Snapshot Base Image
               echo "snapshot image build require"              
               
               # download the latest zip file from meven central
@@ -200,6 +169,7 @@ jobs:
                                  -DartifactId=nx-crawler-$type \
                                  -Dpackaging=zip \
                                  -Dversion=${{env.version_uppercase}} \
+                                 -Dtransitive=false \
                                  -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
         
               # copy the zip files over to the downloaded folder where docker has access to
@@ -238,6 +208,7 @@ jobs:
                               -DartifactId=nx-committer-$com_type \
                               -Dpackaging=zip \
                               -Dversion=${{env.version_uppercase}} \
+                              -Dtransitive=false \
                               -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
             
               # copy the zip files over to the downloaded folder where docker has access to
@@ -255,32 +226,10 @@ jobs:
               docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=$com_type --build-arg dl_filename=$com_zip_filename --build-arg committer_version=${{ env.version_uppercase}} --build-arg build_version=${{env.major_minor_revis}} --build-arg crawler_type=$type --tag ${{env.version_lowercase}}-crawler-$type-$com_type
               
             done
-
-
           done
       
           docker image ls
 
-    
-      
-    #   # add committer library into base image and save as committer specific image
-    #   # for additional committers, add the committer type to the variable "committer_types" in the env variable section
-    #   - name: Build committer images
-    #     run: |
-    #       #if [[ "${{inputs.manual_committer_type}}" == 'all' ]]; then
-
-    #         for type in $committer_types; do
-            
-    #           #cp .github/workflows/docker-files/Dockerfile-com .github/workflows/docker-files/Dockerfile-com-$type
-              
-    #           #sed -i 's/replace-this-with-committer-files-in-dockerfile/$type-folder/g' .github/workflows/docker-files/Dockerfile-committers-$type
-              
-    #           more .github/workflows/docker-files/Dockerfile-committers
-    #           #docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg build_version=${{env.version_lowercase}} --build-arg committer_type=${type} --tag ${{env.version_lowercase}}-crawler-${type}
-    #           docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg build_version=${{env.major_minor_revis}} --build-arg committer_type=elasticsearch --tag ${{env.version_lowercase}}-crawler-${type}
-    #           docker image ls -a
-            
-    #         done
 
       # login to Dockerhub
       - name: Login to Docker Hub
