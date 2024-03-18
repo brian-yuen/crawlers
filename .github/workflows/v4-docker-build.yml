@@ -126,7 +126,7 @@ jobs:
             local_dl_filename=$(basename "$local_latest_file")
 
             pwd
-            curl -LO $latest_file
+            curl -LO $local_latest_file
             cp $local_dl_filename downloaded/$type
 
             # Extract just the filename from the URL
@@ -135,7 +135,7 @@ jobs:
             echo "latestfile: $local_latest_file"
 
             ls -la downloaded/$type
-            
+
           done
 
       - name: Print Env Variable
