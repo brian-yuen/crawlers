@@ -252,6 +252,7 @@ jobs:
               curl -LO $local_latest_file
               ls -la
 
+              echo "local dl filename: $local_dl_filename"
 
               #docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base         
               docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$local_dl_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base
