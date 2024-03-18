@@ -125,16 +125,20 @@ jobs:
 
             local_dl_filename=$(basename "$local_latest_file")
 
+            # create folder for the downloaded files
+            mkdir -p downloaded/$type
+
             pwd
+            cd downloaded/$type
             curl -LO $local_latest_file
-            cp $local_dl_filename downloaded/$type
+            ls -la
 
             # Extract just the filename from the URL
             echo "dl_filename=$(basename "$local_latest_file")" >> $GITHUB_ENV
 
             echo "latestfile: $local_latest_file"
 
-            ls -la downloaded/$type
+            
 
           done
 
