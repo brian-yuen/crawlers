@@ -107,40 +107,24 @@ jobs:
           echo "Major_Minor: ${{env.major_minor}}"
           echo "Major_Minor_Revis: ${{env.major_minor_revis}}"
 
-    #   - name: Find and download latest crawler snapshot zip file
+    #   - name: Find and download latest snapshot zip file
     #     run: |
-    #       for type in $crawler_types; do          
-
-    #         # Define URL of the page containing the list of zip files
-    #         URL="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}/"
+    #       # Define URL of the page containing the list of zip files
+    #       URL="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-crawler-web/${{env.version_uppercase}}/"
       
-    #         echo "URL: $URL"
+    #       echo "URL: $URL"
 
-    #         # Extract the list of zip file URLs from the page
-    #         all_zip_files=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+\.zip' | sort)
+    #       # Extract the list of zip file URLs from the page
+    #       all_zip_files=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+\.zip' | sort)
      
-    #         # Get the latest zip file URL
-    #         local_latest_file=$(echo "$all_zip_files" | tail -n 1)
-    #         echo "latest_file=$(echo "$all_zip_files" | tail -n 1)" >> $GITHUB_ENV
+    #       # Get the latest zip file URL
+    #       local_latest_file=$(echo "$all_zip_files" | tail -n 1)
+    #       echo "latest_file=$(echo "$all_zip_files" | tail -n 1)" >> $GITHUB_ENV
 
-    #         local_dl_filename=$(basename "$local_latest_file")
+    #       # Extract just the filename from the URL
+    #       echo "dl_filename=$(basename "$local_latest_file")" >> $GITHUB_ENV
 
-    #         # create folder for the downloaded files
-    #         mkdir -p downloaded/$type
-
-    #         pwd
-    #         cd downloaded/$type
-    #         curl -LO $local_latest_file
-    #         ls -la
-
-    #         # Extract just the filename from the URL
-    #         echo "dl_filename=$(basename "$local_latest_file")" >> $GITHUB_ENV
-
-    #         echo "latestfile: $local_latest_file"
-
-            
-
-    #       done
+    #       echo "latestfile: $local_latest_file"
 
     #   - name: Print Env Variable
     #     run: |
@@ -205,60 +189,30 @@ jobs:
                                  -DartifactId=nx-crawler-$type \
                                  -Dpackaging=zip \
                                  -Dversion=${{env.version_lowercase}} \
-                                 -Dtransitive=false \
                                  -DremoteRepositories=https://repo1.maven.org/maven2/com/norconex/
               
               docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version_lowercase}} --target regular --tag ${{env.version_lowercase}}-crawler-base            
-            else # Snaphost base build
+            else
               echo "snapshot image build require"              
               
-            #   # download the latest zip file from meven central
-            #   mvn dependency:get -DgroupId=com.norconex.crawler \
-            #                      -DartifactId=nx-crawler-$type \
-            #                      -Dpackaging=zip \
-            #                      -Dversion=${{env.version_uppercase}} \
-            #                      -Dtransitive=false \
-            #                      -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
+              # download the latest zip file from meven central
+              mvn dependency:get -DgroupId=com.norconex.crawler \
+                                 -DartifactId=nx-crawler-$type \
+                                 -Dpackaging=zip \
+                                 -Dversion=${{env.version_uppercase}} \
+                                 -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
         
-            #   # copy the zip files over to the downloaded folder where docker has access to
-            #   cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}/*.zip ./downloaded/$type
+              # copy the zip files over to the downloaded folder where docker has access to
+              cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}/*.zip ./downloaded/$type
 
-            #   # debug
-            #   ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}
-            #   ls -la downloaded/$type
+              # debug
+              ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}
+              ls -la downloaded/$type
           
-            #   #Extract Filename
-            #   zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{ env.version_uppercase}}/*.zip)
-                
-              # Define URL of the page containing the list of zip files
-              URL="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}/"
-      
-              echo "URL: $URL"
-
-              # Extract the list of zip file URLs from the page
-              all_zip_files=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+\.zip' | sort)
-     
-              # Get the latest zip file URL
-              local_latest_file=$(echo "$all_zip_files" | tail -n 1)
-              echo "latest_file=$(echo "$all_zip_files" | tail -n 1)" >> $GITHUB_ENV
-
-              local_dl_filename=$(basename "$local_latest_file")
-
-              # create folder for the downloaded files
-              mkdir -p downloaded/$type
-
-              pwd
-              cd downloaded/$type
-              curl -LO $local_latest_file
-              ls -la
-
-              cd ../..
-              pwd
-
-              echo "local dl filename: $local_dl_filename"
-
-              #docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base         
-              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$local_dl_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base
+              #Extract Filename
+              zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{ env.version_uppercase}}/*.zip)
+                            
+              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base         
             fi                        
             
             if [[ $type == "web" ]]; then
@@ -328,72 +282,72 @@ jobs:
             
     #         done
 
-    #   # login to Dockerhub
-    #   - name: Login to Docker Hub
-    #     uses: docker/login-action@v3
-    #     with:
-    #       username: ${{ secrets.DOCKER_HUB_USERNAME }}
-    #       password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      # login to Dockerhub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       
-    #   # Tag and push images onto Dockerhub repo
-    #   - name: Tag and Push images to Dockerhub
-    #     run: |
-    #       for type in $crawler_types; do
+      # Tag and push images onto Dockerhub repo
+      - name: Tag and Push images to Dockerhub
+        run: |
+          for type in $crawler_types; do
 
-    #         # check if it is a snapshot build, if not, upload different favor of images
-    #         if [[ "${{env.version_lowercase}}" != *"-snapshot"* ]]; then
+            # check if it is a snapshot build, if not, upload different favor of images
+            if [[ "${{env.version_lowercase}}" != *"-snapshot"* ]]; then
 
-    #             docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:latest
-    #             docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:${{env.major}}
-    #             docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:${{env.major_minor}}
-    #             docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:${{env.version_lowercase}}
+                docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:latest
+                docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:${{env.major}}
+                docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:${{env.major_minor}}
+                docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:${{env.version_lowercase}}
 
-    #             # upload to dockerhub
-    #             # docker push norconex/crawler:latest
-    #             # docker push norconex/crawler:${{env.major}}
-    #             # docker push norconex/crawler:${{env.major_minor}}
-    #             # docker push norconex/crawler:${{env.version_lowercase}}
+                # upload to dockerhub
+                # docker push norconex/crawler:latest
+                # docker push norconex/crawler:${{env.major}}
+                # docker push norconex/crawler:${{env.major_minor}}
+                # docker push norconex/crawler:${{env.version_lowercase}}
 
             
-    #             for type in $committer_types; do
+                for type in $committer_types; do
                 
-    #             # tag local images with online norconex tag
-    #             docker image tag ${{env.version_lowercase}}-crawler-$type norconex/crawler:${{env.major}}-$type
-    #             docker image tag ${{env.version_lowercase}}-crawler-$type norconex/crawler:${{env.major_minor}}-$type
-    #             docker image tag ${{env.version_lowercase}}-crawler-$type norconex/crawler:${{env.version_lowercase}}-$type
+                # tag local images with online norconex tag
+                docker image tag ${{env.version_lowercase}}-crawler-$type norconex/crawler:${{env.major}}-$type
+                docker image tag ${{env.version_lowercase}}-crawler-$type norconex/crawler:${{env.major_minor}}-$type
+                docker image tag ${{env.version_lowercase}}-crawler-$type norconex/crawler:${{env.version_lowercase}}-$type
                 
-    #             # upload online norconex tagged images onto docker hub 
-    #             #   docker push norconex/crawler:${{env.major}}-$type
-    #             #   docker push norconex/crawler:${{env.major_minor}}-$type
-    #             #   docker push norconex/crawler:${{env.version_lowercase}}-$type
+                # upload online norconex tagged images onto docker hub 
+                #   docker push norconex/crawler:${{env.major}}-$type
+                #   docker push norconex/crawler:${{env.major_minor}}-$type
+                #   docker push norconex/crawler:${{env.version_lowercase}}-$type
 
-    #             done  
+                done  
 
-    #             # check what images are created
-    #             docker image ls -a
+                # check what images are created
+                docker image ls -a
                         
-    #             echo "Base, and committers images uploaded!"
+                echo "Base, and committers images uploaded!"
             
-    #         else # snapshot images
-    #             # tag the local images with repo inform for upload use
-    #             docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.version_lowercase}}-$type
+            else # snapshot images
+                # tag the local images with repo inform for upload use
+                docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.version_lowercase}}-$type
                 
-    #             # upload tagged images to dockerhub
-    #             docker push norconex/crawler:${{env.version_lowercase}}-$type
+                # upload tagged images to dockerhub
+                docker push norconex/crawler:${{env.version_lowercase}}-$type
                         
-    #             # tag images for different committer type
-    #             for com_type in $committer_types; do
+                # tag images for different committer type
+                for com_type in $committer_types; do
 
-    #               docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.version_lowercase}}-$type-$com_type
+                  docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.version_lowercase}}-$type-$com_type
                     
-    #             # upload different type of committer images
-    #             docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
+                # upload different type of committer images
+                docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
 
-    #             done
+                done
                 
-    #             echo "snapshot uploaded!"
-    #         fi
-    #       done
+                echo "snapshot uploaded!"
+            fi
+          done
 
-    #       docker image ls -a
+          docker image ls -a
