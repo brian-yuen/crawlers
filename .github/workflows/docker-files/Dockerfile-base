@@ -1,4 +1,4 @@
-From ubuntu:22.04 AS base
+FROM ubuntu:22.04 AS base
 ARG crawler_type
 ARG build_version
 ARG dl_path
