@@ -123,11 +123,19 @@ jobs:
             local_latest_file=$(echo "$all_zip_files" | tail -n 1)
             echo "latest_file=$(echo "$all_zip_files" | tail -n 1)" >> $GITHUB_ENV
 
+            local_dl_filename=$(basename "$local_latest_file")
+
+            pwd
+            curl -LO $latest_file
+            cp $local_dl_filename downloaded/$type
+
             # Extract just the filename from the URL
             echo "dl_filename=$(basename "$local_latest_file")" >> $GITHUB_ENV
 
             echo "latestfile: $local_latest_file"
 
+            ls -la downloaded/$type
+            
           done
 
       - name: Print Env Variable
