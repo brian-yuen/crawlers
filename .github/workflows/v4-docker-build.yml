@@ -217,6 +217,7 @@ jobs:
                                  -DartifactId=nx-crawler-$type \
                                  -Dpackaging=zip \
                                  -Dversion=${{env.version_uppercase}} \
+                                 -Dtransitive=false \
                                  -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
         
               # copy the zip files over to the downloaded folder where docker has access to
