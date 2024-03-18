@@ -107,45 +107,45 @@ jobs:
           echo "Major_Minor: ${{env.major_minor}}"
           echo "Major_Minor_Revis: ${{env.major_minor_revis}}"
 
-      - name: Find and download latest crawler snapshot zip file
-        run: |
-          for type in $crawler_types; do          
+    #   - name: Find and download latest crawler snapshot zip file
+    #     run: |
+    #       for type in $crawler_types; do          
 
-            # Define URL of the page containing the list of zip files
-            URL="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}/"
+    #         # Define URL of the page containing the list of zip files
+    #         URL="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}/"
       
-            echo "URL: $URL"
+    #         echo "URL: $URL"
 
-            # Extract the list of zip file URLs from the page
-            all_zip_files=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+\.zip' | sort)
+    #         # Extract the list of zip file URLs from the page
+    #         all_zip_files=$(curl -s "$URL" | grep -oP '(?<=href=")[^"]+\.zip' | sort)
      
-            # Get the latest zip file URL
-            local_latest_file=$(echo "$all_zip_files" | tail -n 1)
-            echo "latest_file=$(echo "$all_zip_files" | tail -n 1)" >> $GITHUB_ENV
+    #         # Get the latest zip file URL
+    #         local_latest_file=$(echo "$all_zip_files" | tail -n 1)
+    #         echo "latest_file=$(echo "$all_zip_files" | tail -n 1)" >> $GITHUB_ENV
 
-            local_dl_filename=$(basename "$local_latest_file")
+    #         local_dl_filename=$(basename "$local_latest_file")
 
-            # create folder for the downloaded files
-            mkdir -p downloaded/$type
+    #         # create folder for the downloaded files
+    #         mkdir -p downloaded/$type
 
-            pwd
-            cd downloaded/$type
-            curl -LO $local_latest_file
-            ls -la
+    #         pwd
+    #         cd downloaded/$type
+    #         curl -LO $local_latest_file
+    #         ls -la
 
-            # Extract just the filename from the URL
-            echo "dl_filename=$(basename "$local_latest_file")" >> $GITHUB_ENV
+    #         # Extract just the filename from the URL
+    #         echo "dl_filename=$(basename "$local_latest_file")" >> $GITHUB_ENV
 
-            echo "latestfile: $local_latest_file"
+    #         echo "latestfile: $local_latest_file"
 
             
 
-          done
+    #       done
 
-      - name: Print Env Variable
-        run: |
-          echo "env latestfile: ${{env.latest_file}}" 
-          echo "env dl_filename: ${{env.dl_filename}}"
+    #   - name: Print Env Variable
+    #     run: |
+    #       echo "env latestfile: ${{env.latest_file}}" 
+    #       echo "env dl_filename: ${{env.dl_filename}}"
       
       - name: Setup Java
         uses: actions/setup-java@v2
