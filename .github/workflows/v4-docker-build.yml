@@ -82,7 +82,7 @@ jobs:
 
       
       # extract version number from value and assign it to different variables for tagging use
-      - name: Extract version numbers
+      - name: Extract version numbers for tagging use
         run: |  
           #if [[ "${{env.version_lowercase}}" == *"-snapshot"* ]]; then
           
@@ -100,12 +100,12 @@ jobs:
           #fi
 
       # debug use only    
-      - name: print extracted version numbers   
-        run: |
-          # Print extracted version numbers
-          echo "Major: ${{env.major}}"
-          echo "Major_Minor: ${{env.major_minor}}"
-          echo "Major_Minor_Revis: ${{env.major_minor_revis}}"
+    #   - name: print extracted version numbers   
+    #     run: |
+    #       # Print extracted version numbers
+    #       echo "Major: ${{env.major}}"
+    #       echo "Major_Minor: ${{env.major_minor}}"
+    #       echo "Major_Minor_Revis: ${{env.major_minor_revis}}"
 
     #   - name: Find and download latest snapshot zip file
     #     run: |
@@ -142,12 +142,9 @@ jobs:
       - name: Build docker base image
         run: |
           for type in $crawler_types; do
-
-            ### this section might need to move to under snapshot section, depends on what the release download URL looks like
+            
             # create folder for the downloaded files
             mkdir -p downloaded/$type
-            
-            ###
            
             #check whether a regular or a snapshot version should be built
             if [[ "${{env.version_lowercase}}" != *"-snapshot"* ]]; then
@@ -161,7 +158,9 @@ jobs:
                                  -DremoteRepositories=https://repo1.maven.org/maven2/com/norconex/
               
               docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version_lowercase}} --target regular --tag ${{env.version_lowercase}}-crawler-base            
+
             else # start building Snapshot Base Image
+
               echo "snapshot image build require"              
               
               # download the latest zip file from meven central
@@ -175,9 +174,9 @@ jobs:
               # copy the zip files over to the downloaded folder where docker has access to
               cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}/*.zip ./downloaded/$type
 
-              # debug
-              ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}
-              ls -la downloaded/$type
+            # debug
+            #   ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}
+            #   ls -la downloaded/$type
           
               #Extract Filename
               zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{ env.version_uppercase}}/*.zip)
@@ -185,6 +184,7 @@ jobs:
               docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base         
             fi                        
             
+            # update the committer docker file with the right crawler base image
             if [[ $type == "web" ]]; then
               echo "replace file with web"
               cp .github/workflows/docker-files/Dockerfile-committers-template .github/workflows/docker-files/Dockerfile-committers
@@ -215,20 +215,21 @@ jobs:
               cp /home/runner/.m2/repository/com/norconex/crawler/nx-committer-$com_type/${{env.version_uppercase}}/*.zip ./downloaded/$com_type
 
               # debug
-              ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-committer-$com_type/${{env.version_uppercase}}
-              ls -la downloaded/$com_type
+            #   ls -la /home/runner/.m2/repository/com/norconex/crawler/nx-committer-$com_type/${{env.version_uppercase}}
+            #   ls -la downloaded/$com_type
+            #   more .github/workflows/docker-files/Dockerfile-committers
+
             
               #Extract Filename
               com_zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-committer-$com_type/${{env.version_uppercase}}/*.zip)
-            
-              #more .github/workflows/docker-files/Dockerfile-committers
-              #docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=elasticsearch --build-arg dl_path="https://oss.sonatype.org/content/repositories/snapshots/com/norconex/crawler/nx-committer-elasticsearch/4.0.0-SNAPSHOT/nx-committer-elasticsearch-4.0.0-20240313.161608-38.zip" --build-arg committer_version=4.0.0 --build-arg build_version=${{env.major_minor_revis}} --tag ${{env.version_lowercase}}-crawler-${type}-${com_type}
+                          
+              # run docker build to build the committer image
               docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=$com_type --build-arg dl_filename=$com_zip_filename --build-arg committer_version=${{ env.version_uppercase}} --build-arg build_version=${{env.major_minor_revis}} --build-arg crawler_type=$type --tag ${{env.version_lowercase}}-crawler-$type-$com_type
               
             done
           done
       
-          docker image ls
+        #   docker image ls
 
 
       # login to Dockerhub
@@ -247,29 +248,30 @@ jobs:
             # check if it is a snapshot build, if not, upload different favor of images
             if [[ "${{env.version_lowercase}}" != *"-snapshot"* ]]; then
 
-                docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:latest
-                docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:${{env.major}}
-                docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:${{env.major_minor}}
-                docker image tag ${{env.version_lowercase}}-crawler-base norconex/crawler:${{env.version_lowercase}}
+                # tag local base image with online norconex tag
+                docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:$type-latest
+                docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.major}}-$type
+                docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.major_minor}}-$type
+                docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.version_lowercase}}-$type
 
                 # upload to dockerhub
-                # docker push norconex/crawler:latest
-                # docker push norconex/crawler:${{env.major}}
-                # docker push norconex/crawler:${{env.major_minor}}
-                # docker push norconex/crawler:${{env.version_lowercase}}
+                # docker push norconex/crawler:$type-latest
+                # docker push norconex/crawler:${{env.major}}-$type
+                # docker push norconex/crawler:${{env.major_minor}}-$type
+                # docker push norconex/crawler:${{env.version_lowercase}}-$type
 
             
-                for type in $committer_types; do
+                for com_type in $committer_types; do
                 
-                # tag local images with online norconex tag
-                docker image tag ${{env.version_lowercase}}-crawler-$type norconex/crawler:${{env.major}}-$type
-                docker image tag ${{env.version_lowercase}}-crawler-$type norconex/crawler:${{env.major_minor}}-$type
-                docker image tag ${{env.version_lowercase}}-crawler-$type norconex/crawler:${{env.version_lowercase}}-$type
+                  # tag local committer images with online norconex tag
+                  docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.major}}-$type-$com_type
+                  docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.major_minor}}-$type-$com_type
+                  docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.version_lowercase}}-$type-$com_type
                 
-                # upload online norconex tagged images onto docker hub 
-                #   docker push norconex/crawler:${{env.major}}-$type
-                #   docker push norconex/crawler:${{env.major_minor}}-$type
-                #   docker push norconex/crawler:${{env.version_lowercase}}-$type
+                  # upload online norconex tagged images onto docker hub 
+                  #   docker push norconex/crawler:${{env.major}}-$type-$com_type
+                  #   docker push norconex/crawler:${{env.major_minor}}-$type-$com_type
+                  #   docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
 
                 done  
 
@@ -279,24 +281,23 @@ jobs:
                 echo "Base, and committers images uploaded!"
             
             else # snapshot images
+
                 # tag the local images with repo inform for upload use
                 docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.version_lowercase}}-$type
                 
                 # upload tagged images to dockerhub
                 docker push norconex/crawler:${{env.version_lowercase}}-$type
                         
-                # tag images for different committer type
+                # tag local committer images with online norconex tag
                 for com_type in $committer_types; do
 
                   docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.version_lowercase}}-$type-$com_type
                     
-                # upload different type of committer images
-                docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
+                  # upload committer images
+                  docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
 
                 done
                 
                 echo "snapshot uploaded!"
             fi
           done
-
-          docker image ls -a
