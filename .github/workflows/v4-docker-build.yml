@@ -149,6 +149,9 @@ jobs:
             #check whether a regular or a snapshot version should be built
             if [[ "${{env.version_lowercase}}" != *"-snapshot"* ]]; then
 
+              # start building Regular Base Image
+              echo "Regular image build start"              
+
               # download the latest zip file from meven central
               mvn dependency:get -DgroupId=com.norconex.crawler \
                                  -DartifactId=nx-crawler-$type \
@@ -157,11 +160,18 @@ jobs:
                                  -Dtransitive=false \
                                  -DremoteRepositories=https://repo1.maven.org/maven2/com/norconex/
               
-              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg build_version=${{env.version_lowercase}} --target regular --tag ${{env.version_lowercase}}-crawler-base            
+              # copy the zip files over to the downloaded folder where docker has access to
+              cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_lowercase}}/*.zip ./downloaded/$type
 
-            else # start building Snapshot Base Image
-
-              echo "snapshot image build require"              
+              #Extract Filename
+              zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_lowercase}}/*.zip)
+              
+              docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.version_lowercase}} --build-arg dl_filename=$zip_filename --target regular --tag ${{env.version_lowercase}}-crawler-$type-base            
+            
+            else 
+            
+              # start building Snapshot Base Image
+              echo "Snapshot image build start"              
               
               # download the latest zip file from meven central
               mvn dependency:get -DgroupId=com.norconex.crawler \
