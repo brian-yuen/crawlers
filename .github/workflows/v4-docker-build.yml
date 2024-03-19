@@ -265,10 +265,10 @@ jobs:
                 docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.version_lowercase}}-$type
 
                 # upload to dockerhub
-                # docker push norconex/crawler:$type-latest
-                # docker push norconex/crawler:${{env.major}}-$type
-                # docker push norconex/crawler:${{env.major_minor}}-$type
-                # docker push norconex/crawler:${{env.version_lowercase}}-$type
+                docker push norconex/crawler:$type-latest
+                docker push norconex/crawler:${{env.major}}-$type
+                docker push norconex/crawler:${{env.major_minor}}-$type
+                docker push norconex/crawler:${{env.version_lowercase}}-$type
 
             
                 for com_type in $committer_types; do
@@ -279,9 +279,9 @@ jobs:
                   docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.version_lowercase}}-$type-$com_type
                 
                   # upload online norconex tagged images onto docker hub 
-                  #   docker push norconex/crawler:${{env.major}}-$type-$com_type
-                  #   docker push norconex/crawler:${{env.major_minor}}-$type-$com_type
-                  #   docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
+                  docker push norconex/crawler:${{env.major}}-$type-$com_type
+                  docker push norconex/crawler:${{env.major_minor}}-$type-$com_type
+                  docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
 
                 done  
 
