@@ -1,0 +1,23 @@
+name: PR Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check if PR is from Dependabot
+        id: check_dependabot
+        run: echo "::set-output name=is_dependabot::$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH" | grep -c dependabot)"
+
+      - name: Skip if PR is from Dependabot
+        if: steps.check_dependabot.outputs.is_dependabot == '1'
+        run: exit 78
+
+      # Add your workflow steps here
+
