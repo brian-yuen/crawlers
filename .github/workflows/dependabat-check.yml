@@ -27,17 +27,20 @@ jobs:
   other-job:
     needs: [setup]
     runs-on: ubuntu-latest
-    if: ${{ needs.setup.outputs.condition }} == 'true'
-    continue-on-error: true
-    run: exit: 0
-    
+    if: ${{ needs.setup.outputs.condition }} == 'false'
+  
     steps:
       - run: |
           echo "PR NOT requested by brian"          
           
-#   - name: Check if PR is from Dependabot
-    #     id: check_dependabot
-    #     run: echo "::set-output name=is_brian::$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH" | grep -c brian-yuen)"
+      - name: Check if PR is from Dependabot
+        id: check_dependabot
+        run: |
+          name_check=$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH" | grep -c brian-yuen)
+          who=$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH")
+
+          echo "name check:$name_check"
+          echo "who: $who"
 
     #   - name: Skip if PR is from Dependabot
     #     if: steps.check_dependabot.outputs.is_brian == '1'
