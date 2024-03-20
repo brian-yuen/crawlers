@@ -37,4 +37,5 @@ jobs:
     steps:
       - run: |
           echo "PR requested by brian"
+          continue-on-error: true
           exit: 0
