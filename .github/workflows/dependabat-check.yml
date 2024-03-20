@@ -7,18 +7,34 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Check if PR is from Dependabot
-        id: check_dependabot
-        run: echo "::set-output name=is_brian::$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH" | grep -c brian-yuen)"
+    #   - name: Check if PR is from Dependabot
+    #     id: check_dependabot
+    #     run: echo "::set-output name=is_brian::$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH" | grep -c brian-yuen)"
 
-      - name: Skip if PR is from Dependabot
-        if: steps.check_dependabot.outputs.is_brian == '1'
-        continue-on-error: true
-        run: exit 0
+    #   - name: Skip if PR is from Dependabot
+    #     if: steps.check_dependabot.outputs.is_brian == '1'
+    #     continue-on-error: true
+    #     run: exit 0
 
       # Add your workflow steps here
 
+      - id: condition
+        run: |
+          if [[ ${{ github.head_ref }} == *"depbot"* ]]; then
+             echo "condition=true" >> $GITHUB_OUTPUT
+          else
+             echo "condition=false" >> $GITHUB_OUTPUT  
+          fi
+
+  other-job:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    if: ${{ needs.setup.outputs.condition }} == 'true'
+    steps:
+      - run: |
+          echo "PR requested by brian"
+          exit: 0
