@@ -24,7 +24,7 @@ jobs:
 
       - id: condition
         run: |
-          if [[ ${{ github.head_ref }} == *"brian"* ]]; then
+          if [[ ${{ github.head_ref }} == *brian* ]]; then
              echo "condition=true" >> $GITHUB_OUTPUT
              echo "is B"
           else
