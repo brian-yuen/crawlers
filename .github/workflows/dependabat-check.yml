@@ -9,7 +9,8 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    
+    outputs:
+        condition: ${{ steps.condition.outputs.condition }}
     steps:
     #   - name: Check if PR is from Dependabot
     #     id: check_dependabot
