@@ -23,12 +23,19 @@ jobs:
           echo "name check:$name_check"
           echo "who: $who"
 
-      - name: Skip if PR is from Dependabot
+      - name: Exit - Skip if PR is from Dependabot
         if: steps.check_dependabot.outputs.is_brian == '1'
         continue-on-error: true
         run: | 
           echo "brian requested it, exit now"
           exit 0
+
+      - name: Return - Skip if PR is from Dependabot
+        if: steps.check_dependabot.outputs.is_brian == '1'
+        continue-on-error: true
+        run: | 
+          echo "brian requested it, exit now"
+          return
       
       - uses: actions/checkout@v4
         with:
