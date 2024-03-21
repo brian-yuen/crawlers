@@ -25,9 +25,7 @@ jobs:
 #           fi
 
   other-job:
-    # needs: [setup]
     runs-on: ubuntu-latest
-    # if: ${{ needs.setup.outputs.condition }} == 'false'
   
     steps:
       - run: |
