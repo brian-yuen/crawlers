@@ -13,30 +13,7 @@ jobs:
       pull-requests: write
       contents: write
 
-    steps:
-      - name: Check if PR is from Dependabot
-        id: check_dependabot
-        run: |
-          name_check=$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH" | grep -c brian-yuen)
-          who=$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH")
-
-          echo "name check:$name_check"
-          echo "who: $who"
-
-      - name: Exit - Skip if PR is from Dependabot
-        if: steps.check_dependabot.outputs.is_brian == '1'
-        continue-on-error: true
-        run: | 
-          echo "brian requested it, exit now"
-          exit 0
-
-      - name: Return - Skip if PR is from Dependabot
-        if: steps.check_dependabot.outputs.is_brian == '1'
-        continue-on-error: true
-        run: | 
-          echo "brian requested it, exit now"
-          return
-      
+    steps:     
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
