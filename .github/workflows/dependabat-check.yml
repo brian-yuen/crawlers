@@ -1,0 +1,50 @@
+name: PR Workflow
+
+on:   
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+jobs:
+#   setup:
+#     runs-on: ubuntu-latest
+#     outputs:
+#         condition: ${{ steps.condition.outputs.condition }}
+#     steps:
+#       - id: condition
+#         run: |
+#           if [[ ${{ github.head_ref }} == *pull* ]]; then
+#              echo "condition=true" >> $GITHUB_OUTPUT
+#              echo "is B"
+#              echo "r: ${{ github.head_ref }}"
+#           else
+#              echo "condition=false" >> $GITHUB_OUTPUT  
+#              echo "Not B"
+#              echo "re: ${{ github.head_ref }}"
+#           fi
+
+  other-job:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - run: |
+          echo "PR NOT requested by brian"          
+          
+      - name: Check if PR is from Dependabot
+        id: check_dependabot
+        run: |
+          name_check=$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH" | grep -c brian-yuen)
+          who=$(jq -r '.pull_request.user.login' "$GITHUB_EVENT_PATH")
+
+          echo "name check:$name_check"
+          echo "who: $who"
+
+      - name: Skip if PR is from Dependabot
+        if: steps.check_dependabot.outputs.is_brian == '1'
+        # continue-on-error: true
+        run: exit 78
+
+      # Add your workflow steps here
+      - name: other steps
+        run: echo "continue to run if PR not from Brian"
