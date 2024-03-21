@@ -55,7 +55,7 @@ jobs:
           echo "who: $who"
 
       - name: Skip if PR is from Dependabot
-        if: steps.check_dependabot.outputs.check == '1'
+        if: steps.check_dependabot.outputs.check == '0'
         # continue-on-error: true
         run: echo " From Brian, so this should not print"
 
