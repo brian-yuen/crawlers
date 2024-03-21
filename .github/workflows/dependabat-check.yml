@@ -57,7 +57,7 @@ jobs:
       - name: Skip if PR is from Dependabot
         if: steps.check_dependabot.outputs.check == '1'
         # continue-on-error: true
-        run: exit 78
+        run: echo " From Brian, so this should not print"
 
       # Add your workflow steps here
       - name: other steps
