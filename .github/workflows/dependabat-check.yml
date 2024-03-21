@@ -41,7 +41,7 @@ jobs:
           echo "who: $who"
 
       - name: Skip if PR is from Dependabot
-        if: steps.check_dependabot.outputs.is_brian == '1'
+        if: steps.check_dependabot.outputs.name_check == '1'
         # continue-on-error: true
         run: exit 78
 
