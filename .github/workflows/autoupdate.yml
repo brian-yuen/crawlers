@@ -13,7 +13,7 @@ jobs:
         id: autoupdate
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          DRY_RUN: "true"
+          DRY_RUN: "false"
           PR_FILTER: "labelled"
           PR_LABELS: "autoupdate"
         #   MERGE_CONFLICT_ACTION: "fail"
