@@ -10,31 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout main branch
-      uses: actions/checkout@v4
-      with:
-        ref: main
-        fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Fetch all branches
-      run: git fetch --all
+      - name: Install Git
+        run: sudo apt-get install git -y
 
-    - name: Check for branch sync
-      run: |
-        for branch in $(git branch -r --format="%(refname:lstrip=3)"); do
-          if [ "$branch" != "main" ]; then
-            git checkout $branch
-            git merge origin/main --no-commit --no-ff
-            if [ $? -eq 0 ]; then
-              echo "Branch $branch is up to date with main."
-              # You can add logic here to send an email to the branch owner
-            else
-              echo "Branch $branch has conflicts with main."
-              # You can add logic here to send an email to the branch owner
+      - name: Fetch all branches
+        run: git fetch --all
+
+      - name: Check branch sync
+        run: |
+          for branch in $(git branch -r --format '%(refname:short)'); do
+            if [[ $branch != "origin/2.x-branch" && $branch != "origin/3.x-branch" ]]; then
+              git checkout $branch
+              git pull origin $branch
+              if [[ $(git merge-base HEAD origin/main) == $(git rev-parse HEAD) ]]; then
+                echo "Branch $branch is up to date with main branch"
+                # Send email to branch owner
+                # Replace 'send-email-command' with actual command to send email
+                # Replace 'branch-owner-email' with actual email of branch owner
+                send-email-command "Your branch $branch can merge with the main branch, please go ahead and do so." branch-owner-email
+              else
+                echo "Branch $branch has conflicts with the main branch"
+                # Send email to branch owner
+                # Replace 'send-email-command' with actual command to send email
+                # Replace 'branch-owner-email' with actual email of branch owner
+                send-email-command "Your branch $branch has conflicts with the main branch, please resolve the conflict and then sync with the main branch." branch-owner-email
+              fi
             fi
-            git merge --abort
-          fi
-        done
+          done
+
 
 
 # name: Update Branch
