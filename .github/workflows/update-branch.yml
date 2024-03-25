@@ -1,31 +1,69 @@
-name: Update Branch
+name: Check Branch Sync
 
 on:
   push:
-    branches: [main]
-    
-permissions: 
-  contents: write
+    branches:
+      - main
 
 jobs:
-  sync:
+  check-sync:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - name: Checkout main branch
+      uses: actions/checkout@v4
+      with:
+        ref: main
 
-      - name: Setup Git User
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "brian.yuen@norconex.com"
+    - name: Fetch all branches
+      run: git fetch --all
 
-      - name: Update Branch
-        run: |
-          git checkout main
-          git fetch origin
-          git checkout update-test
-          git pull
-          git merge origin/main
-          git push origin update-test
+    - name: Check for branch sync
+      run: |
+        for branch in $(git branch -r --format="%(refname:lstrip=3)"); do
+          if [ "$branch" != "main" ]; then
+            git checkout $branch
+            git merge origin/main --no-commit --no-ff
+            if [ $? -eq 0 ]; then
+              echo "Branch $branch is up to date with main."
+              # You can add logic here to send an email to the branch owner
+            else
+              echo "Branch $branch has conflicts with main."
+              # You can add logic here to send an email to the branch owner
+            fi
+            git merge --abort
+          fi
+        done
+
+
+# name: Update Branch
+
+# on:
+#   push:
+#     branches: [main]
+    
+# permissions: 
+#   contents: write
+
+# jobs:
+#   sync:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+
+#       - name: Setup Git User
+#         run: |
+#           git config user.name "GitHub Action"
+#           git config user.email "brian.yuen@norconex.com"
+
+#       - name: Update Branch
+#         run: |
+#           git checkout main
+#           git fetch origin
+#           git checkout update-test
+#           git pull
+#           git merge origin/main
+#           git push origin update-test

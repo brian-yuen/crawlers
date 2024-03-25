@@ -13,10 +13,11 @@ jobs:
         id: autoupdate
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          DRY_RUN: "false"
+        #   DRY_RUN: "false"
           PR_FILTER: "labelled"
           PR_LABELS: "autoupdate"
         #   MERGE_CONFLICT_ACTION: "fail"
+          PR_READY_STATE: "ready_for_review"
 
       - run: echo 'Merge conflicts found!'
         if: ${{ steps.autoupdate.outputs.conflicted }}
