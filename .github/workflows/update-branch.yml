@@ -29,13 +29,13 @@ jobs:
                 # Send email to branch owner
                 # Replace 'send-email-command' with actual command to send email
                 # Replace 'branch-owner-email' with actual email of branch owner
-                send-email-command "Your branch $branch can merge with the main branch, please go ahead and do so." branch-owner-email
+                #send-email-command "Your branch $branch can merge with the main branch, please go ahead and do so." branch-owner-email
               else
                 echo "Branch $branch has conflicts with the main branch"
                 # Send email to branch owner
                 # Replace 'send-email-command' with actual command to send email
                 # Replace 'branch-owner-email' with actual email of branch owner
-                send-email-command "Your branch $branch has conflicts with the main branch, please resolve the conflict and then sync with the main branch." branch-owner-email
+                #send-email-command "Your branch $branch has conflicts with the main branch, please resolve the conflict and then sync with the main branch." branch-owner-email
               fi
             fi
           done
