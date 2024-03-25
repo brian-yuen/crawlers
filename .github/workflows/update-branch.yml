@@ -23,7 +23,10 @@ jobs:
         run: |
           for branch in $(git branch -r --format '%(refname:short)'); do
             if [[ $branch != *"synk"* && $branch != *"dependabot"* && $branch != "origin/2.x-branch" && $branch != "origin/3.x-branch" && $branch != "origin/bugfix/unknown-properties" ]]; then
-              git checkout $branch                          
+              git checkout $branch     
+              echo ""
+              echo "working on $branch"
+              echo ""                     
               if [[ $(git merge-base HEAD origin/main) == $(git rev-parse HEAD) ]]; then
                 echo "Branch $branch is up to date with main branch"
                 # Send email to branch owner
