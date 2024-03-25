@@ -1,13 +1,13 @@
 name: autoupdate
 on:
-  push: 
-    branches:
-        - main
+  push: {}
+    # branches:
+    #     - main
 
 jobs:
   autoupdate:
     name: autoupdate
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: docker://chinthakagodawita/autoupdate-action:v1
         id: autoupdate
