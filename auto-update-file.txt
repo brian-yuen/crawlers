@@ -1,1 +1,3 @@
 new file to test auto branch update. if this file shows up in the update-test branch, then the auto update workflow works.
+
+new lines added 
