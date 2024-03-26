@@ -32,7 +32,7 @@ jobs:
         uses: MadLadSquad/check-for-synced-branches-action@v1.0.0.3
         with:
           upstream-url: "https://github.com/brian-yuen/crawlers"
-          first-branch: new-update-branch
+          first-branch: test-branch-tbd
           second-branch: main
 
       - name: Issue
