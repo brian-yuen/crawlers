@@ -32,8 +32,8 @@ jobs:
         uses: MadLadSquad/check-for-synced-branches-action@v1.0.0.3
         with:
           upstream-url: "https://github.com/brian-yuen/crawlers"
-          first-branch: main
-          second-branch: new-update-branch
+          first-branch: new-update-branch
+          second-branch: main
 
       - name: Issue
         if: steps.check.outputs.behind > 0
