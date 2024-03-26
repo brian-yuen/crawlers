@@ -29,12 +29,12 @@ jobs:
 
       - name: Check for synced branches action
         id: check
-        uses: MadLadSquad/check-for-synced-branches-action@master
+        uses: MadLadSquad/check-for-synced-branches-action@v1.0.0.3
         with:
           upstream-url: "https://github.com/brian-yuen/crawlers"
           first-branch: main
           second-branch: new-update-branch
-          
+
       - name: Issue
         if: steps.check.outputs.behind > 0
         uses: JasonEtco/create-an-issue@v2 # Creates an issue
