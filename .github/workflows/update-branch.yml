@@ -36,14 +36,10 @@ jobs:
           second-branch: main
 
       - name: Issue
-        if: steps.check.outputs.behind > 0
-        uses: JasonEtco/create-an-issue@v2 # Creates an issue
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          filename: .github/auto-issue-template.md
-          update_existing: true
-          search_existing: all
+        run: |
+          echo "behind: ${{steps.check.outputs.behind}}
+          echo "ahead: ${{steps.check.outputs.ahead}}"
+        
 
 # on:
 #   push:
