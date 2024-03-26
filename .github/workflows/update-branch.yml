@@ -37,7 +37,7 @@ jobs:
 
       - name: Issue
         run: |
-          echo "behind: ${{steps.check.outputs.behind}}
+          echo "behind: ${{steps.check.outputs.behind}}"
           echo "ahead: ${{steps.check.outputs.ahead}}"
         
 
