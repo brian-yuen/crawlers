@@ -27,7 +27,7 @@ jobs:
       - name: Test merge main into branches
         run: |
           for branch in $(git branch -r | grep -v 'origin/main' | cut -d '/' -f 2-); do
-            if [[ $branch != *"snyk"* && $branch != *"dependabot"* && $branch != *".x-branch"* && $branch != "origin/bugfix/unknown-properties" ]]; then
+            if [[ $branch != *"snyk"* && $branch != *"dependabot"* && $branch != *".x-branch"* && $branch != *"bugfix/unknown-properties"* ]]; then
             
               git checkout main
               git pull origin main
@@ -35,11 +35,11 @@ jobs:
               if git merge --no-commit --no-ff origin/main; then
                 echo "Merging main into $branch succeeded"
                 # You can add further testing steps here if needed
-                git merge --abort
+                #git merge --abort
               else
                 echo "Merging main into $branch failed"
                 # You can take further actions here, such as sending notifications or running additional tests
-                git merge --abort
+                #git merge --abort
               fi
 
               git branch -D temp-merge-$branch
