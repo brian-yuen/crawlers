@@ -12,17 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # - name: Checkout code
+      #   uses: actions/checkout@v4
 
       - name: Install Git
         run: sudo apt-get install git -y
 
       - name: Fetch all branches
-        run: git fetch --all
+        run: git clone https://github.com/brian-yuen/crawlers.git
 
-      - name: List branches
-        run: git branch -r | grep -v 'origin/main' | cut -d '/' -f 2- > branches.txt
+      # - name: List branches
+      #   run: git branch -r | grep -v 'origin/main' | cut -d '/' -f 2- > branches.txt
 
       - name: Test merge main into branches
         run: |
@@ -31,7 +31,7 @@ jobs:
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
           git checkout test-branch-tbd
-          git merge --allow-unrelated-histories origin/main
+          git merge origin/main
 
           # for branch in $(git branch -r | grep -v 'origin/main' | cut -d '/' -f 2-); do
           #   if [[ $branch != *"snyk"* && $branch != *"dependabot"* && $branch != *".x-branch"* && $branch != *"bugfix/unknown-properties"* ]]; then
