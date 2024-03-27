@@ -34,7 +34,7 @@ jobs:
               git checkout main
               git pull origin main
               git checkout -b temp-merge-$branch origin/$branch
-              if git merge --no-commit --no-ff origin/main; then
+              if git merge --no-commit --no-ff --allow-unrelated-histories origin/main; then
                 echo "Merging main into $branch succeeded"
                 # You can add further testing steps here if needed
                 #git merge --abort
