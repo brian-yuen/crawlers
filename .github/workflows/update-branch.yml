@@ -31,36 +31,31 @@ jobs:
           git config user.name "GitHub Action"
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
-          git checkout test-branch-tbd
-          git merge origin/main
+          # git checkout test-branch-tbd
+          # git merge origin/main
 
-          # for branch in $(git branch -r | grep -v 'origin/main' | cut -d '/' -f 2-); do
-          #   if [[ $branch != *"snyk"* && $branch != *"dependabot"* && $branch != *".x-branch"* && $branch != *"bugfix/unknown-properties"* ]]; then
-          #     echo ""
-          #     echo "Branch is: $branch"
-          #     echo ""
-          #     #git checkout main
-          #     #git pull origin main
-
-          #     git config user.name "GitHub Action"
-          #     git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-
-          #     git checkout -b temp-merge-$branch origin/$branch
+          for branch in $(git branch -r | grep -v 'origin/main' | cut -d '/' -f 2-); do
+            if [[ $branch != *"snyk"* && $branch != *"dependabot"* && $branch != *".x-branch"* && $branch != *"bugfix/unknown-properties"* ]]; then
+              echo ""
+              echo "Branch is: $branch"
+              echo ""
+                            
+              git checkout -b temp-merge-$branch origin/$branch
               
-          #     if git merge --no-commit --no-ff --allow-unrelated-histories origin/main; then
-          #       echo "Merging main into $branch succeeded"
-          #       # You can add further testing steps here if needed
-          #       git merge --abort
-          #     else
-          #       echo "Merging main into $branch failed"
-          #       # You can take further actions here, such as sending notifications or running additional tests
-          #       git merge --abort
-          #     fi
+              if git merge --no-commit --no-ff origin/main; then
+                echo "Merging main into $branch succeeded"
+                # You can add further testing steps here if needed
+                git merge --abort
+              else
+                echo "Merging main into $branch failed"
+                # You can take further actions here, such as sending notifications or running additional tests
+                git merge --abort
+              fi
 
-          #     #git branch -D temp-merge-$branch
-          #   fi
+              git branch -D temp-merge-$branch
+            fi
 
-          # done
+          done
 
 # on:
 #   push:
