@@ -32,8 +32,13 @@ jobs:
               echo "Branch is: $branch"
               echo ""
               git checkout main
-              git pull origin main
+              #git pull origin main
+
+              git config user.name "GitHub Action"
+              git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+
               git checkout -b temp-merge-$branch origin/$branch
+              
               if git merge --no-commit --no-ff --allow-unrelated-histories origin/main; then
                 echo "Merging main into $branch succeeded"
                 # You can add further testing steps here if needed
