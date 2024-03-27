@@ -27,6 +27,7 @@ jobs:
       - name: Test merge main into branches
         run: |
 
+          cd crawlers
           git config user.name "GitHub Action"
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
