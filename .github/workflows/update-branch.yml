@@ -31,7 +31,7 @@ jobs:
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
           git checkout test-branch-tbd
-          git merge origin/main
+          git merge --allow-unrelated-histories origin/main
 
           # for branch in $(git branch -r | grep -v 'origin/main' | cut -d '/' -f 2-); do
           #   if [[ $branch != *"snyk"* && $branch != *"dependabot"* && $branch != *".x-branch"* && $branch != *"bugfix/unknown-properties"* ]]; then
