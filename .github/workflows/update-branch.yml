@@ -1,44 +1,81 @@
 name: Check Branch Sync
 
-#name: Create automatic issue
-# on:
-#   schedule:
-#     - cron:  "0 0 * * *"
+# name: Test Merge Main into Branches
 
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
-  Update-Fork:
+  test-merge:
     runs-on: ubuntu-latest
+
     steps:
-      - name: checking out code
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
-          lfs: true
-          submodules: true
-          clean: false
-          fetch-depth: 0
 
-      - name: Extract commit data
-        uses: rlespinasse/git-commit-data-action@v1
+      - name: Install Git
+        run: sudo apt-get install git -y
 
-      - name: Check for synced branches action
-        id: check
-        uses: MadLadSquad/check-for-synced-branches-action@v1.0.0.3
-        with:
-          upstream-url: "https://github.com/brian-yuen/crawlers"
-          first-branch: test-branch-tbd
-          second-branch: main
+      - name: Fetch all branches
+        run: git fetch --all
 
-      - name: Issue
+      - name: List branches
+        run: git branch -r | grep -v 'origin/main' | cut -d '/' -f 2- > branches.txt
+
+      - name: Test merge main into branches
         run: |
-          echo "behind: ${{steps.check.outputs.behind}}"
-          echo "ahead: ${{steps.check.outputs.ahead}}"
+          while IFS= read -r branch; do
+            git checkout main
+            git pull origin main
+            git checkout -b temp-merge-$branch origin/$branch
+            if git merge --no-commit --no-ff origin/main; then
+              echo "Merging main into $branch succeeded"
+              # You can add further testing steps here if needed
+              git merge --abort
+            else
+              echo "Merging main into $branch failed"
+              # You can take further actions here, such as sending notifications or running additional tests
+              git merge --abort
+            fi
+            git branch -D temp-merge-$branch
+          done < branches.txt
+
+# on:
+#   push:
+#     branches:
+#       - main 
+
+# jobs:
+#   Update-Fork:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: checking out code
+#         uses: actions/checkout@v4
+#         with:
+#           ref: main
+#           token: ${{ secrets.GITHUB_TOKEN }}
+#           lfs: true
+#           submodules: true
+#           clean: false
+#           fetch-depth: 0
+
+#       - name: Extract commit data
+#         uses: rlespinasse/git-commit-data-action@v1
+
+#       - name: Check for synced branches action
+#         id: check
+#         uses: MadLadSquad/check-for-synced-branches-action@v1.0.0.3
+#         with:
+#           upstream-url: "https://github.com/brian-yuen/crawlers"
+#           first-branch: test-branch-tbd
+#           second-branch: main
+
+#       - name: Issue
+#         run: |
+#           echo "behind: ${{steps.check.outputs.behind}}"
+#           echo "ahead: ${{steps.check.outputs.ahead}}"
         
 
 # on:
