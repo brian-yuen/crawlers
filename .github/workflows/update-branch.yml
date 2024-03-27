@@ -43,6 +43,7 @@ jobs:
               fi
 
               git branch -D temp-merge-$branch
+            fi
 
           done
 
