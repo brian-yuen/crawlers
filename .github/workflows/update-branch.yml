@@ -28,7 +28,9 @@ jobs:
         run: |
           for branch in $(git branch -r | grep -v 'origin/main' | cut -d '/' -f 2-); do
             if [[ $branch != *"snyk"* && $branch != *"dependabot"* && $branch != *".x-branch"* && $branch != *"bugfix/unknown-properties"* ]]; then
-            
+              echo ""
+              echo "Branch is: $branch"
+              echo ""
               git checkout main
               git pull origin main
               git checkout -b temp-merge-$branch origin/$branch
