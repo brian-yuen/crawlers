@@ -28,8 +28,7 @@ jobs:
         run: |
           for branch in $(git branch -r --format '%(refname:short)'); do
           if [[ $branch != *"snyk"* && $branch != *"dependabot"* && $branch != *".x-branch"* && $branch != "origin/bugfix/unknown-properties" ]]; then
-                   
-          # while IFS= read -r branch; do
+          
             git checkout main
             git pull origin main
             git checkout -b temp-merge-$branch origin/$branch
@@ -43,7 +42,8 @@ jobs:
               git merge --abort
             fi
             git branch -D temp-merge-$branch
-          done < branches.txt
+            
+          done
 
 # on:
 #   push:
