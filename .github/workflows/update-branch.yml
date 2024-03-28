@@ -48,13 +48,18 @@ jobs:
                 git merge --abort
               else
                 echo "Merging main into $branch failed"
+
+                # Extract the branch name from the format xxxx/branch-name
+                branch_name=$(echo "$branch" | cut -d '/' -f 2-)
+
                 # Save the result of the merge command to a file
-                touch merge-failed.diff
-                git diff > merge-failed.diff
+                touch failed-report-$branch_name.diff
+
+                git diff > failed-report-$branch_name.diff
                 # You can take further actions here, such as sending notifications or running additional tests
                 git merge --abort
               fi
-              more merge-failed.diff
+              more failed-report-$branch_name.diff
               #git branch -D temp-merge-$branch
             fi
 
