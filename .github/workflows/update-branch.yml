@@ -17,6 +17,9 @@ jobs:
 
       - name: Install Git
         run: sudo apt-get install git -y
+      
+      - name: setup mail service
+        run: sudo apt install mailutils -y
 
       - name: Fetch all branches
         run: git clone https://github.com/brian-yuen/crawlers.git
@@ -44,6 +47,7 @@ jobs:
               
               if git merge --no-commit --no-ff origin/main; then
                 echo "Merging main into $branch succeeded"
+                mail -s "Test Merge succeeded!!!" brian.yuen@norconex.com
                 # You can add further testing steps here if needed
                 git merge --abort
               else
@@ -65,6 +69,8 @@ jobs:
               branch_owner=$(git log -1 --format='%ae')
               echo "Last committer email: $branch_owner"
 
+              mail -s "Test Merge Result" -A failed-report-$branch_name.diff brian.yuen@norconex.com
+ 
               #git branch -D temp-merge-$branch
             fi
 
