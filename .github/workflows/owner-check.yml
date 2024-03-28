@@ -18,7 +18,7 @@ jobs:
             git clone https://github.com/brian-yuen/crawlers.git
             cd crawlers
             
-            COMMIT_AUTHOR=$(git log remotes/origin/main | grep Author | sed 's/.*Author: \(.*\) <.*/\1/' | sort -u)
+            COMMIT_AUTHOR=$(git log remotes/origin/main | grep Author | sed 's/.*Author: \(.*\) <.*/\1/' | awk '{print $1}' | sort -u)
             
             for commit in $COMMIT_AUTHOR; do
                 echo "Commit author: $commit"
