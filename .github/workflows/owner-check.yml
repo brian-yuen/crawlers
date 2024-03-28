@@ -17,5 +17,5 @@ jobs:
 
       - name: find out last committer
         run: |
-          COMMIT_AUTHOR=$(git log -1 --format='%ae' ${{ github.ref }})
+          COMMIT_AUTHOR=$(git log -1 --format='%an %ae')
           echo "Commit author: $COMMIT_AUTHOR"
