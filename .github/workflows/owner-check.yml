@@ -10,14 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-            ref: uv-kafka
+        - name: Install Git
+          run: sudo apt-get install git -y
 
-      - name: find out last committer
-        run: |
-          COMMIT_AUTHOR=$(git log uv-kafka --not main)
-          for commit in $COMMIT_AUTHOR; do
-            echo "Commit author: $commit"
-          done
+        - name: Fetch all branches
+          run: |
+            git clone https://github.com/brian-yuen/crawlers.git
+            cd crawlers
+            
+            COMMIT_AUTHOR=$(git log remotes/origin/uv-kafka --not main)
+            
+            for commit in $COMMIT_AUTHOR; do
+                echo "Commit author: $commit"
+            done
+
+    #   - name: Checkout code
+    #     uses: actions/checkout@v4
+    #     with:
+    #         ref: uv-kafka
+
+    #   - name: find out last committer
+    #     run: |
+    #       COMMIT_AUTHOR=$(git log uv-kafka --not main)
+    #       for commit in $COMMIT_AUTHOR; do
+    #         echo "Commit author: $commit"
+    #       done
