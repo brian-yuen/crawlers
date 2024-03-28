@@ -12,8 +12,8 @@ jobs:
     steps:
         - name: setup env
           run: |
-            apt install mailutils -y
-            install mailx
+            sudo apt install mailutils -y
+            
             mail -s "Test Email" brian.yuen@norconex.com
         
         
