@@ -10,19 +10,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-        - name: Install Git
-          run: sudo apt-get install git -y
-
-        - name: Fetch all branches
+        - name: setup env
           run: |
-            git clone https://github.com/brian-yuen/crawlers.git
-            cd crawlers
+            apt install mailutils -y
+            install mailx
+            mail -s "Test Email" brian.yuen@norconex.com
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        ## Get the committers name from a branch
+        # - name: Install Git
+        #   run: sudo apt-get install git -y
+
+        # - name: Fetch all branches
+        #   run: |
+        #     git clone https://github.com/brian-yuen/crawlers.git
+        #     cd crawlers
             
-            COMMIT_AUTHOR=$(git log remotes/origin/main | grep Author | sed 's/.*Author: \(.*\) <.*/\1/' | awk '{print $1}' | sort -u)
+        #     COMMIT_AUTHOR=$(git log remotes/origin/main | grep Author | sed 's/.*Author: \(.*\) <.*/\1/' | awk '{print $1}' | sort -u)
             
-            for commit in $COMMIT_AUTHOR; do
-                echo "Commit author: $commit"
-            done
+        #     for commit in $COMMIT_AUTHOR; do
+        #         echo "Commit author: $commit"
+        #     done
 
     #   - name: Checkout code
     #     uses: actions/checkout@v4
