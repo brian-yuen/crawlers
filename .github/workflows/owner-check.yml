@@ -18,7 +18,7 @@ jobs:
             git clone https://github.com/brian-yuen/crawlers.git
             cd crawlers
             
-            COMMIT_AUTHOR=$(git log remotes/origin/uv-kafka --not main)
+            COMMIT_AUTHOR=$(git log remotes/origin/main | grep Author | sed 's/.*Author: \(.*\) <.*/\1/' | sort -u)
             
             for commit in $COMMIT_AUTHOR; do
                 echo "Commit author: $commit"
