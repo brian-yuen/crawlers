@@ -1,0 +1,21 @@
+name: Owner check
+
+# name: Test Merge Main into Branches
+
+on:
+    workflow_dispatch:
+
+jobs:
+  test-merge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+            ref: uv-kafka
+
+      - name: find out last committer
+        run: |
+          COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+          echo "Commit author: $COMMIT_AUTHOR"
