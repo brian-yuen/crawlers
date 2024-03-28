@@ -52,7 +52,7 @@ jobs:
                 git merge --abort
               fi
 
-              git branch -D temp-merge-$branch
+              #git branch -D temp-merge-$branch
             fi
 
           done
