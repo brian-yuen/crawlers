@@ -42,19 +42,19 @@ jobs:
               echo ""
               echo "Branch is: $branch"
               echo ""
-                            
+                                        
               git checkout -b temp-merge-$branch origin/$branch
+              
+               # Extract the branch name from the format xxxx/branch-name
+               branch_name=$(echo "$branch" | cut -d '/' -f 2-)
               
               if git merge --no-commit --no-ff origin/main; then
                 echo "Merging main into $branch succeeded"
-                mail -s "Test Merge succeeded!!!" brian.yuen@norconex.com
+                mail -s "Test Merge succeeded!!! $branch_name" brian.yuen@norconex.com
                 # You can add further testing steps here if needed
                 git merge --abort
               else
                 echo "Merging main into $branch failed"
-
-                # Extract the branch name from the format xxxx/branch-name
-                branch_name=$(echo "$branch" | cut -d '/' -f 2-)
 
                 # Save the result of the merge command to a file
                 touch failed-report-$branch_name.diff
