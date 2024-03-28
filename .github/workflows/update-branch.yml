@@ -49,8 +49,8 @@ jobs:
               else
                 echo "Merging main into $branch failed"
                 # Save the result of the merge command to a file
-                touch merge-failed-$branch.diff
-                git diff > merge-failed-$branch.diff
+                touch merge-failed.diff
+                git diff > merge-failed.diff
                 # You can take further actions here, such as sending notifications or running additional tests
                 git merge --abort
               fi
