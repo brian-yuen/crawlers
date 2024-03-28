@@ -61,8 +61,8 @@ jobs:
 
                 git diff > failed-report-$branch_name.diff
                 more failed-report-$branch_name.diff
-                mail -s "Test Merge Result" -A failed-report-$branch_name.diff brian.yuen@norconex.com
-                
+                mail -s "Test Merge FAILED - $branch_name" -A failed-report-$branch_name.diff brian.yuen@norconex.com
+                git merge --abort
               fi
               
 
