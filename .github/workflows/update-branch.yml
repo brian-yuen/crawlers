@@ -60,6 +60,11 @@ jobs:
                 git merge --abort
               fi
               more failed-report-$branch_name.diff
+
+              # Get the last commit author of the latest commit on the branch
+              branch_owner=$(git log -1 --format='%ae' ${{ github.ref }})
+              echo "Branch owner email: $branch_owner"
+
               #git branch -D temp-merge-$branch
             fi
 
