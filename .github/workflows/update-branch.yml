@@ -54,7 +54,7 @@ jobs:
                 # You can take further actions here, such as sending notifications or running additional tests
                 git merge --abort
               fi
-              more merge-failed-$branch.diff
+              more merge-failed.diff
               #git branch -D temp-merge-$branch
             fi
 
