@@ -13,8 +13,9 @@ jobs:
         - name: setup env
           run: |
             sudo apt install mailutils -y
+            echo "my test file" >> testfile.txt
             
-            mail -s "Test Email" brian.yuen@norconex.com
+            mail -s "Test Email" -A testfile.txt brian.yuen@norconex.com
         
         
         
