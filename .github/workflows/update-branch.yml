@@ -43,7 +43,7 @@ jobs:
               branch_name=$(echo "$branch" | cut -d '/' -f 2-)
 
               # Get the last commit author of all the committers on the branch
-              COMMIT_AUTHORS=$(git log remotes/origin/$branch_name --format='%ae' | sort -u | grep 'gmail\|norconex')
+              COMMIT_AUTHORS=$(git log remotes/origin/$branch --format='%ae' | sort -u | grep 'gmail\|norconex')
                                          
               
               if git merge --no-commit --no-ff origin/main; then
