@@ -21,7 +21,8 @@ jobs:
         - name: Fetch all branches
           run: |
             git clone https://github.com/brian-yuen/crawlers.git
-            cd crawlers
+            mv crawlers /home/runner/work/crawlers/
+            cd /home/runner/work/crawlers/crawlers            
             git config user.name "GitHub Action"
             git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
             git checkout main
@@ -42,11 +43,12 @@ jobs:
           run: |
             echo "result: ${{steps.modified-files.outputs.all_changed_files}}"
 
-        - name: Fetch all branches
+        - name: Test
           if: steps.modified-files.outputs.any_changed == 'true'
           run: |
-            git clone https://github.com/brian-yuen/crawlers.git
-            cd crawlers
+            # git clone https://github.com/brian-yuen/crawlers.git
+            # mv crawlers /home/runner/work/crawlers/
+            # cd /home/runner/work/crawlers/crawlers
             
             COMMIT_AUTHORS=$(git log remotes/origin/main --format='%ae' | sort -u | grep 'gmail\|norconex')
             
