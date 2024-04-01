@@ -39,15 +39,20 @@ jobs:
                                         
               git checkout -b temp-merge-$branch origin/$branch
 
-              # Get the last commit author of all the committers on the branch
-              committer_email=$(git log remotes/origin/)
-              echo "Last committer email: $branch_owner"
+              # Extract the branch name from the format xxxx/branch-name
+              branch_name=$(echo "$branch" | cut -d '/' -f 2-)
 
-               # Extract the branch name from the format xxxx/branch-name
-               branch_name=$(echo "$branch" | cut -d '/' -f 2-)
+              # Get the last commit author of all the committers on the branch
+              COMMIT_AUTHORS=$(git log remotes/origin/$branch_name --format='%ae' | sort -u | grep 'gmail\|norconex')
+                                         
               
               if git merge --no-commit --no-ff origin/main; then
                 echo "Merging main into $branch succeeded"
+                
+                for author in $COMMIT_AUTHORS; do
+                  echo "Commit author: $author"
+                done
+                
                 mail -s "Test Merge succeeded - Branch: $branch_name" brian.yuen@norconex.com
                 # You can add further testing steps here if needed
                 git merge --abort
@@ -59,6 +64,11 @@ jobs:
 
                 git diff > failed-report-$branch_name.diff
                 more failed-report-$branch_name.diff
+                
+                for author in $COMMIT_AUTHORS; do
+                  echo "Commit author: $author"
+                done
+
                 mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$branch_name.diff brian.yuen@norconex.com
                 git merge --abort
               fi
