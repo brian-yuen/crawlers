@@ -14,9 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # - name: Checkout code
-      #   uses: actions/checkout@v4
-
+     
       - name: Install Git
         run: sudo apt-get install git -y
       
@@ -25,9 +23,6 @@ jobs:
 
       - name: Fetch all branches
         run: git clone https://github.com/brian-yuen/crawlers.git
-
-      # - name: List branches
-      #   run: git branch -r | grep -v 'origin/main' | cut -d '/' -f 2- > branches.txt
 
       - name: Test merge main into branches
         run: |
@@ -52,7 +47,7 @@ jobs:
               
               if git merge --no-commit --no-ff origin/main; then
                 echo "Merging main into $branch succeeded"
-                mail -s "Test Merge succeeded!!! $branch_name" brian.yuen@norconex.com
+                mail -s "Test Merge succeeded - Branch: $branch_name" brian.yuen@norconex.com
                 # You can add further testing steps here if needed
                 git merge --abort
               else
@@ -63,7 +58,7 @@ jobs:
 
                 git diff > failed-report-$branch_name.diff
                 more failed-report-$branch_name.diff
-                mail -s "Test Merge FAILED - $branch_name" -A failed-report-$branch_name.diff brian.yuen@norconex.com
+                mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$branch_name.diff brian.yuen@norconex.com
                 git merge --abort
               fi
               
