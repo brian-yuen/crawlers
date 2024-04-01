@@ -37,9 +37,10 @@ jobs:
               .github/workflows/*.yml
               .github/*.yml
               **/assembly/**
-              
+
         - name: display result
-          run: echo "result: ${{steps.modified-files.outputs.all_changed_files}}"
+          run: |
+            echo "result: ${{steps.modified-files.outputs.all_changed_files}}"
 
         - name: Fetch all branches
           if: steps.modified-files.outputs.any_changed == 'true'
