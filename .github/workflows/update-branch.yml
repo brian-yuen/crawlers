@@ -7,6 +7,8 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+
 jobs:
   test-merge:
     runs-on: ubuntu-latest
@@ -44,7 +46,7 @@ jobs:
               echo ""
                                         
               git checkout -b temp-merge-$branch origin/$branch
-              
+
                # Extract the branch name from the format xxxx/branch-name
                branch_name=$(echo "$branch" | cut -d '/' -f 2-)
               
