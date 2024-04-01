@@ -10,7 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+        - name: Get modified files           
+          id: modified-files        
+          uses: tj-actions/changed-files@v42.0.5
+          with:
+            files_ignore: |     
+              # ignore the yml files and header files in the github folder       
+              .github/workflows/copyright-headers/*.txt
+              .github/workflows/*.yml
+              .github/*.yml
+              **/assembly/**
+        
         - name: Fetch all branches
+          if: steps.modified-files.outputs.any_changed == 'true'
           run: |
             git clone https://github.com/brian-yuen/crawlers.git
             cd crawlers
