@@ -10,12 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-        - name: setup env
+        - name: Fetch all branches
           run: |
-            sudo apt install mailutils -y
-            echo "my test file" >> testfile.txt
+            git clone https://github.com/brian-yuen/crawlers.git
+            cd crawlers
             
-            mail -s "Test Email" -A testfile.txt brian.yuen@norconex.com
+            COMMIT_AUTHORS=$(git log remotes/origin/main --format='%ae' | sort -u | grep 'gmail\|norconex')
+            
+            for author in $COMMIT_AUTHORS; do
+                echo "Commit author: $author"
+            done
+        
+
+
+
         
         
         

@@ -30,10 +30,7 @@ jobs:
           cd crawlers
           git config user.name "GitHub Action"
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-
-          # git checkout test-branch-tbd
-          # git merge origin/main
-
+          
           for branch in $(git branch -r | grep -v 'origin/main' | cut -d '/' -f 2-); do
             if [[ $branch != *"snyk"* && $branch != *"dependabot"* && $branch != *".x-branch"* && $branch != *"bugfix/unknown-properties"* ]]; then
               echo ""
@@ -41,6 +38,10 @@ jobs:
               echo ""
                                         
               git checkout -b temp-merge-$branch origin/$branch
+
+              # Get the last commit author of all the committers on the branch
+              committer_email=$(git log remotes/origin/)
+              echo "Last committer email: $branch_owner"
 
                # Extract the branch name from the format xxxx/branch-name
                branch_name=$(echo "$branch" | cut -d '/' -f 2-)
@@ -63,9 +64,7 @@ jobs:
               fi
               
 
-              # Get the last commit author of the latest commit on the branch
-              branch_owner=$(git log -1 --format='%ae')
-              echo "Last committer email: $branch_owner"
+              
            
  
               #git branch -D temp-merge-$branch
