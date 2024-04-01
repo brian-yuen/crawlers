@@ -21,7 +21,7 @@ jobs:
         - name: Fetch all branches
           run: |
             git clone https://github.com/brian-yuen/crawlers.git
-            mv -R crawlers /home/runner/work/crawlers/
+            mv crawlers /home/runner/work/crawlers/crawlers/
             cd /home/runner/work/crawlers/crawlers            
             git config user.name "GitHub Action"
             git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
