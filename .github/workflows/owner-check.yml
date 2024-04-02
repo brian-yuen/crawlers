@@ -38,8 +38,7 @@ jobs:
               # .github/*.yml
               **/.github/**
               **/assembly/**
-              *.txt
-              *.md
+              *.txt              
               .gitignore
               **/README.md
 
