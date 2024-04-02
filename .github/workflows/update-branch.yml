@@ -21,16 +21,35 @@ jobs:
       - name: setup mail service
         run: sudo apt install mailutils -y
 
-      - name: Fetch all branches
-        run: git clone https://github.com/brian-yuen/crawlers.git
-
-      - name: Test merge main into branches
+      - name: Fetch all branches and setup user information
         run: |
-
-          cd crawlers
+          git clone https://github.com/brian-yuen/crawlers.git /home/runner/work/crawlers/crawlers
+          cd /home/runner/work/crawlers/crawlers            
           git config user.name "GitHub Action"
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-          
+          git checkout main
+
+
+      - name: Get modified files           
+        id: modified-files        
+        uses: tj-actions/changed-files@v42.0.5
+        with:
+          files_ignore: |     
+            # ignore the yml files and header files in the github folder       
+            # .github/workflows/copyright-headers/*.txt
+            # .github/workflows/*.yml
+            # .github/*.yml
+            **/.github/**
+            **/assembly/**
+            new-test-file.txt
+            README.md
+            V4_MIGRATION.md
+            LICENSE.txt
+            .gitignore
+
+      - name: Test merge main into branches
+        if: steps.modified-files.outputs.any_changed == 'true'
+        run: |          
           for branch in $(git branch -r | grep -v 'origin/main' | cut -d '/' -f 2-); do
             if [[ $branch != *"snyk"* && $branch != *"dependabot"* && $branch != *".x-branch"* && $branch != *"bugfix/unknown-properties"* ]]; then
               echo ""
@@ -72,10 +91,6 @@ jobs:
                 mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$branch_name.diff brian.yuen@norconex.com
                 git merge --abort
               fi
-              
-
-              
-           
  
               #git branch -D temp-merge-$branch
             fi
