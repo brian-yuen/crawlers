@@ -42,7 +42,7 @@ jobs:
             **/.github/**
             **/assembly/**
             new-test-file.txt
-            *README.md
+            **README.md
             V4_MIGRATION.md
             LICENSE.txt
             .gitignore
