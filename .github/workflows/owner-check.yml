@@ -38,7 +38,7 @@ jobs:
               # .github/*.yml
               **/.github/**
               **/assembly/**
-              **/**.txt              
+              **/**.txt          
               .gitignore
               **/**.md
 
