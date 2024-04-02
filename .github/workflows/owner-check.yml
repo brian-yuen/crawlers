@@ -33,11 +33,16 @@ jobs:
           with:
             files_ignore: |     
               # ignore the yml files and header files in the github folder       
-              .github/workflows/copyright-headers/*.txt
-              .github/workflows/*.yml
-              .github/*.yml
+              # .github/workflows/copyright-headers/*.txt
+              # .github/workflows/*.yml
+              # .github/*.yml
+              **/.github/**
               **/assembly/**
               new-test-file.txt
+              README.md
+              V4_MIGRATION.md
+              LICENSE.txt
+              .gitignore
 
         - name: display result
           run: |
