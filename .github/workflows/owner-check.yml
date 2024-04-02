@@ -38,9 +38,9 @@ jobs:
               # .github/*.yml
               **/.github/**
               **/assembly/**
-              **/*.txt              
+              **/**.txt              
               .gitignore
-              **/*.md
+              **/**.md
 
         - name: display result
           run: |
