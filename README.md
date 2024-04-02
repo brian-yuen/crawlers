@@ -1,4 +1,4 @@
-# Norconex Crawlers  DELETE ME
+# Norconex Crawlers
 
 Norconex web and filesystem crawlers are full-featured crawlers (or spider) that can manipulate and store collected data in a repository of your choice (e.g., a search engine). They are very flexible, powerful, easy to extend, and portable. They can be used command-line with file-based configuration on any OS or embedded into Java applications using well-documented APIs.
 
