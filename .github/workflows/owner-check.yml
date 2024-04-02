@@ -37,6 +37,7 @@ jobs:
               .github/workflows/*.yml
               .github/*.yml
               **/assembly/**
+              new-test-file.txt
 
         - name: display result
           run: |
