@@ -1,4 +1,4 @@
-Importer DELETE ME
+Importer
 ==========
 
 Norconex Importer is a Java library and command-line application meant to 
