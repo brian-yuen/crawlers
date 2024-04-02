@@ -38,10 +38,8 @@ jobs:
               # .github/*.yml
               **/.github/**
               **/assembly/**
-              new-test-file.txt
-              README.md
-              V4_MIGRATION.md
-              LICENSE.txt
+              *.txt
+              *.md
               .gitignore
 
         - name: display result
