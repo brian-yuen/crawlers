@@ -1,7 +1,5 @@
 name: Check Branch Sync
 
-# name: Test Merge Main into Branches
-
 on:
   push:
     branches:
@@ -21,6 +19,7 @@ jobs:
       - name: setup mail service
         run: sudo apt install mailutils -y
 
+      # Clone the branch, setup user information, and checkout main branch for later files checking  
       - name: Fetch all branches and setup user information
         run: |
           git clone https://github.com/brian-yuen/crawlers.git /home/runner/work/crawlers/crawlers
@@ -29,7 +28,7 @@ jobs:
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
           git checkout main
 
-
+      # check if core files are being modified
       - name: Get modified files           
         id: modified-files        
         uses: tj-actions/changed-files@v42.0.5
@@ -45,6 +44,7 @@ jobs:
             **/**.md
             .gitignore
 
+      # start testing main branch into each sub-branches, only run if core files are modified
       - name: Test merge main into branches
         if: steps.modified-files.outputs.any_changed == 'true'
         run: |          
@@ -62,18 +62,24 @@ jobs:
               # Get the last commit author of all the committers on the branch
               COMMIT_AUTHORS=$(git log remotes/origin/$branch --format='%ae' | sort -u | grep 'gmail\|norconex')
                                          
-              
+              # start merging the main branch into sub-branch
               if git merge --no-commit --no-ff origin/main; then
+                
+                # notify branch committers merge succeeded
                 echo "Merging main into $branch succeeded"
                 
                 for author in $COMMIT_AUTHORS; do
                   echo "Commit author: $author"
+                  # mail -s "Test Merge succeeded - Branch: $branch_name" $author
                 done
                 
-                mail -s "Test Merge succeeded - Branch: $branch_name" brian.yuen@norconex.com
+                # email committers changes in main can be merged into his/her branch without conflicts
+                echo "There are updates to the main branch, please update your branch. Thanks" | mail -s "Test Merge succeeded - Branch: $branch_name" brian.yuen@norconex.com
                 # You can add further testing steps here if needed
                 git merge --abort
+
               else
+                # notify branch committers merge failed
                 echo "Merging main into $branch failed"
 
                 # Save the result of the merge command to a file
@@ -84,10 +90,11 @@ jobs:
                 
                 for author in $COMMIT_AUTHORS; do
                   echo "Commit author: $author"
+                  # mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$branch_name.diff $author
                 done
 
-                mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$branch_name.diff brian.yuen@norconex.com
-                git merge --abort --abort
+                echo "There are updates to the main branch, but test merge failed, attached is the details of the conflicts. Please resolve the conflicts and keep your branch up to date. Thanks" | mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$branch_name.diff brian.yuen@norconex.com
+                git merge --abort
               fi
                
             fi
