@@ -87,10 +87,9 @@ jobs:
                 done
 
                 mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$branch_name.diff brian.yuen@norconex.com
-                git merge --abort
+                git merge --abort --abort
               fi
- 
-              #git branch -D temp-merge-$branch
+               
             fi
 
           done
