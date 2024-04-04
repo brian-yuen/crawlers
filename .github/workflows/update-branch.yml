@@ -1,3 +1,7 @@
+# This workflow will run whenever the main branch is updated. It will try to merge main into
+# each sub-branch in a sandbox environment and see if there is any conflicts, then email the committers of the branch
+# about the result. The conflict details will be attached in the email if test-merge failed.
+
 name: Check Branch Sync
 
 on:
@@ -59,7 +63,7 @@ jobs:
               # Extract the branch name from the format xxxx/branch-name
               branch_name=$(echo "$branch" | cut -d '/' -f 2-)
 
-              # Get the last commit author of all the committers on the branch
+              # Get the last commit author of all the committers on the branch, only committers who has a valid norconex or gmail email will be emailed. 
               COMMIT_AUTHORS=$(git log remotes/origin/$branch --format='%ae' | sort -u | grep 'gmail\|norconex')
                                          
               # start merging the main branch into sub-branch
@@ -67,7 +71,7 @@ jobs:
                 
                 # notify branch committers merge succeeded
                 echo "Merging main into $branch succeeded"
-                
+                                
                 for author in $COMMIT_AUTHORS; do
                   echo "Commit author: $author"   
                   # email committers changes in main can be merged into his/her branch without conflicts
