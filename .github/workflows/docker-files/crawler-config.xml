@@ -1,0 +1,23 @@
+<crawlSession id="s1">
+  <workDir>${workdir}</workDir>
+  <crawlers>
+    <crawler id="myCrawler1" class="WebCrawlerConfig">
+    <startReferences>
+      <ref>https://www.britannica.com/</ref>
+    </startReferences>
+    <maxDepth>0</maxDepth>
+    <numThreads>1</numThreads>
+    <maxDocuments>10</maxDocuments>
+	<fetchersRetryDelay>100</fetchersRetryDelay>
+	
+
+    <committers>
+      <committer class="XMLFileCommitter">
+	  </committer>
+    </committers>
+
+    </crawler>
+ </crawlers>
+
+
+</crawlSession>

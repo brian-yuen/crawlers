@@ -175,6 +175,8 @@ jobs:
             done
           done
 
+      - name: test run
+        run: docker ls -a
 
       # # login to Dockerhub
       # - name: Login to Docker Hub

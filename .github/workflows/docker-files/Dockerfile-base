@@ -13,10 +13,12 @@ ENV COLLECTOR_HOME=/nxer/collector \
 WORKDIR $NORCONEX_HOME
 
 COPY .github/workflows/docker-scripts ./docker-scripts
+COPY .github/workflows/docker-files/crawler-config.xml $COLLECTOR_HOME/configs/
 
 RUN ls; \
     echo ""; \
-    ls docker-scripts;
+    ls docker-scripts; \
+    ls $COLLECTOR_HOME/configs
 
 RUN apt-get -y update ; \
     apt-get install -y nano ; \
@@ -53,3 +55,9 @@ RUN unzip ${dl_filename}; \
     mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT ${COLLECTOR_HOME};
 RUN chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
 RUN rm *.zip
+
+# Entry point when running docker container
+ENTRYPOINT ["docker-entrypoint"]
+
+# The run script
+CMD ["docker-run"]
