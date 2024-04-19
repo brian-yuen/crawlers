@@ -180,7 +180,9 @@ jobs:
           docker image ls -a
           mkdir outputs
           docker run -v outputs:/nxer/outputs/workdir 4.0.0-snapshot-crawler-web-base
-          ls outputs
+          
+      - name: check output
+        run: ls outputs
 
       # # login to Dockerhub
       # - name: Login to Docker Hub
