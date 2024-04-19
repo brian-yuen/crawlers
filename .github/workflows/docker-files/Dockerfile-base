@@ -38,16 +38,18 @@ FROM base AS regular
 WORKDIR $NORCONEX_HOME
 
 COPY downloaded/$crawler_type/*.zip .
-RUN unzip ${dl_filename}
-RUN chmod +x nx-crawler-${crawler_type}-${build_version}/crawl-${crawler_type}.*
+RUN unzip ${dl_filename}; \
+    mv nx-crawler-${crawler_type}-${build_version} ${COLLECTOR_HOME};
+
+RUN chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
 RUN rm *.zip
 
 
 FROM base AS snapshot
 WORKDIR $NORCONEX_HOME
 
-COPY downloaded/$crawler_type/*.zip /nxer/
-RUN unzip ${dl_filename}
-RUN mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT nx-crawler-${crawler_type}-${build_version}
-RUN chmod +x nx-crawler-${crawler_type}-${build_version}/crawl-${crawler_type}.*
+COPY downloaded/$crawler_type/*.zip .
+RUN unzip ${dl_filename}; \
+    mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT ${COLLECTOR_HOME};
+RUN chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
 RUN rm *.zip
