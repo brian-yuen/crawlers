@@ -178,7 +178,7 @@ jobs:
       - name: test run
         run: |
           docker image ls -a          
-          sudo docker run -v assembly:/nxer/outputs/workdir 4.0.0-snapshot-crawler-web-base
+          sudo docker run -v /home/runner/.m2/repository/com/norconex/crawler/assembly:/nxer/outputs/workdir 4.0.0-snapshot-crawler-web-base
           
       - name: check output
         run: ls assembly
