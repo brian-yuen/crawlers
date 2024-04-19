@@ -5,13 +5,6 @@ ARG committer_version
 ARG build_version
 ARG crawler_type
 
-ENV COLLECTOR_HOME=/nxer/collector \
-	WORKDIR=/nxer/outputs/workdir \
-    COLLECTOR_LOG_DIR=/nxer/collector/logs \
-	NORCONEX_HOME=/nxer \
-	COLLECTOR_CONFIG_FILE=crawler-config.xml \	
-    PATH="/nxer/collector:/nxer/docker-scripts:$PATH"
-
 WORKDIR $NORCONEX_HOME
 
 COPY downloaded/$committer_type/*.zip .
