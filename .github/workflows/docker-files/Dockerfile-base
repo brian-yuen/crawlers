@@ -54,9 +54,9 @@ WORKDIR $NORCONEX_HOME
 COPY downloaded/$crawler_type/*.zip .
 RUN unzip ${dl_filename}; \
     cp -R nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/* ${COLLECTOR_HOME}; \
-    ls ${COLLECTOR_HOME};
-RUN chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
-RUN rm *.zip
+    chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*; \
+    rm *.zip; \
+    rm -r nx-crawler-${crawler_type}-${build_version}-SNAPSHOT;
 
 # Entry point when running docker container
 ENTRYPOINT ["docker-entrypoint"]
