@@ -14,7 +14,9 @@ WORKDIR $NORCONEX_HOME
 
 COPY .github/workflows/docker-scripts ./docker-scripts
 COPY .github/workflows/support-files/ .
-RUN mkdir $COLLECTOR_HOME/configs
+RUN cd $COLLECTOR_HOME; \
+    mkdir configs; \
+    cd /nxer
 RUN mv crawler-config.xml $COLLECTOR_HOME/configs/
 
 RUN ls; \
