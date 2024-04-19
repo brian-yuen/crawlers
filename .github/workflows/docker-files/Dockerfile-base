@@ -3,7 +3,20 @@ ARG crawler_type
 ARG build_version
 ARG dl_filename
 
-WORKDIR /nxer
+ENV COLLECTOR_HOME=/nxer/collector \
+	WORKDIR=/nxer/outputs/workdir \
+    COLLECTOR_LOG_DIR=/nxer/collector/logs \
+	NORCONEX_HOME=/nxer \
+	COLLECTOR_CONFIG_FILE=crawler-config.xml \	
+    PATH="/nxer/collector:/nxer/docker-scripts:$PATH"
+
+WORKDIR $NORCONEX_HOME
+
+COPY .github/workflows/docker-scripts "$NORCONEX_HOME/docker-scripts"
+
+RUN ls; \
+    echo ""; \
+    ls "$NORCONEX_HOME/docker-scripts";
 
 RUN apt-get -y update && \
     apt-get install -y nano && \
@@ -17,7 +30,7 @@ RUN apt-get -y update && \
 
 
 FROM base AS regular
-WORKDIR /nxer
+WORKDIR $NORCONEX_HOME
 
 COPY downloaded/$crawler_type/*.zip /nxer/
 RUN unzip ${dl_filename}
@@ -26,7 +39,7 @@ RUN rm *.zip
 
 
 FROM base AS snapshot
-WORKDIR /nxer
+WORKDIR $NORCONEX_HOME
 
 COPY downloaded/$crawler_type/*.zip /nxer/
 RUN unzip ${dl_filename}
