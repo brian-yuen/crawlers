@@ -178,8 +178,8 @@ jobs:
       - name: test run
         run: |
           docker image ls -a
-          mkdir -p outputs/workdir
-          docker run -v outputs/workdir:/nxer/outputs/workdir 4.0.0-snapshot-crawler-web-base
+          mkdir outputs
+          docker run -v outputs:/nxer/outputs/workdir 4.0.0-snapshot-crawler-web-base
           ls outputs/workdir
 
       # # login to Dockerhub
