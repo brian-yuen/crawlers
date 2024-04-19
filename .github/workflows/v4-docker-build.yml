@@ -179,7 +179,8 @@ jobs:
         run: |
           docker image ls -a
           mkdir outputs
-          docker run -v outputs:/nxer/outputs/workdir 4.0.0-snapshot-crawler-web-base
+          mkdir outputs/workdir
+          docker run -v outputs/workdir:/nxer/outputs/workdir 4.0.0-snapshot-crawler-web-base
           
       - name: check output
         run: ls outputs
