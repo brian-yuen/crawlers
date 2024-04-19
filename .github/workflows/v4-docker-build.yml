@@ -181,7 +181,7 @@ jobs:
           docker run -v assembly:/nxer/outputs/workdir 4.0.0-snapshot-crawler-web-base
           
       - name: check output
-        run: ls outputs
+        run: ls assembly
 
       # # login to Dockerhub
       # - name: Login to Docker Hub
