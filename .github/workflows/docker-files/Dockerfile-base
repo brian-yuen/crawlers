@@ -13,7 +13,8 @@ ENV COLLECTOR_HOME=/nxer/collector \
 WORKDIR $NORCONEX_HOME
 
 COPY .github/workflows/docker-scripts ./docker-scripts
-COPY .github/workflows/docker-files/crawler-config.xml $COLLECTOR_HOME/configs/
+COPY .github/workflows/support-files/ .
+RUN mv crawler-config.xml $COLLECTOR_HOME/configs/
 
 RUN ls; \
     echo ""; \
@@ -42,8 +43,7 @@ WORKDIR $NORCONEX_HOME
 COPY downloaded/$crawler_type/*.zip .
 RUN unzip ${dl_filename}; \
     mv nx-crawler-${crawler_type}-${build_version} ${COLLECTOR_HOME}; \
-    ls ${COLLECTOR_HOME};
-
+    mv log4j*.jar ${COLLECTOR_HOME}/lib;
 RUN chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
 RUN rm *.zip
 
@@ -54,6 +54,7 @@ WORKDIR $NORCONEX_HOME
 COPY downloaded/$crawler_type/*.zip .
 RUN unzip ${dl_filename}; \
     cp -R nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/* ${COLLECTOR_HOME}; \
+    mv log4j*.jar ${COLLECTOR_HOME}/lib; \
     chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*; \
     rm *.zip; \
     rm -r nx-crawler-${crawler_type}-${build_version}-SNAPSHOT;
