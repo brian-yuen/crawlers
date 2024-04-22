@@ -175,72 +175,72 @@ jobs:
             done
           done
 
-      # login to Dockerhub
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      # # login to Dockerhub
+      # - name: Login to Docker Hub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKER_HUB_USERNAME }}
+      #     password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       
-      # Tag and push images onto Dockerhub repo
-      - name: Tag and Push images to Dockerhub
-        run: |
-          for type in $crawler_types; do
+      # # Tag and push images onto Dockerhub repo
+      # - name: Tag and Push images to Dockerhub
+      #   run: |
+      #     for type in $crawler_types; do
 
-            # check if it is a snapshot build, if not, upload different favor of images
-            if [[ "${{env.version_lowercase}}" != *"-snapshot"* ]]; then
+      #       # check if it is a snapshot build, if not, upload different favor of images
+      #       if [[ "${{env.version_lowercase}}" != *"-snapshot"* ]]; then
 
-                # tag local base image with online norconex tag
-                docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:$type-latest
-                docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.major}}-$type
-                docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.major_minor}}-$type
-                docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.version_lowercase}}-$type
+      #           # tag local base image with online norconex tag
+      #           docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:$type-latest
+      #           docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.major}}-$type
+      #           docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.major_minor}}-$type
+      #           docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.version_lowercase}}-$type
 
-                # upload to dockerhub
-                docker push norconex/crawler:$type-latest
-                docker push norconex/crawler:${{env.major}}-$type
-                docker push norconex/crawler:${{env.major_minor}}-$type
-                docker push norconex/crawler:${{env.version_lowercase}}-$type
+      #           # upload to dockerhub
+      #           docker push norconex/crawler:$type-latest
+      #           docker push norconex/crawler:${{env.major}}-$type
+      #           docker push norconex/crawler:${{env.major_minor}}-$type
+      #           docker push norconex/crawler:${{env.version_lowercase}}-$type
 
             
-                for com_type in $committer_types; do
+      #           for com_type in $committer_types; do
                 
-                  # tag local committer images with online norconex tag
-                  docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.major}}-$type-$com_type
-                  docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.major_minor}}-$type-$com_type
-                  docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.version_lowercase}}-$type-$com_type
+      #             # tag local committer images with online norconex tag
+      #             docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.major}}-$type-$com_type
+      #             docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.major_minor}}-$type-$com_type
+      #             docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.version_lowercase}}-$type-$com_type
                 
-                  # upload online norconex tagged images onto docker hub 
-                  docker push norconex/crawler:${{env.major}}-$type-$com_type
-                  docker push norconex/crawler:${{env.major_minor}}-$type-$com_type
-                  docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
+      #             # upload online norconex tagged images onto docker hub 
+      #             docker push norconex/crawler:${{env.major}}-$type-$com_type
+      #             docker push norconex/crawler:${{env.major_minor}}-$type-$com_type
+      #             docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
 
-                done  
+      #           done  
 
-                # check what images are created
-                docker image ls -a
+      #           # check what images are created
+      #           docker image ls -a
                         
-                echo "Base, and committers images uploaded!"
+      #           echo "Base, and committers images uploaded!"
             
-            else # snapshot images
+      #       else # snapshot images
 
-                # tag the local images with repo inform for upload use
-                docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.version_lowercase}}-$type
+      #           # tag the local images with repo inform for upload use
+      #           docker image tag ${{env.version_lowercase}}-crawler-$type-base norconex/crawler:${{env.version_lowercase}}-$type
                 
-                # upload tagged images to dockerhub
-                docker push norconex/crawler:${{env.version_lowercase}}-$type
+      #           # upload tagged images to dockerhub
+      #           docker push norconex/crawler:${{env.version_lowercase}}-$type
                         
-                # tag local committer images with online norconex tag
-                for com_type in $committer_types; do
+      #           # tag local committer images with online norconex tag
+      #           for com_type in $committer_types; do
 
-                  docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.version_lowercase}}-$type-$com_type
+      #             docker image tag ${{env.version_lowercase}}-crawler-$type-$com_type norconex/crawler:${{env.version_lowercase}}-$type-$com_type
                     
-                  # upload committer images
-                  docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
+      #             # upload committer images
+      #             docker push norconex/crawler:${{env.version_lowercase}}-$type-$com_type
 
-                done
+      #           done
                 
-                echo "snapshot uploaded!"
-            fi
-          done
+      #           echo "snapshot uploaded!"
+      #       fi
+      #     done
