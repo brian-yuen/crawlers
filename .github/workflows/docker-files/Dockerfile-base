@@ -13,7 +13,6 @@ ENV COLLECTOR_HOME=/nxer/collector \
 WORKDIR $NORCONEX_HOME
 
 COPY .github/workflows/support-files .
-RUN ls $COLLECTOR_HOME
 
 RUN apt-get -y update ; \
     apt-get install -y nano ; \
