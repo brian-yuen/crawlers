@@ -9,5 +9,5 @@ WORKDIR $NORCONEX_HOME
 
 COPY downloaded/$committer_type/*.zip .
 RUN unzip ${dl_filename}
-RUN cp nx-committer-${committer_type}-${committer_version}/lib/* $COLLECTOR_HOME/lib/
+RUN cp "nx-committer-${committer_type}-${committer_version}/lib/*" "$COLLECTOR_HOME/lib/"
 RUN rm *.zip
