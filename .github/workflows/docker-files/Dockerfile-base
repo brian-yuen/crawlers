@@ -12,15 +12,8 @@ ENV COLLECTOR_HOME=/nxer/collector \
 
 WORKDIR $NORCONEX_HOME
 
-COPY .github/workflows/docker-scripts ./docker-scripts
-COPY .github/workflows/support-files "$COLLECTOR_HOME/configs"
-RUN ls $COLLECTOR_HOME/configs
-
-
-RUN ls; \
-    echo ""; \
-    ls docker-scripts; \
-    ls $COLLECTOR_HOME/configs
+COPY .github/workflows/support-files .
+RUN ls $COLLECTOR_HOME
 
 RUN apt-get -y update ; \
     apt-get install -y nano ; \
@@ -32,39 +25,33 @@ RUN apt-get -y update ; \
     dpkg -i jdk-17_linux-x64_bin.deb ; \    
     rm *.deb;
 
-# Extract, remove carriage return in files and change permission
-RUN set -x; \    
-    sed -i -e 's/\r$//' docker-scripts/docker-entrypoint; \
-    sed -i -e 's/\r$//' docker-scripts/docker-run; \
-    chmod 755 docker-scripts/*; 
-
 FROM base AS regular
 WORKDIR $NORCONEX_HOME
 
 COPY downloaded/$crawler_type/*.zip .
-RUN unzip ${dl_filename}; \
+RUN set -x; \ 
+    unzip ${dl_filename}; \
     mv nx-crawler-${crawler_type}-${build_version} ${COLLECTOR_HOME}; \
-    mv log4j-core-2.23.1.jar1 log4j-core-2.23.1.jar; \
-    mv log4j-slf4j2-impl-2.23.1.jar1 log4j-slf4j2-impl-2.23.1.jar; \
-    mv log4j*.jar ${COLLECTOR_HOME}/lib;
-RUN chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
-RUN rm *.zip
+    mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar"; \
+    mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar"; \    
+    chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*; \
+    rm *.zip
 
 
 FROM base AS snapshot
 WORKDIR $NORCONEX_HOME
 
 COPY downloaded/$crawler_type/*.zip .
-RUN unzip ${dl_filename}; \
-    cp -R nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/* ${COLLECTOR_HOME}; \
-    mv "${COLLECTOR_HOME}/configs/log4j-core-2.23.1.jar1" "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar"; \
-    mv "${COLLECTOR_HOME}/configs/log4j-slf4j2-impl-2.23.1.jar1" "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar"; \    
+RUN set -x; \ 
+    unzip ${dl_filename}; \
+    mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/* ${COLLECTOR_HOME}; \
+    mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar"; \
+    mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar"; \    
     chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*; \
-    rm *.zip; \
-    rm -r nx-crawler-${crawler_type}-${build_version}-SNAPSHOT;
+    rm *.zip;     
 
 # Entry point when running docker container
-ENTRYPOINT ["docker-entrypoint"]
+ENTRYPOINT ["crawl-web.sh"]
 
 # The run script
-CMD ["docker-run"]
+CMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]
