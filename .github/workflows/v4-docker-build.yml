@@ -102,69 +102,69 @@ jobs:
           echo "debug: show Dockerfile-base-reg!!!"
           more .github/workflows/docker-files/Dockerfile-base-reg
 
-          # echo "############################################"
-          # echo "# Start building normal docker images!!    #"
-          # echo "############################################"
+          echo "############################################"
+          echo "# Start building normal docker images!!    #"
+          echo "############################################"
 
-          # for type in $crawler_types; do
+          for type in $crawler_types; do
             
-          #   # create folder for the downloaded files
-          #   mkdir -p downloaded/$type
+            # create folder for the downloaded files
+            mkdir -p downloaded/$type
            
-          #   #check whether a regular or a snapshot version should be built
-          #   if [[ "${{env.version_lowercase}}" != *"-snapshot"* ]]; then
+            #check whether a regular or a snapshot version should be built
+            if [[ "${{env.version_lowercase}}" != *"-snapshot"* ]]; then
 
-          #     # start building Regular Base Image
-          #     echo "Regular image build start"              
+              # start building Regular Base Image
+              echo "Regular image build start"              
 
-          #     # download the latest zip file from meven central
-          #     mvn dependency:get -DgroupId=com.norconex.crawler \
-          #                        -DartifactId=nx-crawler-$type \
-          #                        -Dpackaging=zip \
-          #                        -Dversion=${{env.version_lowercase}} \
-          #                        -Dtransitive=false \
-          #                        -DremoteRepositories=https://repo1.maven.org/maven2/com/norconex/
+              # download the latest zip file from meven central
+              mvn dependency:get -DgroupId=com.norconex.crawler \
+                                 -DartifactId=nx-crawler-$type \
+                                 -Dpackaging=zip \
+                                 -Dversion=${{env.version_lowercase}} \
+                                 -Dtransitive=false \
+                                 -DremoteRepositories=https://repo1.maven.org/maven2/com/norconex/
               
-          #     # copy the zip files over to the downloaded folder where docker has access to
-          #     cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_lowercase}}/*.zip ./downloaded/$type
+              # copy the zip files over to the downloaded folder where docker has access to
+              cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_lowercase}}/*.zip ./downloaded/$type
 
-          #     #Extract Filename
-          #     zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_lowercase}}/*.zip)
+              #Extract Filename
+              zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_lowercase}}/*.zip)
               
-          #     docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.version_lowercase}} --build-arg dl_filename=$zip_filename --target regular --tag ${{env.version_lowercase}}-crawler-$type-base            
+              docker build . --file .github/workflows/docker-files/Dockerfile-base-reg --build-arg crawler_type=$type --build-arg build_version=${{env.version_lowercase}} --build-arg dl_filename=$zip_filename --target regular --tag ${{env.version_lowercase}}-crawler-$type-base            
             
-          #     # start building Executable Base Image
-          #     echo "Executable image build start"         
+              # start building Executable Base Image
+              echo "Executable image build start"         
 
-          #     docker build . --file .github/workflows/docker-files/Dockerfile-base-exec --build-arg crawler_type=$type --build-arg build_version=${{env.version_lowercase}} --build-arg dl_filename=$zip_filename --target regular --tag ${{env.version_lowercase}}-crawler-$type-base-exec
+              docker build . --file .github/workflows/docker-files/Dockerfile-base-exec --build-arg crawler_type=$type --build-arg build_version=${{env.version_lowercase}} --build-arg dl_filename=$zip_filename --target regular --tag ${{env.version_lowercase}}-crawler-$type-base-exec
 
-          #   else 
+            else 
             
-          #     # start building Snapshot Base Image
-          #     echo "Snapshot image build start"              
+              # start building Snapshot Base Image
+              echo "Snapshot image build start"              
               
-          #     # download the latest zip file from meven central
-          #     mvn dependency:get -DgroupId=com.norconex.crawler \
-          #                        -DartifactId=nx-crawler-$type \
-          #                        -Dpackaging=zip \
-          #                        -Dversion=${{env.version_uppercase}} \
-          #                        -Dtransitive=false \
-          #                        -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
+              # download the latest zip file from meven central
+              mvn dependency:get -DgroupId=com.norconex.crawler \
+                                 -DartifactId=nx-crawler-$type \
+                                 -Dpackaging=zip \
+                                 -Dversion=${{env.version_uppercase}} \
+                                 -Dtransitive=false \
+                                 -DremoteRepositories=https://oss.sonatype.org/content/repositories/snapshots/
         
-          #     # copy the zip files over to the downloaded folder where docker has access to
-          #     cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}/*.zip ./downloaded/$type
+              # copy the zip files over to the downloaded folder where docker has access to
+              cp /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{env.version_uppercase}}/*.zip ./downloaded/$type
           
-          #     #Extract Filename
-          #     zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{ env.version_uppercase}}/*.zip)
+              #Extract Filename
+              zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{ env.version_uppercase}}/*.zip)
                             
-          #     docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base         
+              docker build . --file .github/workflows/docker-files/Dockerfile-base-reg --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base         
               
-          #     # start building Executable Base Image
-          #     echo "Executable image build start"  
+              # start building Executable Base Image
+              echo "Executable image build start"  
 
-          #     docker build . --file .github/workflows/docker-files/Dockerfile-base-exec --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base-exec         
+              docker build . --file .github/workflows/docker-files/Dockerfile-base-exec --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base-exec         
 
-          #   fi                        
+            fi                        
             
           
           #   # update the committer docker file with the right crawler base image
