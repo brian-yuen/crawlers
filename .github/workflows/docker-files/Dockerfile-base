@@ -38,10 +38,10 @@ RUN set -e; \
     rm *.zip
 
 # Entry point when running docker container
-#uncomment-thisENTRYPOINT ["crawl-web.sh"]
+ENTRYPOINT ["crawl-web.sh"]
 
 # Crawl-web options
-#uncomment-thisCMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]
+CMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]
 
 FROM base AS snapshot
 WORKDIR $NORCONEX_HOME
@@ -57,7 +57,7 @@ RUN set -e; \
     rm *.zip;     
 
 # Entry point when running docker container
-#uncomment-thisENTRYPOINT ["crawl-web.sh"]
+ENTRYPOINT ["crawl-web.sh"]
 
 # Crawl-web options
-#uncomment-thisCMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]
+CMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]
