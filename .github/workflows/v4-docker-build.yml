@@ -99,6 +99,10 @@ jobs:
           echo "debug: show Dockerfile-base-reg!!!"
           more .github/workflows/docker-files/Dockerfile-base-reg
 
+          echo "debug: show Dockerfile-base-exec!!!"
+          more .github/workflows/docker-files/Dockerfile-base-exec
+
+
           echo "############################################"
           echo "# Start building normal docker images!!    #"
           echo "############################################"
