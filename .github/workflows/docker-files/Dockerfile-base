@@ -37,7 +37,9 @@ RUN set -e; \
     chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*; \
     rm *.zip
 
-#replace-this-for-executable
+#replace-line1
+
+#replace-line2
 
 FROM base AS snapshot
 WORKDIR $NORCONEX_HOME
@@ -52,4 +54,6 @@ RUN set -e; \
     chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*; \
     rm *.zip;     
 
-#replace-this-for-executable
+#replace-line1
+
+#replace-line2
