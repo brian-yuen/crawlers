@@ -86,14 +86,21 @@ jobs:
           
       # build the crawler base docker image
       - name: Build docker base image
-        run: |
-          echo "############################################"
-          echo "# Start building normal docker images!!     #"
-          echo "############################################"
+        run: |         
         
           # Make a copy of the dockerfile-base for building executable image
           cp .github/workflows/docker-files/Dockerfile-base .github/workflows/docker-files/Dockerfile-base-exec
 
+          # insert the Entrypoint and CMD command into the Dockerfile
+          sed -i -e 's/\#replace-this-for-executable/# Entry point when running docker container\nENTRYPOINT ["crawl-web.sh"]]\n\n# The run script\nCMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]/g' Dockerfile-base-exec
+
+          echo "debug: show Dockerfile-base-exec!!!"
+          more .github/workflows/docker-files/Dockerfile-base-exec
+
+          echo "############################################"
+          echo "# Start building normal docker images!!     #"
+          echo "############################################"
+          
           for type in $crawler_types; do
             
             # create folder for the downloaded files
@@ -124,12 +131,7 @@ jobs:
               # start building Executable Base Image
               echo "Executable image build start"         
 
-              # insert the Entrypoint and CMD command into the Dockerfile
-              sed -i -e 's/\#replace-this-for-executable/# Entry point when running docker container\nENTRYPOINT ["crawl-web.sh"]]\n\n# The run script\nCMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]/g' Dockerfile-base-exec
-
-              echo "debug: show Dockerfile-base-exec!!!"
-              more .github/workflows/docker-files/Dockerfile-base-exec
-
+              
 
             else 
             
@@ -151,6 +153,7 @@ jobs:
               zip_filename=$(basename /home/runner/.m2/repository/com/norconex/crawler/nx-crawler-$type/${{ env.version_uppercase}}/*.zip)
                             
               docker build . --file .github/workflows/docker-files/Dockerfile-base --build-arg crawler_type=$type --build-arg build_version=${{env.major_minor_revis}} --build-arg dl_filename=$zip_filename --target snapshot --tag ${{env.version_lowercase}}-crawler-$type-base         
+              
             fi                        
             
           
