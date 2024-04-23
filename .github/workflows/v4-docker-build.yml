@@ -94,7 +94,7 @@ jobs:
           ls .github/workflows/docker-files
 
           # insert the Entrypoint and CMD command into the Dockerfile
-          sed -i -e 's,#replace-this-for-executable,# Entry point when running docker container\nENTRYPOINT ["crawl-web.sh"]]\n\n# The run script\nCMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"],g' .github/workflows/docker-files/Dockerfile-base-exec
+          sed -i -e 's/#replace-this-for-executable/# Entry point when running docker container\nENTRYPOINT ["crawl-web.sh"]]/g' .github/workflows/docker-files/Dockerfile-base-exec
 
           echo "debug: show Dockerfile-base-exec!!!"
           more .github/workflows/docker-files/Dockerfile-base-exec
