@@ -96,8 +96,8 @@ jobs:
           # remove entrypoint and CMD from Dockerfile for regular build
           sed -i '/# Entry point/,/config.xml"]/s/.*//g' .github/workflows/docker-files/Dockerfile-base-reg
           
-          #echo "debug: show Dockerfile-base-reg!!!"
-          #more .github/workflows/docker-files/Dockerfile-base-reg
+          echo "debug: show Dockerfile-base-reg!!!"
+          more .github/workflows/docker-files/Dockerfile-base-reg
 
           echo "############################################"
           echo "# Start building normal docker images!!    #"

@@ -61,3 +61,5 @@ ENTRYPOINT ["crawl-web.sh"]
 
 # Crawl-web options
 CMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]
+
+#Other options
