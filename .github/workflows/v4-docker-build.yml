@@ -77,11 +77,11 @@ jobs:
           echo "major_minor_revis=$(echo ${{env.version_lowercase}} | cut -d '-' -f 1)" >> $GITHUB_ENV
 
           
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'adopt'
-          java-version: '17'
+      # - name: Setup Java
+      #   uses: actions/setup-java@v4
+      #   with:
+      #     distribution: 'adopt'
+      #     java-version: '17'
           
           
       # build the crawler base docker image
@@ -96,8 +96,8 @@ jobs:
           ls .github/workflows/docker-files
 
           # insert the Entrypoint and CMD command into the Dockerfile
-          sed -i -e 's/#replace-line1/#Entry point when running docker container\nENTRYPOINT ["crawl-web.sh"]"]/g' .github/workflows/docker-files/Dockerfile-base-exec
-          sed -i -e 's/#replace-line2/${{vars.line2}}\n/g' .github/workflows/docker-files/Dockerfile-base-exec
+          sed -i -e 's/#uncomment-this//g' .github/workflows/docker-files/Dockerfile-base-exec
+          
 
           echo "debug: show Dockerfile-base-exec!!!"
           more .github/workflows/docker-files/Dockerfile-base-exec

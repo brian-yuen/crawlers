@@ -37,9 +37,11 @@ RUN set -e; \
     chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*; \
     rm *.zip
 
-#replace-line1
+# Entry point when running docker container
+#uncomment-thisENTRYPOINT ["crawl-web.sh"]
 
-#replace-line2
+# Crawl-web options
+#uncomment-thisCMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]
 
 FROM base AS snapshot
 WORKDIR $NORCONEX_HOME
@@ -54,6 +56,8 @@ RUN set -e; \
     chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*; \
     rm *.zip;     
 
-#replace-line1
+# Entry point when running docker container
+#uncomment-thisENTRYPOINT ["crawl-web.sh"]
 
-#replace-line2
+# Crawl-web options
+#uncomment-thisCMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]
