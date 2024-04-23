@@ -100,7 +100,7 @@ jobs:
           echo "############################################"
           echo "# Start building normal docker images!!     #"
           echo "############################################"
-          
+
           for type in $crawler_types; do
             
             # create folder for the downloaded files
@@ -199,6 +199,8 @@ jobs:
               
             done
           done
+
+          docker image ls -a
 
       # # login to Dockerhub
       # - name: Login to Docker Hub
