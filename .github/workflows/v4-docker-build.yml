@@ -88,6 +88,8 @@ jobs:
       - name: Build docker base image
         run: |         
         
+          line2="CMD ["start", "-config=/nxer/collector/configs/crawler-config.xml"]"
+          
           # Make a copy of the dockerfile-base for building executable image
           cp .github/workflows/docker-files/Dockerfile-base .github/workflows/docker-files/Dockerfile-base-exec
 
@@ -95,7 +97,7 @@ jobs:
 
           # insert the Entrypoint and CMD command into the Dockerfile
           sed -i -e 's/#replace-line1/#Entry point when running docker container\nENTRYPOINT ["crawl-web.sh"]"]/g' .github/workflows/docker-files/Dockerfile-base-exec
-          sed -i -e 's/#replace-line2/\C\M\D ["start", "-config=/nxer/collector/configs/crawler-config.xml"]\n/g' .github/workflows/docker-files/Dockerfile-base-exec
+          sed -i -e 's/#replace-line2/$line2\n/g' .github/workflows/docker-files/Dockerfile-base-exec
 
           echo "debug: show Dockerfile-base-exec!!!"
           more .github/workflows/docker-files/Dockerfile-base-exec
