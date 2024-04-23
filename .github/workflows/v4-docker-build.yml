@@ -108,6 +108,7 @@ jobs:
 
           for type in $crawler_types; do
             
+            echo "In crawler type for loop!!"
             # create folder for the downloaded files
             mkdir -p downloaded/$type
            
