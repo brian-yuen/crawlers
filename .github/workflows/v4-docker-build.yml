@@ -203,7 +203,7 @@ jobs:
             #   docker build . --file .github/workflows/docker-files/Dockerfile-committers --build-arg committer_type=$com_type --build-arg dl_filename=$com_zip_filename --build-arg committer_version=${{ env.version_uppercase}} --build-arg build_version=${{env.major_minor_revis}} --build-arg crawler_type=$type --tag ${{env.version_lowercase}}-crawler-$type-$com_type
               
             # done
-          done
+          #done
 
           docker image ls -a
 
