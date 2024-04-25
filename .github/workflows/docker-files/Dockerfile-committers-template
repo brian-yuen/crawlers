@@ -11,4 +11,4 @@ COPY downloaded/$committer_type/*.zip .
 RUN unzip ${dl_filename}
 RUN ls $COLLECTOR_HOME/lib
 RUN cp nx-committer-${committer_type}-${committer_version}/lib/* $COLLECTOR_HOME/lib/
-RUN rm *.zip
+#RUN rm *.zip
