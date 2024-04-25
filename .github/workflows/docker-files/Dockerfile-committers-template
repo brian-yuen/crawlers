@@ -7,7 +7,7 @@ ARG crawler_type
 
 WORKDIR $NORCONEX_HOME
 
-COPY downloaded/$committer_type/nx-committer-solr-4.0.0-20*.zip .
+COPY downloaded/$committer_type/nx-committer-${committer_type}-${build_version}-202*.zip .
 RUN unzip nx-committer*
 #RUN unzip ${dl_filename}
 #RUN cp nx-committer-${committer_type}-${committer_version}/lib/* nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/lib/

@@ -27,7 +27,7 @@ RUN apt-get -y update ; \
 FROM base AS regular
 WORKDIR $NORCONEX_HOME
 
-COPY downloaded/$crawler_type/nx-crawler-web-4.0.0-20*.zip .
+COPY downloaded/$crawler_type/nx-crawler-${crawler_type}-${build_version}-20*.zip .
 RUN set -e; \ 
     unzip ${dl_filename}; \
     mkdir collector; \
@@ -46,7 +46,7 @@ RUN set -e; \
 FROM base AS snapshot
 WORKDIR $NORCONEX_HOME
 
-COPY downloaded/$crawler_type/nx-crawler-web-4.0.0-20*.zip .
+COPY downloaded/$crawler_type/nx-crawler-${crawler_type}-${build_version}-20*.zip .
 RUN set -e; \ 
     unzip nx-crawler*; \
     #unzip ${dl_filename}; \
