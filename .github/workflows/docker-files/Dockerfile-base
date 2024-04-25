@@ -48,12 +48,8 @@ WORKDIR $NORCONEX_HOME
 
 COPY downloaded/$crawler_type/*.zip .
 RUN set -e; \ 
-    unzip ${dl_filename}; \
-    mkdir collector; \
-    mv log4j-core-2.23.1.jar1 nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/lib/log4j-core-2.23.1.jar; \
-    mv log4j-slf4j2-impl-2.23.1.jar1 nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/lib/log4j-slf4j2-impl-2.23.1.jar; \
-    chmod +x nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/crawl-${crawler_type}.*
-
+    #unzip ${dl_filename}; \
+    mkdir collector; 
     # mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/* ${COLLECTOR_HOME}; \
     # mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar"; \
     # mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar"; \    
