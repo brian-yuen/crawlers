@@ -34,8 +34,8 @@ RUN set -e; \
     mv nx-crawler-${crawler_type}-${build_version} ${COLLECTOR_HOME}; \
     mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar"; \
     mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar"; \    
-    chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*; \
-    rm *.zip
+    chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
+    #rm *.zip
 
 # # Entry point when running docker container
 # ENTRYPOINT ["crawl-web.sh"]
@@ -53,8 +53,8 @@ RUN set -e; \
     mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/* ${COLLECTOR_HOME}; \
     mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar"; \
     mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar"; \    
-    chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*; \
-    rm *.zip;     
+    chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
+    #rm *.zip;     
 
 # # Entry point when running docker container
 # ENTRYPOINT ["crawl-web.sh"]
