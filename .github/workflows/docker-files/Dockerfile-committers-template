@@ -16,21 +16,22 @@ RUN ls ${dl_filename}
 
 RUN unzip ${dl_filename}
 # RUN pwd
-RUN echo "collector/lib"
-RUN ls -l collector/lib
-RUN echo "committer/lib"
-RUN ls -l nx-committer-${committer_type}-${committer_version}/lib
-RUN cp nx-committer-${committer_type}-${committer_version}/lib/* ${COLLECTOR_HOME}/lib/
+# RUN echo "collector/lib"
+# RUN ls -l collector/lib
+# RUN echo "committer/lib"
+# RUN ls -l nx-committer-${committer_type}-${committer_version}/lib
+RUN cp "nx-committer-${committer_type}-${committer_version}/lib/*" "${COLLECTOR_HOME}/lib/"; \
 #RUN cp nx-committer-${committer_type}-${committer_version}/lib/* nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/lib/
 #RUN ls -l collector/lib
-RUN cd "${COLLECTOR_HOME}/lib"; \
-    pwd; \
-    ls -l; \
-    mv jetty-alpn-client-11.0.15.jar jetty-alpn-client-11.0.15.jar1; \
-    mv jetty-client-11.0.15.jar jetty-client-11.0.15.jar1; \
-    mv jetty-http-11.0.15.jar jetty-http-11.0.15.jar1; \
-    mv jetty-io-11.0.15.jar jetty-io-11.0.15.jar1
-
+RUN if [ "${crawler_type}" = "web"]; then \
+        cd "${COLLECTOR_HOME}/lib"; \
+        pwd; \
+        ls -l; \
+        mv jetty-alpn-client-11.0.15.jar jetty-alpn-client-11.0.15.jar1; \
+        mv jetty-client-11.0.15.jar jetty-client-11.0.15.jar1; \
+        mv jetty-http-11.0.15.jar jetty-http-11.0.15.jar1; \
+        mv jetty-io-11.0.15.jar jetty-io-11.0.15.jar1; \
+    fi
 
 #RUN ls $COLLECTOR_HOME/lib
 #RUN cp nx-committer-${committer_type}-${committer_version}/lib/* $COLLECTOR_HOME/lib/
