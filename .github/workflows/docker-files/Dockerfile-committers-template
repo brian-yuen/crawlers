@@ -17,11 +17,11 @@ RUN ls ${dl_filename}
 RUN unzip ${dl_filename}
 # RUN pwd
 # RUN echo "collector/lib"
-# RUN ls -l collector/lib
+RUN ls -l collector/lib
 # RUN echo "committer/lib"
 RUN cp nx-committer-${committer_type}-${committer_version}/lib/* ${COLLECTOR_HOME}/lib/
 #RUN cp nx-committer-${committer_type}-${committer_version}/lib/* nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/lib/
-RUN ls -l collector/lib
+#RUN ls -l collector/lib
 RUN cd "${COLLECTOR_HOME}/lib"; \
     pwd; \
     ls -l; \
