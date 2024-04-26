@@ -53,12 +53,13 @@ COPY downloaded/$crawler_type/*.zip .
 
 RUN set -e; \ 
     #unzip nx-crawler*; \
-    #unzip ${dl_filename}; \
-    mkdir collector; 
-    # mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/* ${COLLECTOR_HOME}; \
-    # mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar"; \
-    # mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar"; \    
-    # chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
+    ls ${dl_filename}; \
+    unzip ${dl_filename}; \
+    #mkdir collector; \
+    mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT collector; \
+    mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar"; \
+    mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar"; \    
+    chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
     #rm *.zip;     
 
 # # Entry point when running docker container
