@@ -24,7 +24,7 @@ RUN cp nx-committer-${committer_type}-${committer_version}/lib/* ${COLLECTOR_HOM
 #RUN cp nx-committer-${committer_type}-${committer_version}/lib/* nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/lib/
 #RUN ls -l collector/lib
 RUN if [ "$crawler_type" = "web"]; then \
-        cd "${COLLECTOR_HOME}/lib"; \
+        cd ${COLLECTOR_HOME}/lib; \
         pwd; \
         ls -l; \
         mv jetty-alpn-client-11.0.15.jar jetty-alpn-client-11.0.15.jar1; \
