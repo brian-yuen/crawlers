@@ -17,7 +17,7 @@ RUN ls ${dl_filename}
 RUN unzip ${dl_filename}
 RUN cp nx-committer-${committer_type}-${committer_version}/lib/* $COLLECTOR_HOME/lib/
 #RUN cp nx-committer-${committer_type}-${committer_version}/lib/* nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/lib/
-RUN cd n$COLLECTOR_HOME/lib
+RUN cd $COLLECTOR_HOME/lib
 RUN mv jetty-alpn-client-11.0.15.jar jetty-alpn-client-11.0.15.jar1
 RUN mv jetty-client-11.0.15.jar jetty-client-11.0.15.jar1
 RUN mv jetty-http-11.0.15.jar jetty-http-11.0.15.jar1
