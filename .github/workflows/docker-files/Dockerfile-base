@@ -30,14 +30,13 @@ WORKDIR $NORCONEX_HOME
 #COPY downloaded/$crawler_type/nx-crawler-${crawler_type}-${build_version}-20*.zip .
 COPY downloaded/$crawler_type/*.zip .
 
-RUN set -e; \ 
-    unzip ${dl_filename}; \
-    mkdir collector; \
-    mv nx-crawler-${crawler_type}-${build_version} ${COLLECTOR_HOME}; \
-    mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar"; \
-    mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar"; \    
-    chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
-    #rm *.zip
+RUN set -e ; \ 
+    unzip ${dl_filename} ; \    
+    mv nx-crawler-${crawler_type}-${build_version} ${COLLECTOR_HOME} ; \
+    mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar" ; \
+    mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar" ; \    
+    chmod +x "${COLLECTOR_HOME}/crawl-${crawler_type}.*" ; \
+    rm *.zip
 
 # # Entry point when running docker container
 # ENTRYPOINT ["crawl-web.sh"]
@@ -52,16 +51,13 @@ WORKDIR $NORCONEX_HOME
 COPY downloaded/$crawler_type/*.zip .
 
 RUN set -e; \ 
-    #unzip nx-crawler*; \
-    ls ${dl_filename}; \
-    unzip ${dl_filename}; \
-    #mkdir collector; \
+    unzip ${dl_filename}; \    
     mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT collector
 
-RUN mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar"; \
-    mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar"; \    
-    chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.*
-    #rm *.zip;     
+RUN mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar" ; \
+    mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar" ; \    
+    chmod +x "${COLLECTOR_HOME}/crawl-${crawler_type}.*" ; \
+    rm *.zip
 
 # # Entry point when running docker container
 # ENTRYPOINT ["crawl-web.sh"]

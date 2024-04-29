@@ -7,33 +7,17 @@ ARG crawler_type
 
 WORKDIR $NORCONEX_HOME
 
-#COPY downloaded/$committer_type/nx-committer-${committer_type}-${build_version}-202*.zip .
 COPY downloaded/$committer_type/*.zip .
 
-#RUN unzip nx-committer*
+RUN unzip ${dl_filename}; \
+    cp nx-committer-${committer_type}-${committer_version}/lib/* ${COLLECTOR_HOME}/lib/
 
-RUN ls ${dl_filename}
-
-RUN unzip ${dl_filename}
-# RUN pwd
-# RUN echo "collector/lib"
-# RUN ls -l collector/lib
-# RUN echo "committer/lib"
-# RUN ls -l nx-committer-${committer_type}-${committer_version}/lib
-RUN cp nx-committer-${committer_type}-${committer_version}/lib/* ${COLLECTOR_HOME}/lib/
-#RUN cp nx-committer-${committer_type}-${committer_version}/lib/* nx-crawler-${crawler_type}-${build_version}-SNAPSHOT/lib/
-#RUN ls -l collector/lib
 RUN if [ "$crawler_type" = "web" ]; then \
-        mv ${COLLECTOR_HOME}/lib/jetty-alpn-client-11.0.15.jar jetty-alpn-client-11.0.15.jar1; \
-        # cd ${COLLECTOR_HOME}/lib; \
-        # pwd; \
-        # ls -l; \
-        # mv jetty-alpn-client-11.0.15.jar jetty-alpn-client-11.0.15.jar1; \
-        mv ${COLLECTOR_HOME}/lib/jetty-client-11.0.15.jar jetty-client-11.0.15.jar1; \
-        mv ${COLLECTOR_HOME}/lib/jetty-http-11.0.15.jar jetty-http-11.0.15.jar1; \
-        mv ${COLLECTOR_HOME}/lib/jetty-io-11.0.15.jar jetty-io-11.0.15.jar1; \
+        mv ${COLLECTOR_HOME}/lib/jetty-alpn-client-11.0.15.jar jetty-alpn-client-11.0.15.jar1; \                
+        mv ${COLLECTOR_HOME}/lib/jetty-client-11.0.15.jar jetty-client-11.0.15.jar1 ; \
+        mv ${COLLECTOR_HOME}/lib/jetty-http-11.0.15.jar jetty-http-11.0.15.jar1 ; \
+        mv ${COLLECTOR_HOME}/lib/jetty-io-11.0.15.jar jetty-io-11.0.15.jar1 ; \
+        ls -l ${COLLECTOR_HOME}/lib/*jetty* ; \
     fi
 
-#RUN ls $COLLECTOR_HOME/lib
-#RUN cp nx-committer-${committer_type}-${committer_version}/lib/* $COLLECTOR_HOME/lib/
-#RUN rm *.zip
+RUN rm *.zip
