@@ -59,8 +59,8 @@ RUN mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar" ; \
     chmod +x ${COLLECTOR_HOME}/crawl-${crawler_type}.* ; \
     rm *.zip
 
-# # Entry point when running docker container
-# ENTRYPOINT ["crawl-web.sh"]
+# Entry point when running docker container
+ENTRYPOINT ["crawl-web.sh"]
 
-# # Crawl-web options
-# CMD ["start", "-config=/nxer/collector/configs/$COLLECTOR_CONFIG_FILE"]
+# Crawl-web options
+CMD ["start", "-config=/nxer/collector/configs/$COLLECTOR_CONFIG_FILE"]
