@@ -17,7 +17,7 @@ on:
 
 env:
   # define the types of committers
-  committer_types: "solr"    
+  committer_types: "elasticsearch solr"    
   crawler_types: "web fs"
 
 jobs:

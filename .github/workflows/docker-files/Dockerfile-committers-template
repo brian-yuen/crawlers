@@ -12,12 +12,15 @@ COPY downloaded/$committer_type/*.zip .
 RUN unzip ${dl_filename}; \
     cp nx-committer-${committer_type}-${committer_version}/lib/* ${COLLECTOR_HOME}/lib/
 
-RUN if [ "$crawler_type" = "web" ]; then \
-        mv ${COLLECTOR_HOME}/lib/jetty-alpn-client-11.0.15.jar jetty-alpn-client-11.0.15.jar1; \                
-        mv ${COLLECTOR_HOME}/lib/jetty-client-11.0.15.jar jetty-client-11.0.15.jar1 ; \
-        mv ${COLLECTOR_HOME}/lib/jetty-http-11.0.15.jar jetty-http-11.0.15.jar1 ; \
-        mv ${COLLECTOR_HOME}/lib/jetty-io-11.0.15.jar jetty-io-11.0.15.jar1 ; \
-        ls -l ${COLLECTOR_HOME}/lib/*jetty* ; \
+# temp fix for the solr jetty library conflict issue, should be removed in the future
+RUN if [ "$committer_type" = "solr" ]; then \
+        if [ "$crawler_type" = "web" ]; then \
+            mv ${COLLECTOR_HOME}/lib/jetty-alpn-client-11.0.15.jar jetty-alpn-client-11.0.15.jar1; \                
+            mv ${COLLECTOR_HOME}/lib/jetty-client-11.0.15.jar jetty-client-11.0.15.jar1 ; \
+            mv ${COLLECTOR_HOME}/lib/jetty-http-11.0.15.jar jetty-http-11.0.15.jar1 ; \
+            mv ${COLLECTOR_HOME}/lib/jetty-io-11.0.15.jar jetty-io-11.0.15.jar1 ; \
+            ls -l ${COLLECTOR_HOME}/lib/*jetty* ; \
+        fi ; \
     fi
 
 RUN rm *.zip
