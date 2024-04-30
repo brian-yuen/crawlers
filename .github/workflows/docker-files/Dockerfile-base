@@ -13,6 +13,11 @@ ENV COLLECTOR_HOME=/nxer/collector \
 WORKDIR $NORCONEX_HOME
 
 COPY .github/workflows/support-files .
+COPY .github/workflows/docker-scripts ./docker-scripts
+
+RUN set -x ; \
+    sed -i -e 's/\r$//' "$NORCONEX_HOME"/docker-scripts/docker-run; \
+    chmod 755 "$NORCONEX_HOME"/docker-scripts/*
 
 RUN apt-get -y update ; \
     apt-get install -y nano ; \
@@ -60,8 +65,9 @@ RUN mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar" ; \
     rm *.zip
 
 # Entry point when running docker container
-ENTRYPOINT ["crawl-web.sh"]
+#ENTRYPOINT ["crawl-web.sh"]
 
 # Crawl-web options
 # CMD ["start", "-config=/nxer/collector/configs/${COLLECTOR_CONFIG_FILE}"]
-CMD start -config=/nxer/collector/configs/${COLLECTOR_CONFIG_FILE}
+#CMD start -config=/nxer/collector/configs/${COLLECTOR_CONFIG_FILE}
+#CMD ["docker-run"]
