@@ -70,4 +70,4 @@ RUN mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar" ; \
 # Crawl-web options
 # CMD ["start", "-config=/nxer/collector/configs/${COLLECTOR_CONFIG_FILE}"]
 #CMD start -config=/nxer/collector/configs/${COLLECTOR_CONFIG_FILE}
-#CMD ["docker-run"]
+CMD ["docker-run"]
