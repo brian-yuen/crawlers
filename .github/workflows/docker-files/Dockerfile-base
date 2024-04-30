@@ -52,7 +52,7 @@ COPY downloaded/$crawler_type/*.zip .
 
 RUN set -e; \ 
     unzip ${dl_filename}; \    
-    mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT collector
+    mv nx-crawler-${crawler_type}-${build_version}-SNAPSHOT $COLLECTOR_HOME
 
 RUN mv log4j-core-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-core-2.23.1.jar" ; \
     mv log4j-slf4j2-impl-2.23.1.jar1 "${COLLECTOR_HOME}/lib/log4j-slf4j2-impl-2.23.1.jar" ; \    
