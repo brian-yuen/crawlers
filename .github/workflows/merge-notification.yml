@@ -63,25 +63,30 @@ jobs:
                 for author in $COMMIT_AUTHORS; do
                   echo "Commit author: $author"   
                   # email committers changes in main can be merged into his/her branch without conflicts
-                  echo "There are updates to the main branch, and test merge to your branch succeeded. Please update your branch. Thanks" | mail -s "Test Merge succeeded - Branch: $branch_name" $author                                 
+                  echo "There are updates to the main branch, and test merge to your branch succeeded. Please update your branch. Thanks" | mail -s "Test Merge succeeded - Branch: $branch_name" brian.yuen@norconex.com
                 done
                                              
-                git merge --abort
+                git reset --hard
 
               else
                 # notify branch committers merge failed
                 echo "Merging main into $branch failed"
 
-                # Save the result of the merge command to a file
-                touch failed-report-$branch_name.diff
+                # get only the branch-name without the /
+                file_name=$(echo "$branch" | awk -F'/' '{print $NF}')
 
-                git diff > failed-report-$branch_name.diff
-                more failed-report-$branch_name.diff
+                echo "File name: $file_name"
+
+                # Save the result of the merge command to a file
+                touch failed-report-$file_name.diff
+
+                git diff > failed-report-$file_name.diff
+                # more failed-report-$file_name.diff
                 
                 for author in $COMMIT_AUTHORS; do
                   echo "Commit author: $author"                  
                   # email committers that changes in main has conflicts with his/her branch, and attached the details for review.
-                  echo "There are updates to the main branch, but test merge failed, attached is the details of the conflicts. Please resolve the conflicts and keep your branch up to date. Thanks" | mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$branch_name.diff $author
+                  echo "There are updates to the main branch, but test merge failed, attached is the details of the conflicts. Please resolve the conflicts and keep your branch up to date. Thanks" | mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$file_name.diff brian.yuen@norconex.com
                 done
                 
                 git merge --abort
