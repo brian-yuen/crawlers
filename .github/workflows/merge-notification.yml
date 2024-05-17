@@ -89,11 +89,13 @@ jobs:
                   #echo "There are updates to the main branch, but test merge failed, attached is the details of the conflicts. Please resolve the conflicts and keep your branch up to date. Thanks" | mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$file_name.diff brian.yuen@norconex.com
                 done
 
-                echo "failed_branches=$branch_name" >> $GITHUB_ENV
+                failed_branches+="$branch_name,"
                 
                 git merge --abort
               fi               
             fi
+
+            echo "failed_branches=${failed_branches%,}" >> $GITHUB_ENV
           done
 
       - name: printout failed branches
