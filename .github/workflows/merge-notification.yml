@@ -108,5 +108,5 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK }}
           SLACK_USERNAME: "Github merge test"
           SLACK_COLOR: failure
-          SLACK_TITLE: Github Branch Merge Failed!!
-          SLACK_MESSAGE: Check your branch: ${{ env.failed_branches }}
+          SLACK_TITLE: 'Github Branch Merge Failed!!'
+          SLACK_MESSAGE: 'Check your branch: ${{ env.failed_branches }}'
