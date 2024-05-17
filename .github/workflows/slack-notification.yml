@@ -11,3 +11,7 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK }}
+        SLACK_USERNAME: "Github merge test"
+        SLACK_COLOR: failure
+        SLACK_TITLE: Github Branch Merge Failed!!
+        SLACK_MESSAGE: Branch xx needs to be updated
