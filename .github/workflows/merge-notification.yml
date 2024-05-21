@@ -117,5 +117,5 @@ jobs:
           SLACK_USERNAME: "Github merge test"
           SLACK_COLOR: failure
           MSG_MINIMAL: actions url
-          SLACK_TITLE: 'Github Branch Merge Failed!!'
+          SLACK_TITLE: 'Github Branch Merge FAILED!!'
           SLACK_MESSAGE: 'Check your branch: ${{ env.failed_branches }}'
