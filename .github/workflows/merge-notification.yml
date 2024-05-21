@@ -90,7 +90,7 @@ jobs:
                 done
 
                 failed_branches+="$branch, "
-                echo "" >> $failed_branches
+                #echo "" >> $failed_branches
                                 
                 git merge --abort
               fi               
