@@ -63,9 +63,10 @@ jobs:
                 for author in $COMMIT_AUTHORS; do
                   echo "Commit author: $author"   
                   # email committers changes in main can be merged into his/her branch without conflicts
-                  #echo "There are updates to the main branch, and test merge to your branch succeeded. Please update your branch. Thanks" | mail -s "Test Merge succeeded - Branch: $branch_name" brian.yuen@norconex.com
+                  echo "There are updates to the main branch, and test merge to your branch succeeded. Please update your branch. Thanks" | mail -s "Test Merge succeeded - Branch: $branch_name" $author
                 done
-                                             
+                               
+                # reset the merge conditiion for next run
                 git reset --hard
 
               else
@@ -75,26 +76,33 @@ jobs:
                 # get only the branch-name without the /
                 file_name=$(echo "$branch" | awk -F'/' '{print $NF}')
 
-                echo "File name: $file_name"
+                # for debug use
+                # echo "File name: $file_name"
 
                 # Save the result of the merge command to a file
                 touch failed-report-$file_name.diff
 
+                # add the git difference to file for user to review
                 git diff > failed-report-$file_name.diff
+
+                # for debug use
                 # more failed-report-$file_name.diff
                 
                 for author in $COMMIT_AUTHORS; do
                   echo "Commit author: $author"                  
                   # email committers that changes in main has conflicts with his/her branch, and attached the details for review.
-                  #echo "There are updates to the main branch, but test merge failed, attached is the details of the conflicts. Please resolve the conflicts and keep your branch up to date. Thanks" | mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$file_name.diff brian.yuen@norconex.com
+                  echo "There are updates to the main branch, but test merge failed, attached is the details of the conflicts. Please resolve the conflicts and keep your branch up to date. Thanks" | mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$file_name.diff $author
                 done
 
+                # add failed branch name to a variable to send slack notification
                 failed_branches+="$branch, "
                                                 
+                # abort the merge in conflict for next run
                 git merge --abort
               fi               
             fi
 
+            # 
             echo "failed_branches=${failed_branches}" >> $GITHUB_ENV
           done
 
@@ -108,5 +116,6 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK }}
           SLACK_USERNAME: "Github merge test"
           SLACK_COLOR: failure
+          MSG_MINIMAL: actions url
           SLACK_TITLE: 'Github Branch Merge Failed!!'
           SLACK_MESSAGE: 'Check your branch: ${{ env.failed_branches }}'
