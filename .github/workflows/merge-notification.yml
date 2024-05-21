@@ -96,13 +96,13 @@ jobs:
               fi               
             fi
             echo "branches: $failed_branches"
-            
-            echo "failed_branches=${failed_branches}" >> $GITHUB_ENV
+
+            #echo "failed_branches=${failed_branches}" >> $GITHUB_ENV
           done
 
       - name: printout failed branches
         run: |
-          echo "failed branches are: ${{ env.failed_branches }}"
+          echo "failed branches are: $failed_branches"
 
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
@@ -111,4 +111,4 @@ jobs:
           SLACK_USERNAME: "Github merge test"
           SLACK_COLOR: failure
           SLACK_TITLE: 'Github Branch Merge Failed!!'
-          SLACK_MESSAGE: 'Check your branch: ${{ env.failed_branches }}'
+          SLACK_MESSAGE: 'Check your branch: $failed_branches'
