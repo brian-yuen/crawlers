@@ -89,20 +89,18 @@ jobs:
                   #echo "There are updates to the main branch, but test merge failed, attached is the details of the conflicts. Please resolve the conflicts and keep your branch up to date. Thanks" | mail -s "Test Merge FAILED - Branch: $branch_name" -A failed-report-$file_name.diff brian.yuen@norconex.com
                 done
 
-                failed_branches+="${branch}"$'\n'
-                #echo "\n" >> ${{ env.failed_branches }}
-                                
+                failed_branches+="$branch, "
+                                                
                 git merge --abort
               fi               
             fi
-            echo "branches: $failed_branches"
 
-            #echo "failed_branches=${failed_branches}" >> $GITHUB_ENV
+            echo "failed_branches=${failed_branches}" >> $GITHUB_ENV
           done
 
       - name: printout failed branches
         run: |
-          echo "failed branches are: $failed_branches"
+          echo "failed branches are: ${{ env.failed_branches }}"
 
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
@@ -111,4 +109,4 @@ jobs:
           SLACK_USERNAME: "Github merge test"
           SLACK_COLOR: failure
           SLACK_TITLE: 'Github Branch Merge Failed!!'
-          SLACK_MESSAGE: 'Check your branch: $failed_branches'
+          SLACK_MESSAGE: 'Check your branch: ${{ env.failed_branches }}'
