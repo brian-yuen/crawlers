@@ -95,7 +95,8 @@ jobs:
                 git merge --abort
               fi               
             fi
-
+            echo "branches: $failed_branches"
+            
             echo "failed_branches=${failed_branches}" >> $GITHUB_ENV
           done
 
